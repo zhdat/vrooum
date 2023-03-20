@@ -27,6 +27,7 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
   }
   return -gas;
 }
+  
 
 int main()
 {
