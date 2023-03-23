@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <droitAuBut.h>
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
 
@@ -26,6 +27,43 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
     gas += 1;
   }
   return -gas;
+}
+
+/* Algorithm A star */
+Node* createNode(int x, int y, int distance_start, int distance_heuristic, Node* parent){
+    Node* node = malloc(sizeof(struct node));
+    node->x = x;
+    node->y = y;
+    node->distance_start = distance_start;
+    node->distance_heuristic = distance_heuristic;
+    node->distance_total = distance_start + distance_heuristic;
+    node->parent = parent;
+
+    return node;
+}
+
+void freeNode(Node* node){
+    free(node);
+}
+
+List* createList(Node* node, List* next){
+    List* list = malloc(sizeof(struct list));
+    list->node = node;
+    list->next = next;
+
+    return list;
+}
+
+void freeList(List* list){
+    if(list != NULL){
+        freeList(list->next);
+        freeNode(list->node);
+        free(list);
+    }
+}
+
+int distanceHeuristic(Node* start, Node* end){
+    return abs(start->x - end->x) + abs(start->y - end->y);
 }
   
 
