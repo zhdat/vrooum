@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <droitAuBut.h>
+
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
 
@@ -19,115 +20,103 @@
  * @param inSand (boolean)
  * @return Number of gas units consumed
  */
-int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
-{
-  int gas = accX * accX + accY * accY;
-  gas += (int)(sqrt(speedX * speedX + speedY * speedY) * 3.0 / 2.0);
-  if (inSand)
-  {
-    gas += 1;
-  }
-  return -gas;
+int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand) {
+    int gas = accX * accX + accY * accY;
+    gas += (int) (sqrt(speedX * speedX + speedY * speedY) * 3.0 / 2.0);
+    if (inSand) {
+        gas += 1;
+    }
+    return -gas;
 }
 
 /* Algorithm A star */
-Node *createNode(int x, int y, int distance_start, int distance_heuristic, Node *parent)
-{
-  Node *node = malloc(sizeof(struct node));
-  node->x = x;
-  node->y = y;
-  node->distance_start = distance_start;
-  node->distance_heuristic = distance_heuristic;
-  node->distance_total = distance_start + distance_heuristic;
-  node->parent = parent;
+Node *createNode(int x, int y, int distance_start, int distance_heuristic, Node *parent) {
+    Node *node = malloc(sizeof(struct node));
+    node->x = x;
+    node->y = y;
+    node->distance_start = distance_start;
+    node->distance_heuristic = distance_heuristic;
+    node->distance_total = distance_start + distance_heuristic;
+    node->parent = parent;
 
-  return node;
+    return node;
 }
 
-void freeNode(Node *node)
-{
-  free(node);
+void freeNode(Node *node) {
+    free(node);
 }
 
-List *createList(Node *node, List *next)
-{
-  List *list = malloc(sizeof(struct list));
-  list->node = node;
-  list->next = next;
+List *createList(Node *node, List *next) {
+    List *list = malloc(sizeof(struct list));
+    list->node = node;
+    list->next = next;
 
-  return list;
+    return list;
 }
 
-void freeList(List *list)
-{
-  if (list != NULL)
-  {
-    freeList(list->next);
-    freeNode(list->node);
-    free(list);
-  }
-}
-
-int distanceHeuristic(Node *start, Node *end)
-{
-  return abs(start->x - end->x) + abs(start->y - end->y);
-}
-
-int main()
-{
-  int row;
-  int width, height;
-  int gasLevel;
-  int boosts = BOOSTS_AT_START;
-  int round = 0;
-  int accelerationX = 1, accelerationY = 0;
-  int speedX = 0, speedY = 0;
-  char action[100];
-  char line_buffer[MAX_LINE_LENGTH];
-
-  boosts = boosts;                            /* Prevent warning "unused variable" */
-  fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
-  sscanf(line_buffer, "%d %d %d", &width, &height, &gasLevel);
-  fprintf(stderr, "=== >Map< ===\n");
-  fprintf(stderr, "Size %d x %d\n", width, height);
-  fprintf(stderr, "Gas at start %d \n\n", gasLevel);
-  for (row = 0; row < height; ++row)
-  { /* Read map data, line per line */
-    fgets(line_buffer, MAX_LINE_LENGTH, stdin);
-    fputs(line_buffer, stderr);
-  }
-  fflush(stderr);
-  fprintf(stderr, "\n=== Race start ===\n");
-  while (!feof(stdin))
-  {
-    int myX, myY, secondX, secondY, thirdX, thirdY;
-    round++;
-    fprintf(stderr, "=== ROUND %d\n", round);
-    fflush(stderr);
-    fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read positions of pilots */
-    sscanf(line_buffer, "%d %d %d %d %d %d",
-           &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
-    fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n",
-            myX, myY, secondX, secondY, thirdX, thirdY);
-    fflush(stderr);
-    /* Gas consumption cannot be accurate here. */
-    gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, 0);
-    speedX += accelerationX;
-    speedY += accelerationY;
-    /* Write the acceleration request to the race manager (stdout). */
-    sprintf(action, "%d %d", accelerationX, accelerationY);
-    fprintf(stdout, "%s", action);
-    fflush(stdout); /* CAUTION : This is necessary  */
-    fprintf(stderr, "    Action: %s   Gas remaining: %d\n", action, gasLevel);
-    fflush(stderr);
-    if (0 && round > 4)
-    { /* (DISABLED) Force a segfault for testing purpose */
-      int *p = NULL;
-      fprintf(stderr, "Good Bye!\n");
-      fflush(stderr);
-      *p = 0;
+void freeList(List *list) {
+    if (list != NULL) {
+        freeList(list->next);
+        freeNode(list->node);
+        free(list);
     }
-  }
+}
 
-  return EXIT_SUCCESS;
+int distanceHeuristic(Node *start, Node *end) {
+    return abs(start->x - end->x) + abs(start->y - end->y);
+}
+
+int main() {
+    int row;
+    int width, height;
+    int gasLevel;
+    int boosts = BOOSTS_AT_START;
+    int round = 0;
+    int accelerationX = 1, accelerationY = 0;
+    int speedX = 0, speedY = 0;
+    char action[100];
+    char line_buffer[MAX_LINE_LENGTH];
+
+    boosts = boosts;                            /* Prevent warning "unused variable" */
+    fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
+    sscanf(line_buffer, "%d %d %d", &width, &height, &gasLevel);
+    fprintf(stderr, "=== >Map< ===\n");
+    fprintf(stderr, "Size %d x %d\n", width, height);
+    fprintf(stderr, "Gas at start %d \n\n", gasLevel);
+    for (row = 0; row < height; ++row) { /* Read map data, line per line */
+        fgets(line_buffer, MAX_LINE_LENGTH, stdin);
+        fputs(line_buffer, stderr);
+    }
+    fflush(stderr);
+    fprintf(stderr, "\n=== Race start ===\n");
+    while (!feof(stdin)) {
+        int myX, myY, secondX, secondY, thirdX, thirdY;
+        round++;
+        fprintf(stderr, "=== ROUND %d\n", round);
+        fflush(stderr);
+        fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read positions of pilots */
+        sscanf(line_buffer, "%d %d %d %d %d %d",
+               &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
+        fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n",
+                myX, myY, secondX, secondY, thirdX, thirdY);
+        fflush(stderr);
+        /* Gas consumption cannot be accurate here. */
+        gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, 0);
+        speedX += accelerationX;
+        speedY += accelerationY;
+        /* Write the acceleration request to the race manager (stdout). */
+        sprintf(action, "%d %d", accelerationX, accelerationY);
+        fprintf(stdout, "%s", action);
+        fflush(stdout); /* CAUTION : This is necessary  */
+        fprintf(stderr, "    Action: %s   Gas remaining: %d\n", action, gasLevel);
+        fflush(stderr);
+        if (0 && round > 4) { /* (DISABLED) Force a segfault for testing purpose */
+            int *p = NULL;
+            fprintf(stderr, "Good Bye!\n");
+            fflush(stderr);
+            *p = 0;
+        }
+    }
+
+    return EXIT_SUCCESS;
 }
