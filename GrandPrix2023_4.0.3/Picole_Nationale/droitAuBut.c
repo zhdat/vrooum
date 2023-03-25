@@ -1,10 +1,10 @@
+#include "droitAuBut.h"
+#include "queue.h"
+#include "stack.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "droitAuBut.h"
-#include "queue.h"
-#include "stack.h"
 
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
@@ -18,9 +18,8 @@
  * @param y2 y coordinate of the second point.
  * @return The Euclidean distance between the input points
  */
-double distance(double x1, double y1, double x2, double y2)
-{
-    return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
+double distance(double x1, double y1, double x2, double y2) {
+  return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
 }
 
 /**
@@ -30,12 +29,11 @@ double distance(double x1, double y1, double x2, double y2)
  * @param next Pointer of the following node in the adjacency list.
  * @return A pointer to the new node.
  */
-NodeList *newNodeGraph(int dest, NodeList *next)
-{
-    NodeList *newNode = (NodeList *)malloc(sizeof(NodeList));
-    newNode->dest = dest;
-    newNode->next = next;
-    return newNode;
+NodeList *newNodeGraph(int dest, NodeList *next) {
+  NodeList *newNode = (NodeList *)malloc(sizeof(NodeList));
+  newNode->dest = dest;
+  newNode->next = next;
+  return newNode;
 }
 
 /**
@@ -47,10 +45,9 @@ NodeList *newNodeGraph(int dest, NodeList *next)
  *
  * Only the array of adjacency lists is updated.
  */
-void addEdgeInGraph(Graph graph, int vertex1, int vertex2)
-{
-    graph.array[vertex1] = newNodeGraph(vertex2, graph.array[vertex1]);
-    graph.array[vertex2] = newNodeGraph(vertex1, graph.array[vertex2]);
+void addEdgeInGraph(Graph graph, int vertex1, int vertex2) {
+  graph.array[vertex1] = newNodeGraph(vertex2, graph.array[vertex1]);
+  graph.array[vertex2] = newNodeGraph(vertex1, graph.array[vertex2]);
 }
 
 /**
@@ -66,105 +63,98 @@ void addEdgeInGraph(Graph graph, int vertex1, int vertex2)
  * The elements of the array parents are set to -1.
  * The array of adjacency lists must be updated.
  */
-Graph createGraph(int numVertices, double sigma)
-{
-    Graph graph;
-    int i;
-    int j;
-    graph.numberVertices = numVertices;
-    graph.array = (NodeList **)malloc(numVertices * sizeof(NodeList *));
-    graph.xCoordinates = (double *)malloc(numVertices * sizeof(double));
-    graph.yCoordinates = (double *)malloc(numVertices * sizeof(double));
-    graph.sigma = sigma;
-    graph.parents = (int *)malloc(numVertices * sizeof(int));
-    for (i = 0; i < numVertices; i++)
-    {
-        graph.array[i] = NULL;
-        graph.parents[i] = -1;
-        graph.xCoordinates[i] = (double)rand() / RAND_MAX;
-        graph.yCoordinates[i] = (double)rand() / RAND_MAX;
+Graph createGraph(int numVertices, double sigma) {
+  Graph graph;
+  int i;
+  int j;
+  graph.numberVertices = numVertices;
+  graph.array = (NodeList **)malloc(numVertices * sizeof(NodeList *));
+  graph.xCoordinates = (double *)malloc(numVertices * sizeof(double));
+  graph.yCoordinates = (double *)malloc(numVertices * sizeof(double));
+  graph.sigma = sigma;
+  graph.parents = (int *)malloc(numVertices * sizeof(int));
+  for (i = 0; i < numVertices; i++) {
+    graph.array[i] = NULL;
+    graph.parents[i] = -1;
+    graph.xCoordinates[i] = (double)rand() / RAND_MAX;
+    graph.yCoordinates[i] = (double)rand() / RAND_MAX;
+  }
+  for (i = 0; i < numVertices; i++) {
+    for (j = i + 1; j < numVertices; j++) {
+      if (distance(graph.xCoordinates[i], graph.yCoordinates[i],
+                   graph.xCoordinates[j], graph.yCoordinates[j]) < sigma) {
+        addEdgeInGraph(graph, i, j);
+      }
     }
-    for (i = 0; i < numVertices; i++)
-    {
-        for (j = i + 1; j < numVertices; j++)
-        {
-            if (distance(graph.xCoordinates[i], graph.yCoordinates[i],
-                         graph.xCoordinates[j], graph.yCoordinates[j]) < sigma)
-            {
-                addEdgeInGraph(graph, i, j);
-            }
-        }
-    }
-    return graph;
+  }
+  return graph;
 }
 
-void Astar(Graph graph, int source, int destination)
-{
-    int nbVertices = graph.numberVertices;
-    int i;
-    double cost;
-    double heuristic;
-    NodeList *neighbor;
-    Queue *queue;
-    /* Initialize the arrays for visited nodes and distances */
-    int *visited = (int *)malloc(nbVertices * sizeof(int));
-    double *distances = (double *)malloc(nbVertices * sizeof(double));
-    for (i = 0; i < nbVertices; i++)
-    {
-        visited[i] = 0;
-        distances[i] = INFINITY;
+void Astar(Graph graph, int source, int destination) {
+  int nbVertices = graph.numberVertices;
+  int i;
+  double cost;
+  double heuristic;
+  NodeList *neighbor;
+  Queue *queue;
+  /* Initialize the arrays for visited nodes and distances */
+  int *visited = (int *)malloc(nbVertices * sizeof(int));
+  double *distances = (double *)malloc(nbVertices * sizeof(double));
+  for (i = 0; i < nbVertices; i++) {
+    visited[i] = 0;
+    distances[i] = INFINITY;
+  }
+  /* Set the distance of the source node to 0 */
+  distances[source] = 0;
+
+  /* Initialize the priority queue with the source node */
+  queue = createQueue(nbVertices);
+  enqueue(queue, source);
+
+  /* Start the A* algorithm */
+  while (!isQueueEmpty(*queue)) {
+    /* Pop the node with the lowest total cost from the priority queue */
+    int currentNode = dequeue(queue);
+    visited[currentNode] = 1;
+
+    /* If the destination node has been reached, stop the algorithm */
+    if (currentNode == destination) {
+      break;
     }
-    /* Set the distance of the source node to 0 */
-    distances[source] = 0;
 
-    /* Initialize the priority queue with the source node */
-    queue = createQueue(nbVertices);
-    enqueue(queue, source);
+    /* Visit all the neighbors of the current node */
+    neighbor = graph.array[currentNode];
+    while (neighbor != NULL) {
+      int neighborIndex = neighbor->dest;
 
-    /* Start the A* algorithm */
-    while (!isQueueEmpty(*queue))
-    {
-        /* Pop the node with the lowest total cost from the priority queue */
-        int currentNode = dequeue(queue);
-        visited[currentNode] = 1;
+      /* If the neighbor has already been visited */
+      if (visited[neighborIndex] == 1) {
+        neighbor = neighbor->next;
+        continue;
+      }
 
-        /* If the destination node has been reached, stop the algorithm */
-        if (currentNode == destination)
-        {
-            break;
-        }
+      /* Compute the distance between the current node and the neighbor */
+      cost = distance(
+          graph.xCoordinates[currentNode], graph.yCoordinates[currentNode],
+          graph.xCoordinates[neighborIndex], graph.yCoordinates[neighborIndex]);
+      cost += distances[currentNode];
 
-        /* Visit all the neighbors of the current node */
-        neighbor = graph.array[currentNode];
-        while (neighbor != NULL)
-        {
-            int neighborIndex = neighbor->dest;
+      /* Compute the estimated cost to the destination node */
+      heuristic = distance(
+          graph.xCoordinates[neighborIndex], graph.yCoordinates[neighborIndex],
+          graph.xCoordinates[destination], graph.yCoordinates[destination]);
 
-            /* If the neighbor has already been visited */
-            if (visited[neighborIndex] == 1)
-            {
-                neighbor = neighbor->next;
-                continue;
-            }
+      /* Update the distance of the neighbor if a shorter paths has been found
+       */
+      if (cost + heuristic < distances[neighborIndex]) {
+        distances[neighborIndex] = cost + heuristic;
+        graph.parents[neighborIndex] = currentNode;
+        enqueue(queue, neighborIndex);
+      }
 
-            /* Compute the distance between the current node and the neighbor */
-            cost = distance(graph.xCoordinates[currentNode], graph.yCoordinates[currentNode], graph.xCoordinates[neighborIndex], graph.yCoordinates[neighborIndex]);
-            cost += distances[currentNode];
-
-            /* Compute the estimated cost to the destination node */
-            heuristic = distance(graph.xCoordinates[neighborIndex], graph.yCoordinates[neighborIndex], graph.xCoordinates[destination], graph.yCoordinates[destination]);
-
-            /* Update the distance of the neighbor if a shorter paths has been found */
-            if (cost + heuristic < distances[neighborIndex])
-            {
-                distances[neighborIndex] = cost + heuristic;
-                graph.parents[neighborIndex] = currentNode;
-                enqueue(queue, neighborIndex);
-            }
-
-            neighbor = neighbor->next;
-        }
+      neighbor = neighbor->next;
     }
+  }
 }
 
 /* How to use */
@@ -186,72 +176,66 @@ Astar(graph, source, destination); */
  * @param inSand (boolean)
  * @return Number of gas units consumed
  */
-int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
-{
-    int gas = accX * accX + accY * accY;
-    gas += (int)(sqrt(speedX * speedX + speedY * speedY) * 3.0 / 2.0);
-    if (inSand)
-    {
-        gas += 1;
-    }
-    return -gas;
+int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand) {
+  int gas = accX * accX + accY * accY;
+  gas += (int)(sqrt(speedX * speedX + speedY * speedY) * 3.0 / 2.0);
+  if (inSand) {
+    gas += 1;
+  }
+  return -gas;
 }
 
-int main()
-{
-    int row;
-    int width, height;
-    int gasLevel;
-    int boosts = BOOSTS_AT_START;
-    int round = 0;
-    int accelerationX = 1, accelerationY = 0;
-    int speedX = 0, speedY = 0;
-    char action[100];
-    char line_buffer[MAX_LINE_LENGTH];
+int main() {
+  int row;
+  int width, height;
+  int gasLevel;
+  int boosts = BOOSTS_AT_START;
+  int round = 0;
+  int accelerationX = 1, accelerationY = 0;
+  int speedX = 0, speedY = 0;
+  char action[100];
+  char line_buffer[MAX_LINE_LENGTH];
 
-    boosts = boosts;                            /* Prevent warning "unused variable" */
-    fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
-    sscanf(line_buffer, "%d %d %d", &width, &height, &gasLevel);
-    fprintf(stderr, "=== >Map< ===\n");
-    fprintf(stderr, "Size %d x %d\n", width, height);
-    fprintf(stderr, "Gas at start %d \n\n", gasLevel);
-    for (row = 0; row < height; ++row)
-    { /* Read map data, line per line */
-        fgets(line_buffer, MAX_LINE_LENGTH, stdin);
-        fputs(line_buffer, stderr);
-    }
+  boosts = boosts; /* Prevent warning "unused variable" */
+  fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
+  sscanf(line_buffer, "%d %d %d", &width, &height, &gasLevel);
+  fprintf(stderr, "=== >Map< ===\n");
+  fprintf(stderr, "Size %d x %d\n", width, height);
+  fprintf(stderr, "Gas at start %d \n\n", gasLevel);
+  for (row = 0; row < height; ++row) { /* Read map data, line per line */
+    fgets(line_buffer, MAX_LINE_LENGTH, stdin);
+    fputs(line_buffer, stderr);
+  }
+  fflush(stderr);
+  fprintf(stderr, "\n=== Race start ===\n");
+  while (!feof(stdin)) {
+    int myX, myY, secondX, secondY, thirdX, thirdY;
+    round++;
+    fprintf(stderr, "=== ROUND %d\n", round);
     fflush(stderr);
-    fprintf(stderr, "\n=== Race start ===\n");
-    while (!feof(stdin))
-    {
-        int myX, myY, secondX, secondY, thirdX, thirdY;
-        round++;
-        fprintf(stderr, "=== ROUND %d\n", round);
-        fflush(stderr);
-        fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read positions of pilots */
-        sscanf(line_buffer, "%d %d %d %d %d %d",
-               &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
-        fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n",
-                myX, myY, secondX, secondY, thirdX, thirdY);
-        fflush(stderr);
-        /* Gas consumption cannot be accurate here. */
-        gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, 0);
-        speedX += accelerationX;
-        speedY += accelerationY;
-        /* Write the acceleration request to the race manager (stdout). */
-        sprintf(action, "%d %d", accelerationX, accelerationY);
-        fprintf(stdout, "%s", action);
-        fflush(stdout); /* CAUTION : This is necessary  */
-        fprintf(stderr, "    Action: %s   Gas remaining: %d\n", action, gasLevel);
-        fflush(stderr);
-        if (0 && round > 4)
-        { /* (DISABLED) Force a segfault for testing purpose */
-            int *p = NULL;
-            fprintf(stderr, "Good Bye!\n");
-            fflush(stderr);
-            *p = 0;
-        }
+    fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read positions of pilots */
+    sscanf(line_buffer, "%d %d %d %d %d %d", &myX, &myY, &secondX, &secondY,
+           &thirdX, &thirdY);
+    fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY,
+            secondX, secondY, thirdX, thirdY);
+    fflush(stderr);
+    /* Gas consumption cannot be accurate here. */
+    gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, 0);
+    speedX += accelerationX;
+    speedY += accelerationY;
+    /* Write the acceleration request to the race manager (stdout). */
+    sprintf(action, "%d %d", accelerationX, accelerationY);
+    fprintf(stdout, "%s", action);
+    fflush(stdout); /* CAUTION : This is necessary  */
+    fprintf(stderr, "    Action: %s   Gas remaining: %d\n", action, gasLevel);
+    fflush(stderr);
+    if (0 && round > 4) { /* (DISABLED) Force a segfault for testing purpose */
+      int *p = NULL;
+      fprintf(stderr, "Good Bye!\n");
+      fflush(stderr);
+      *p = 0;
     }
+  }
 
-    return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }
