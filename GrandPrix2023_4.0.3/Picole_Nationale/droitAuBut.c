@@ -2,10 +2,176 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <droitAuBut.h>
+#include "droitAuBut.h"
+#include "queue.h"
+#include "stack.h"
 
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
+
+/**
+ * @brief Computes the Euclidean distance between two points.
+ *
+ * @param x1 x coordinate of the first point
+ * @param y1 y coordinate of the first point.
+ * @param x2 x coordinate of the second point.
+ * @param y2 y coordinate of the second point.
+ * @return The Euclidean distance between the input points
+ */
+double distance(double x1, double y1, double x2, double y2)
+{
+    return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
+}
+
+/**
+ * @brief Function to create a new node of an adjacency list.
+ *
+ * @param dest The destination vertex.
+ * @param next Pointer of the following node in the adjacency list.
+ * @return A pointer to the new node.
+ */
+NodeList *newNodeGraph(int dest, NodeList *next)
+{
+    NodeList *newNode = (NodeList *)malloc(sizeof(NodeList));
+    newNode->dest = dest;
+    newNode->next = next;
+    return newNode;
+}
+
+/**
+ * @brief Function to add an edge in a graph.
+ *
+ * @param vertex1 First vertex of the edge.
+ * @param vertex2 Second vertex of the edge.
+ * @param graph The graph in which the edge is added.
+ *
+ * Only the array of adjacency lists is updated.
+ */
+void addEdgeInGraph(Graph graph, int vertex1, int vertex2)
+{
+    graph.array[vertex1] = newNodeGraph(vertex2, graph.array[vertex1]);
+    graph.array[vertex2] = newNodeGraph(vertex1, graph.array[vertex2]);
+}
+
+/**
+ * @brief Function to create a random graph with a specified number of vertices
+ *and parameter sigma.
+ *
+ *
+ * @param numVertices The number of vertices in the graph.
+ * @param sigma Parameter of the procedure to generate a random graph.
+ *
+ * @return A pointer to the new graph.
+ *
+ * The elements of the array parents are set to -1.
+ * The array of adjacency lists must be updated.
+ */
+Graph createGraph(int numVertices, double sigma)
+{
+    Graph graph;
+    int i;
+    int j;
+    graph.numberVertices = numVertices;
+    graph.array = (NodeList **)malloc(numVertices * sizeof(NodeList *));
+    graph.xCoordinates = (double *)malloc(numVertices * sizeof(double));
+    graph.yCoordinates = (double *)malloc(numVertices * sizeof(double));
+    graph.sigma = sigma;
+    graph.parents = (int *)malloc(numVertices * sizeof(int));
+    for (i = 0; i < numVertices; i++)
+    {
+        graph.array[i] = NULL;
+        graph.parents[i] = -1;
+        graph.xCoordinates[i] = (double)rand() / RAND_MAX;
+        graph.yCoordinates[i] = (double)rand() / RAND_MAX;
+    }
+    for (i = 0; i < numVertices; i++)
+    {
+        for (j = i + 1; j < numVertices; j++)
+        {
+            if (distance(graph.xCoordinates[i], graph.yCoordinates[i],
+                         graph.xCoordinates[j], graph.yCoordinates[j]) < sigma)
+            {
+                addEdgeInGraph(graph, i, j);
+            }
+        }
+    }
+    return graph;
+}
+
+void Astar(Graph graph, int source, int destination)
+{
+    int nbVertices = graph.numberVertices;
+    int i;
+    double cost;
+    double heuristic;
+    NodeList *neighbor;
+    Queue *queue;
+    /* Initialize the arrays for visited nodes and distances */
+    int *visited = (int *)malloc(nbVertices * sizeof(int));
+    double *distances = (double *)malloc(nbVertices * sizeof(double));
+    for (i = 0; i < nbVertices; i++)
+    {
+        visited[i] = 0;
+        distances[i] = INFINITY;
+    }
+    /* Set the distance of the source node to 0 */
+    distances[source] = 0;
+
+    /* Initialize the priority queue with the source node */
+    queue = createQueue(nbVertices);
+    enqueue(queue, source);
+
+    /* Start the A* algorithm */
+    while (!isQueueEmpty(*queue))
+    {
+        /* Pop the node with the lowest total cost from the priority queue */
+        int currentNode = dequeue(queue);
+        visited[currentNode] = 1;
+
+        /* If the destination node has been reached, stop the algorithm */
+        if (currentNode == destination)
+        {
+            break;
+        }
+
+        /* Visit all the neighbors of the current node */
+        neighbor = graph.array[currentNode];
+        while (neighbor != NULL)
+        {
+            int neighborIndex = neighbor->dest;
+
+            /* If the neighbor has already been visited */
+            if (visited[neighborIndex] == 1)
+            {
+                neighbor = neighbor->next;
+                continue;
+            }
+
+            /* Compute the distance between the current node and the neighbor */
+            cost = distance(graph.xCoordinates[currentNode], graph.yCoordinates[currentNode], graph.xCoordinates[neighborIndex], graph.yCoordinates[neighborIndex]);
+            cost += distances[currentNode];
+
+            /* Compute the estimated cost to the destination node */
+            heuristic = distance(graph.xCoordinates[neighborIndex], graph.yCoordinates[neighborIndex], graph.xCoordinates[destination], graph.yCoordinates[destination]);
+
+            /* Update the distance of the neighbor if a shorter paths has been found */
+            if (cost + heuristic < distances[neighborIndex])
+            {
+                distances[neighborIndex] = cost + heuristic;
+                graph.parents[neighborIndex] = currentNode;
+                enqueue(queue, neighborIndex);
+            }
+
+            neighbor = neighbor->next;
+        }
+    }
+}
+
+/* How to use */
+/* Graph graph = createGraph(numVertices, sigma);
+int source = 0;
+int destination = numVertices - 1;
+Astar(graph, source, destination); */
 
 /**
  * @brief Compute the gas consumption of a requested acceleration
@@ -20,53 +186,19 @@
  * @param inSand (boolean)
  * @return Number of gas units consumed
  */
-int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand) {
+int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
+{
     int gas = accX * accX + accY * accY;
-    gas += (int) (sqrt(speedX * speedX + speedY * speedY) * 3.0 / 2.0);
-    if (inSand) {
+    gas += (int)(sqrt(speedX * speedX + speedY * speedY) * 3.0 / 2.0);
+    if (inSand)
+    {
         gas += 1;
     }
     return -gas;
 }
 
-/* Algorithm A star */
-Node *createNode(int x, int y, int distance_start, int distance_heuristic, Node *parent) {
-    Node *node = malloc(sizeof(struct node));
-    node->x = x;
-    node->y = y;
-    node->distance_start = distance_start;
-    node->distance_heuristic = distance_heuristic;
-    node->distance_total = distance_start + distance_heuristic;
-    node->parent = parent;
-
-    return node;
-}
-
-void freeNode(Node *node) {
-    free(node);
-}
-
-List *createList(Node *node, List *next) {
-    List *list = malloc(sizeof(struct list));
-    list->node = node;
-    list->next = next;
-
-    return list;
-}
-
-void freeList(List *list) {
-    if (list != NULL) {
-        freeList(list->next);
-        freeNode(list->node);
-        free(list);
-    }
-}
-
-int distanceHeuristic(Node *start, Node *end) {
-    return abs(start->x - end->x) + abs(start->y - end->y);
-}
-
-int main() {
+int main()
+{
     int row;
     int width, height;
     int gasLevel;
@@ -83,13 +215,15 @@ int main() {
     fprintf(stderr, "=== >Map< ===\n");
     fprintf(stderr, "Size %d x %d\n", width, height);
     fprintf(stderr, "Gas at start %d \n\n", gasLevel);
-    for (row = 0; row < height; ++row) { /* Read map data, line per line */
+    for (row = 0; row < height; ++row)
+    { /* Read map data, line per line */
         fgets(line_buffer, MAX_LINE_LENGTH, stdin);
         fputs(line_buffer, stderr);
     }
     fflush(stderr);
     fprintf(stderr, "\n=== Race start ===\n");
-    while (!feof(stdin)) {
+    while (!feof(stdin))
+    {
         int myX, myY, secondX, secondY, thirdX, thirdY;
         round++;
         fprintf(stderr, "=== ROUND %d\n", round);
@@ -110,7 +244,8 @@ int main() {
         fflush(stdout); /* CAUTION : This is necessary  */
         fprintf(stderr, "    Action: %s   Gas remaining: %d\n", action, gasLevel);
         fflush(stderr);
-        if (0 && round > 4) { /* (DISABLED) Force a segfault for testing purpose */
+        if (0 && round > 4)
+        { /* (DISABLED) Force a segfault for testing purpose */
             int *p = NULL;
             fprintf(stderr, "Good Bye!\n");
             fflush(stderr);
