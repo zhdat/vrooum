@@ -207,6 +207,18 @@ Node* a_star(Point start, Point end, char** grid, int width, int height)
 	return NULL;
 }
 
+Point get_acceleration(Node* path)
+{
+	Point acceleration = { 0, 0 };
+
+	if (path != NULL && path->parent != NULL) {
+		acceleration.x = path->parent->point.x - path->point.x;
+		acceleration.y = path->parent->point.y - path->point.y;
+	}
+
+	return acceleration;
+}
+
 int main()
 {
 	int row;
@@ -218,6 +230,13 @@ int main()
 	int speedX = 0, speedY = 0;
 	char action[100];
 	char line_buffer[MAX_LINE_LENGTH];
+	char** grid;
+	Point start;
+	Point end;
+	int x;
+	int y;
+	Node* path;
+	Point acceleration;
 
 	boosts = boosts;							/* Prevent warning "unused variable" */
 	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
@@ -225,9 +244,12 @@ int main()
 	fprintf(stderr, "=== >Map< ===\n");
 	fprintf(stderr, "Size %d x %d\n", width, height);
 	fprintf(stderr, "Gas at start %d \n\n", gasLevel);
+	grid = (char**)malloc(height * sizeof(char*));
 	for (row = 0; row < height; ++row) { /* Read map data, line per line */
 		fgets(line_buffer, MAX_LINE_LENGTH, stdin);
 		fputs(line_buffer, stderr);
+		grid[row] = (char*)malloc((width + 1) * sizeof(char));
+		strcpy(grid[row], line_buffer);
 	}
 	fflush(stderr);
 	fprintf(stderr, "\n=== Race start ===\n");
@@ -244,6 +266,26 @@ int main()
 		gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, 0);
 		speedX += accelerationX;
 		speedY += accelerationY;
+		start.x = myX;
+		start.y = myY;
+		end.x = -1;
+		end.y = -1;
+		for (y = 0; y < height; y++) {
+			for (x = 0; x < width; x++) {
+				if (grid[y][x] == '=') {
+					end.x = x;
+					end.y = y;
+					break;
+				}
+			}
+			if (end.x != -1) {
+				break;
+			}
+		}
+		path = a_star(start, end, grid, width, height);
+		acceleration = get_acceleration(path);
+		accelerationX = acceleration.x;
+		accelerationY = acceleration.y;
 		/* Write the acceleration request to the race manager (stdout). */
 		sprintf(action, "%d %d", accelerationX, accelerationY);
 		fprintf(stdout, "%s", action);
@@ -256,7 +298,13 @@ int main()
 			fflush(stderr);
 			*p = 0;
 		}
+		free_nodes(&path, 0);
 	}
+	/* Free memory */
+	for (row = 0; row < height; ++row) {
+		free(grid[row]);
+	}
+	free(grid);
 
 	return EXIT_SUCCESS;
 }
