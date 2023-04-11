@@ -145,6 +145,8 @@ Node* a_star(int start_x, int start_y, int end_x, int end_y, char** grid, int wi
 	Node* start_node = create_node(start_x, start_y, NULL);
 	add_to_list(&open_list, start_node);
 
+	Node* neighbor;
+
 	while (open_list != NULL) {
 		int i;
 		int y;
@@ -168,7 +170,7 @@ Node* a_star(int start_x, int start_y, int end_x, int end_y, char** grid, int wi
 					continue;
 				}
 
-				Node* neighbor = create_node(new_x, new_y, current_node);
+				neighbor = create_node(new_x, new_y, current_node);
 				int tentative_g_cost = current_node->g_cost + 1;
 
 				if (!is_in_list(open_list, neighbor) || tentative_g_cost < neighbor->g_cost) {
@@ -187,7 +189,7 @@ Node* a_star(int start_x, int start_y, int end_x, int end_y, char** grid, int wi
 
 	free_list(open_list);
 	free_list(closed_list);
-	return NULL;
+	return neighbor;
 }
 
 int main()
