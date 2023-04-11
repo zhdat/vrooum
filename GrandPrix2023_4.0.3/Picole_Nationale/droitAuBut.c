@@ -111,7 +111,7 @@ Node** get_neighbors(Node* node, char** grid, int width, int height)
 		int x = node->point.x + directions[i].x;
 		int y = node->point.y + directions[i].y;
 
-		if (x >= 0 && x < width && y >= 0 && y < height && grid[y][x] != '.') {
+		if (x >= 0 && x < width && y >= 0 && y < height && (grid[y][x] == '#' || grid[y][x] == '~')) {
 			Node* neighbor = (Node*)malloc(sizeof(Node));
 			neighbor->point.x = x;
 			neighbor->point.y = y;
@@ -298,7 +298,7 @@ int main()
 			fflush(stderr);
 			*p = 0;
 		}
-		free_nodes(&path, 0);
+		/* free_nodes(&path, 0); */
 	}
 	/* Free memory */
 	for (row = 0; row < height; ++row) {
