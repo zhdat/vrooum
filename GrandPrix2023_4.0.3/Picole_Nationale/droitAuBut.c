@@ -287,6 +287,26 @@ int main()
 		}
 		if (depart != 0) {
 			path = a_star(start, end, grid, width, height);
+			Node* temp = path;
+			fprintf(stderr, "Path: ");
+			while (temp != NULL) {
+				fprintf(stderr, "(%d, %d) -> ", temp->point.x, temp->point.y);
+				temp = temp->parent;
+			}
+			fprintf(stderr, "NULL\n");
+			int path_length = 0;
+			temp = path;
+			while (temp != NULL) {
+				path_length++;
+				temp = temp->parent;
+			}
+
+			if (path_length >= 3) {
+				acceleration = get_acceleration(path, speedX, speedY);
+			} else {
+				fprintf(stderr, "Path too short, using default acceleration\n");
+				acceleration = (Point){ 0, 0 };
+			}
 			acceleration = get_acceleration(path, speedX, speedY);
 			accelerationX = acceleration.x;
 			accelerationY = acceleration.y;
