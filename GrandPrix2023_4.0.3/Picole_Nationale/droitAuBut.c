@@ -111,7 +111,7 @@ Node** get_neighbors(Node* node, char** grid, int width, int height)
 		int x = node->point.x + directions[i].x;
 		int y = node->point.y + directions[i].y;
 
-		if (x >= 0 && x < width && y >= 0 && y < height && (grid[y][x] == '#' || grid[y][x] == '~' || grid[y][x] == '1' || grid[y][x] == '=')) {
+		if (x >= 0 && x < width && y >= 0 && y < height && !(grid[y][x] == '.')) {
 			Node* neighbor = (Node*)malloc(sizeof(Node));
 			neighbor->point.x = x;
 			neighbor->point.y = y;
@@ -237,6 +237,8 @@ int main()
 	int y;
 	Node* path;
 	Point acceleration;
+	int depart;
+	depart = 0;
 
 	boosts = boosts;							/* Prevent warning "unused variable" */
 	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
@@ -282,10 +284,17 @@ int main()
 				break;
 			}
 		}
-		path = a_star(start, end, grid, width, height);
-		acceleration = get_acceleration(path);
-		accelerationX = acceleration.x;
-		accelerationY = acceleration.y;
+		if (depart != 0){
+			path = a_star(start, end, grid, width, height);
+			acceleration = get_acceleration(path);
+			accelerationX = acceleration.x;
+			accelerationY = acceleration.y;
+		} else{
+			accelerationX = 1;
+			accelerationY = 0;
+			depart++;
+		}
+			
 		/* Write the acceleration request to the race manager (stdout). */
 		sprintf(action, "%d %d", accelerationX, accelerationY);
 		fprintf(stdout, "%s", action);
