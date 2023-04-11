@@ -239,7 +239,7 @@ int main()
 	Node* path;
 	Point acceleration;
 	int depart;
-	depart = 0;
+	depart = 1;
 
 	boosts = boosts;							/* Prevent warning "unused variable" */
 	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
