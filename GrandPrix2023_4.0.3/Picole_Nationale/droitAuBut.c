@@ -111,7 +111,7 @@ Node** get_neighbors(Node* node, char** grid, int width, int height)
 		int x = node->point.x + directions[i].x;
 		int y = node->point.y + directions[i].y;
 
-		if (x >= 0 && x < width && y >= 0 && y < height && !(grid[y][x] == '.')) {
+		if (x >= 0 && x < width && y >= 0 && y < height && (grid[y][x] == '#' || grid[y][x] == '~' || grid[y][x] == '.')) {
 			Node* neighbor = (Node*)malloc(sizeof(Node));
 			neighbor->point.x = x;
 			neighbor->point.y = y;
@@ -183,7 +183,8 @@ Node* a_star(Point start, Point end, char** grid, int width, int height)
 				free(neighbor);
 				continue;
 			}
-			tentative_g_cost = current_node->g_cost + 1;
+
+			tentative_g_cost = current_node->g_cost + ((grid[neighbor->point.y][neighbor->point.x] == '.') ? 10 : 1);
 
 			if (!in_set(open_set, open_set_size, neighbor->point)) {
 				open_set[open_set_size++] = neighbor;
@@ -284,17 +285,17 @@ int main()
 				break;
 			}
 		}
-		if (depart != 0){
+		if (depart != 0) {
 			path = a_star(start, end, grid, width, height);
 			acceleration = get_acceleration(path);
 			accelerationX = acceleration.x;
 			accelerationY = acceleration.y;
-		} else{
+		} else {
 			accelerationX = 1;
 			accelerationY = 0;
 			depart++;
 		}
-			
+
 		/* Write the acceleration request to the race manager (stdout). */
 		sprintf(action, "%d %d", accelerationX, accelerationY);
 		fprintf(stdout, "%s", action);
