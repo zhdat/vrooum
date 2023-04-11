@@ -186,7 +186,7 @@ Node* a_star(int start_x, int start_y, int end_x, int end_y, char** grid, int wi
 			}
 		}
 	}
-	return open_list->node;
+	return closed_list->next->node;
 	free_list(open_list);
 	free_list(closed_list);
 }
