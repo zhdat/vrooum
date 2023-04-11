@@ -164,11 +164,9 @@ Node* a_star(Point start, Point end, char** grid, int width, int height)
 		Node* current_node = lowest_f_cost_node(open_set, open_set_size);
 
 		if (points_are_equal(current_node->point, end)) {
-			Node* result = (Node*)malloc(sizeof(Node));
-			*result = *current_node;
 			free_nodes(open_set, open_set_size);
 			free_nodes(closed_set, closed_set_size);
-			return result;
+			return current_node;
 		}
 
 		remove_node_from_set(open_set, &open_set_size, current_node->point);
@@ -205,16 +203,38 @@ Node* a_star(Point start, Point end, char** grid, int width, int height)
 		free(neighbors);
 	}
 
-	/* Retourne le premier noeud dans le chemin optimal trouvé */
-	Node* result = (Node*)malloc(sizeof(Node));
-	Node* next_node = lowest_f_cost_node(open_set, open_set_size);
-	while (next_node->parent != NULL) {
-		next_node = next_node->parent;
-	}
-	*result = *next_node;
 	free_nodes(open_set, open_set_size);
 	free_nodes(closed_set, closed_set_size);
-	return result;
+
+	return NULL;
+}
+
+Node* next_move(Point start, Point end, char** grid, int width, int height)
+{
+	Node* path = a_star(start, end, grid, width, height);
+	if (path == NULL) {
+		return NULL;
+	}
+
+	Node* current_node = path;
+	while (current_node->parent != NULL && !points_are_equal(current_node->parent->point, start)) {
+		Node* temp = current_node;
+		current_node = current_node->parent;
+		free(temp);
+	}
+
+	/* Crée un nouveau nœud pour éviter les problèmes de mémoire */
+	Node* next_move_node = (Node*)malloc(sizeof(Node));
+	*next_move_node = *current_node;
+
+	/* Libère les nœuds restants */
+	while (current_node != NULL) {
+		Node* temp = current_node;
+		current_node = current_node->parent;
+		free(temp);
+	}
+
+	return next_move_node;
 }
 
 Point get_acceleration(Node* path, int speedX, int speedY)
@@ -297,7 +317,7 @@ int main()
 		if (depart != 0) {
 			fprintf(stderr, "Start: (%d, %d)\n", start.x, start.y);
 			fprintf(stderr, "End: (%d, %d)\n", end.x, end.y);
-			path = a_star(start, end, grid, width, height);
+			path = next_move(start, end, grid, width, height);
 			Node* temp = path;
 			fprintf(stderr, "Path: ");
 			while (temp != NULL) {
