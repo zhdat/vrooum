@@ -40,15 +40,49 @@ int get_cost(char terrain) {
 
 Position dijkstra_next_move(char** map, int width, int height, Position start,
                             Position end) {
-    int visited[height][width];
-    int dist[height][width];
+    int** visited;
+    int** dist;
     int y;
     int x;
     int i;
-    Position prev[height][width];
+    Position** prev;
     Position directions[] = {{0, 1},   {1, 0}, {0, -1}, {-1, 0},
                              {-1, -1}, {1, 1}, {-1, 1}, {1, -1}};
-    int dir_count = sizeof(directions) / sizeof(directions[0]);
+    int dir_count;
+
+    visited = malloc(height * sizeof(int *));
+    if (visited == NULL) {
+        perror("Memory allocation failed");
+    }
+    for (i = 0; i < height; i++) {
+        visited[i] = malloc(width * sizeof(int));
+        if (visited[i] == NULL) {
+            perror("Memory allocation failed");
+        }
+    }
+
+    dist = malloc(height * sizeof(int *));
+    if (dist == NULL) {
+        perror("Memory allocation failed");
+    }
+    for (i = 0; i < height; i++) {
+        dist[i] = malloc(width * sizeof(int));
+        if (dist[i] == NULL) {
+            perror("Memory allocation failed");
+        }
+    }
+    prev = malloc(height * sizeof(Position*));
+    if (prev == NULL) {
+        perror("Memory allocation failed");
+    }
+    for (i = 0; i < height; i++) {
+        prev[i] = malloc(width * sizeof(Position));
+        if (prev[i] == NULL) {
+            perror("Memory allocation failed");
+        }
+    }
+
+    dir_count = sizeof(directions) / sizeof(directions[0]);
 
     for (y = 0; y < height; y++) {
         for (x = 0; x < width; x++) {
@@ -78,8 +112,8 @@ Position dijkstra_next_move(char** map, int width, int height, Position start,
             break;
         }
 
-        int x = min_node.pos.x;
-        int y = min_node.pos.y;
+        x = min_node.pos.x;
+        y = min_node.pos.y;
         visited[y][x] = 1;
 
         for (i = 0; i < dir_count; i++) {
@@ -92,14 +126,18 @@ Position dijkstra_next_move(char** map, int width, int height, Position start,
                 int new_cost = dist[y][x] + get_cost(map[ny][nx]);
                 if (new_cost < dist[ny][nx]) {
                     dist[ny][nx] = new_cost;
-                    prev[ny][nx] = (Position){x, y};
+                    prev[ny][nx].x = x;
+                    prev[ny][nx].y = y;
                 }
             }
         }
     }
 
     if (dist[end.y][end.x] == INF) {
-        return (Position){-1, -1};
+        Position pos;
+        pos.x = -1;
+        pos.y = -1;
+        return pos;
     } else {
         Position current = end;
         while (!(prev[current.y][current.x].x == start.x &&
@@ -148,6 +186,7 @@ int main() {
     int j;
     Position start;
     Position end;
+    Position next;
 
     boosts = boosts; /* Prevent warning "unused variable" */
     fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
@@ -194,7 +233,7 @@ int main() {
                 }
             }
         }
-        Position next = dijkstra_next_move(grid, width, height, start, end);
+        next = dijkstra_next_move(grid, width, height, start, end);
         accelerationX = next.x - myX;
         accelerationY = next.y - myY;
         /* Write the acceleration request to the race manager (stdout). */
