@@ -8,11 +8,11 @@
 #define BOOSTS_AT_START 5
 
 typedef struct Node {
-	int x, y;			 // Position du nœud dans la grille
-	int g_cost;			 // Coût du chemin depuis le nœud de départ jusqu'à ce nœud
-	int h_cost;			 // Coût estimé du chemin de ce nœud jusqu'au nœud d'arrivée (heuristique)
-	int f_cost;			 // Somme des coûts g et h
-	struct Node* parent; // Nœud parent dans le chemin
+	int x, y;			 /* Position du nœud dans la grille */
+	int g_cost;			 /* Coût du chemin depuis le nœud de départ jusqu'à ce nœud */
+	int h_cost;			 /* Coût estimé du chemin de ce nœud jusqu'au nœud d'arrivée (heuristique) */
+	int f_cost;			 /* Somme des coûts g et h */
+	struct Node* parent; /* Nœud parent dans le chemin */
 } Node;
 
 typedef struct NodeList {
@@ -146,6 +146,8 @@ Node* a_star(int start_x, int start_y, int end_x, int end_y, char** grid, int wi
 	add_to_list(&open_list, start_node);
 
 	while (open_list != NULL) {
+		int i;
+		int y;
 		Node* current_node = get_lowest_f_cost_node(open_list);
 		remove_from_list(&open_list, current_node);
 		add_to_list(&closed_list, current_node);
@@ -157,7 +159,7 @@ Node* a_star(int start_x, int start_y, int end_x, int end_y, char** grid, int wi
 			return result;
 		}
 
-		for (int i = 0; i < 8; ++i) {
+		for (i = 0; i < 8; ++i) {
 			int new_x = current_node->x + dx[i];
 			int new_y = current_node->y + dy[i];
 
@@ -172,7 +174,7 @@ Node* a_star(int start_x, int start_y, int end_x, int end_y, char** grid, int wi
 				if (!is_in_list(open_list, neighbor) || tentative_g_cost < neighbor->g_cost) {
 					neighbor->parent = current_node;
 					neighbor->g_cost = tentative_g_cost;
-					neighbor->h_cost = manhattan_distance(new_x, new_y, end_x, end_y);
+					neighbor->h_cost = heuristic_cost(new_x, new_y, end_x, end_y);
 					neighbor->f_cost = neighbor->g_cost + neighbor->h_cost;
 
 					if (!is_in_list(open_list, neighbor)) {
@@ -235,9 +237,9 @@ int main()
 		speedX += accelerationX;
 		speedY += accelerationY;
 		/* Trouver la position d'arrivée */
-		int finish_x, finish_y;
-		for (int y = 0; y < height; ++y) {
-			for (int x = 0; x < width; ++x) {
+		int finish_x, finish_y, x;
+		for (y = 0; y < height; ++y) {
+			for (x = 0; x < width; ++x) {
 				if (grid[y][x] == '=') {
 					finish_x = x;
 					finish_y = y;
