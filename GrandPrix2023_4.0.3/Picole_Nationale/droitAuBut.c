@@ -44,12 +44,15 @@ Position dijkstra_next_move(char** map, int width, int height, Position start, P
 {
 	int visited[height][width];
 	int dist[height][width];
+	int y;
+	int x;
+	int i;
 	Position prev[height][width];
 	Position directions[] = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }, { -1, -1 }, { 1, 1 }, { -1, 1 }, { 1, -1 } };
 	int dir_count = sizeof(directions) / sizeof(directions[0]);
 
-	for (int y = 0; y < height; y++) {
-		for (int x = 0; x < width; x++) {
+	for (y = 0; y < height; y++) {
+		for (x = 0; x < width; x++) {
 			visited[y][x] = 0;
 			dist[y][x] = INF;
 		}
@@ -61,8 +64,8 @@ Position dijkstra_next_move(char** map, int width, int height, Position start, P
 		Node min_node;
 		min_node.cost = INF;
 
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
+		for (y = 0; y < height; y++) {
+			for (x = 0; x < width; x++) {
 				if (!visited[y][x] && dist[y][x] < min_node.cost) {
 					min_node.cost = dist[y][x];
 					min_node.pos.x = x;
@@ -79,7 +82,7 @@ Position dijkstra_next_move(char** map, int width, int height, Position start, P
 		int y = min_node.pos.y;
 		visited[y][x] = 1;
 
-		for (int i = 0; i < dir_count; i++) {
+		for (i = 0; i < dir_count; i++) {
 			int dx = directions[i].x;
 			int dy = directions[i].y;
 			int nx = x + dx;
@@ -143,6 +146,7 @@ int main()
 	char** grid;
 	int x;
 	int y;
+	int j;
 	Position start;
 	Position end;
 
@@ -204,8 +208,8 @@ int main()
 		}
 	}
 
-	for (int row = 0; row < height; ++row) {
-		free(grid[row]);
+	for (j = 0; j < height; ++j) {
+		free(grid[j]);
 	}
 	free(grid);
 
