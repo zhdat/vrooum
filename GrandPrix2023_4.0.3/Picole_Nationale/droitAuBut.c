@@ -7,18 +7,18 @@
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
 
-typedef struct Point {
-	int x;
-	int y;
-} Point;
-
 typedef struct Node {
-	Point point;
-	int g_cost;
-	int h_cost;
-	int f_cost;
-	struct Node* parent;
+	int x, y;			 // Position du nœud dans la grille
+	int g_cost;			 // Coût du chemin depuis le nœud de départ jusqu'à ce nœud
+	int h_cost;			 // Coût estimé du chemin de ce nœud jusqu'au nœud d'arrivée (heuristique)
+	int f_cost;			 // Somme des coûts g et h
+	struct Node* parent; // Nœud parent dans le chemin
 } Node;
+
+typedef struct NodeList {
+	Node* node;
+	struct NodeList* next;
+} NodeList;
 
 /**
  * @brief Compute the gas consumption of a requested acceleration
@@ -43,210 +43,149 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
 	return -gas;
 }
 
-int manhattan_distance(Point a, Point b)
+Node* create_node(int x, int y, Node* parent)
 {
-	return abs(a.x - b.x) + abs(a.y - b.y);
+	Node* new_node = (Node*)malloc(sizeof(Node));
+	new_node->x = x;
+	new_node->y = y;
+	new_node->g_cost = 0;
+	new_node->h_cost = 0;
+	new_node->f_cost = 0;
+	new_node->parent = parent;
+	return new_node;
 }
 
-int points_are_equal(Point a, Point b)
+int heuristic_cost(int x1, int y1, int x2, int y2)
 {
-	return a.x == b.x && a.y == b.y;
+	return abs(x1 - x2) + abs(y1 - y2);
 }
 
-Node* lowest_f_cost_node(Node** open_set, int open_set_size)
+int is_valid_position(int x, int y, int width, int height, char** grid)
 {
-	Node* lowest_f_cost_node;
-	int i;
-	lowest_f_cost_node = open_set[0];
-	for (i = 1; i < open_set_size; i++) {
-		if (open_set[i]->f_cost < lowest_f_cost_node->f_cost) {
-			lowest_f_cost_node = open_set[i];
-		}
-	}
-	return lowest_f_cost_node;
+	return x >= 0 && x < width && y >= 0 && y < height && (grid[y][x] == '#' || grid[y][x] == '~' || grid[y][x] == '=');
 }
 
-int in_set(Node** node_set, int set_size, Point point)
+NodeList* create_node_list(Node* node)
 {
-	int i;
-	for (i = 0; i < set_size; i++) {
-		if (points_are_equal(node_set[i]->point, point)) {
+	NodeList* new_list = (NodeList*)malloc(sizeof(NodeList));
+	new_list->node = node;
+	new_list->next = NULL;
+	return new_list;
+}
+
+void add_to_list(NodeList** list, Node* node)
+{
+	NodeList* new_list = create_node_list(node);
+	new_list->next = *list;
+	*list = new_list;
+}
+
+int is_in_list(NodeList* list, Node* node)
+{
+	NodeList* current = list;
+	while (current != NULL) {
+		if (current->node->x == node->x && current->node->y == node->y) {
 			return 1;
 		}
+		current = current->next;
 	}
 	return 0;
 }
 
-void remove_node_from_set(Node** node_set, int* set_size, Point point)
+void remove_from_list(NodeList** list, Node* node)
 {
-	int i;
-	for (i = 0; i < *set_size; i++) {
-		if (points_are_equal(node_set[i]->point, point)) {
-			node_set[i] = node_set[--(*set_size)];
+	NodeList* current = *list;
+	NodeList* previous = NULL;
+	while (current != NULL) {
+		if (current->node->x == node->x && current->node->y == node->y) {
+			if (previous != NULL) {
+				previous->next = current->next;
+			} else {
+				*list = current->next;
+			}
+			free(current);
 			return;
 		}
+		previous = current;
+		current = current->next;
 	}
 }
 
-Node* find_node(Node** node_set, int set_size, Point point)
+Node* get_lowest_f_cost_node(NodeList* list)
 {
-	int i;
-	for (i = 0; i < set_size; i++) {
-		if (points_are_equal(node_set[i]->point, point)) {
-			return node_set[i];
+	NodeList* current = list;
+	Node* lowest_node = NULL;
+	while (current != NULL) {
+		if (lowest_node == NULL || current->node->f_cost < lowest_node->f_cost) {
+			lowest_node = current->node;
 		}
+		current = current->next;
 	}
-	return NULL;
+	return lowest_node;
 }
 
-Node** get_neighbors(Node* node, char** grid, int width, int height)
+void free_list(NodeList* list)
 {
-	int i;
-	Node** neighbors = (Node**)calloc(5, sizeof(Node*));
-	int idx = 0;
-
-	Point directions[] = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
-
-	for (i = 0; i < 4; i++) {
-		int x = node->point.x + directions[i].x;
-		int y = node->point.y + directions[i].y;
-
-		if (x >= 0 && x < width && y >= 0 && y < height && (grid[y][x] == '#' || grid[y][x] == '~')) {
-			Node* neighbor = (Node*)malloc(sizeof(Node));
-			neighbor->point.x = x;
-			neighbor->point.y = y;
-			neighbor->g_cost = 0;
-			neighbor->h_cost = 0;
-			neighbor->f_cost = 0;
-			neighbor->parent = NULL;
-
-			neighbors[idx++] = neighbor;
-		}
+	NodeList* current = list;
+	while (current != NULL) {
+		NodeList* next = current->next;
+		free(current);
+		current = next;
 	}
-
-	return neighbors;
 }
 
-void free_nodes(Node** nodes, int node_count)
+Node* a_star(int start_x, int start_y, int end_x, int end_y, char** grid, int width, int height)
 {
-	int i;
-	for (i = 0; i < node_count; i++) {
-		free(nodes[i]);
-	}
-	free(nodes);
-}
+	int dx[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
+	int dy[] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 
-Node* a_star(Point start, Point end, char** grid, int width, int height)
-{
-	Node* start_node;
-	Node** open_set;
-	Node** closed_set;
-	int open_set_size;
-	int closed_set_size;
-	start_node = (Node*)malloc(sizeof(Node));
-	start_node->point = start;
-	start_node->g_cost = 0;
-	start_node->h_cost = manhattan_distance(start, end);
-	start_node->f_cost = start_node->h_cost;
-	start_node->parent = NULL;
+	NodeList* open_list = NULL;
+	NodeList* closed_list = NULL;
 
-	open_set = (Node**)malloc(width * height * sizeof(Node*));
-	open_set_size = 0;
-	open_set[open_set_size++] = start_node;
+	Node* start_node = create_node(start_x, start_y, NULL);
+	add_to_list(&open_list, start_node);
 
-	closed_set = (Node**)malloc(width * height * sizeof(Node*));
-	closed_set_size = 0;
+	while (open_list != NULL) {
+		Node* current_node = get_lowest_f_cost_node(open_list);
+		remove_from_list(&open_list, current_node);
+		add_to_list(&closed_list, current_node);
 
-	while (open_set_size > 0) {
-		Node** neighbors;
-		int neighbor_count;
-		int i;
-		Node* current_node = lowest_f_cost_node(open_set, open_set_size);
-
-		if (points_are_equal(current_node->point, end)) {
-			free_nodes(open_set, open_set_size);
-			free_nodes(closed_set, closed_set_size);
-			return current_node;
+		if (current_node->x == end_x && current_node->y == end_y) {
+			Node* result = create_node(current_node->x, current_node->y, current_node->parent);
+			free_list(open_list);
+			free_list(closed_list);
+			return result;
 		}
 
-		remove_node_from_set(open_set, &open_set_size, current_node->point);
-		closed_set[closed_set_size++] = current_node;
+		for (int i = 0; i < 8; ++i) {
+			int new_x = current_node->x + dx[i];
+			int new_y = current_node->y + dy[i];
 
-		neighbors = get_neighbors(current_node, grid, width, height);
-		neighbor_count = 0;
-		while (neighbors[neighbor_count] != NULL) {
-			neighbor_count++;
-		}
-		for (i = 0; i < neighbor_count; i++) {
-			int tentative_g_cost;
-			Node* neighbor = neighbors[i];
+			if (new_x >= 0 && new_x < width && new_y >= 0 && new_y < height) {
+				if (grid[new_y][new_x] == '.' || grid[new_y][new_x] == '=' || is_in_list(closed_list, create_node(new_x, new_y, NULL))) {
+					continue;
+				}
 
-			if (in_set(closed_set, closed_set_size, neighbor->point)) {
-				free(neighbor);
-				continue;
+				Node* neighbor = create_node(new_x, new_y, current_node);
+				int tentative_g_cost = current_node->g_cost + 1;
+
+				if (!is_in_list(open_list, neighbor) || tentative_g_cost < neighbor->g_cost) {
+					neighbor->parent = current_node;
+					neighbor->g_cost = tentative_g_cost;
+					neighbor->h_cost = manhattan_distance(new_x, new_y, end_x, end_y);
+					neighbor->f_cost = neighbor->g_cost + neighbor->h_cost;
+
+					if (!is_in_list(open_list, neighbor)) {
+						add_to_list(&open_list, neighbor);
+					}
+				}
 			}
-			tentative_g_cost = current_node->g_cost + 1;
-
-			if (!in_set(open_set, open_set_size, neighbor->point)) {
-				open_set[open_set_size++] = neighbor;
-			} else if (tentative_g_cost >= neighbor->g_cost) {
-				free(neighbor);
-				continue;
-			}
-
-			neighbor->parent = current_node;
-			neighbor->g_cost = tentative_g_cost;
-			neighbor->h_cost = manhattan_distance(neighbor->point, end);
-			neighbor->f_cost = neighbor->g_cost + neighbor->h_cost;
 		}
-
-		free(neighbors);
 	}
 
-	free_nodes(open_set, open_set_size);
-	free_nodes(closed_set, closed_set_size);
-
+	free_list(open_list);
+	free_list(closed_list);
 	return NULL;
-}
-
-Node* next_move(Point start, Point end, char** grid, int width, int height)
-{
-	Node* path = a_star(start, end, grid, width, height);
-	if (path == NULL) {
-		return NULL;
-	}
-
-	Node* current_node = path;
-	while (current_node->parent != NULL && !points_are_equal(current_node->parent->point, start)) {
-		Node* temp = current_node;
-		current_node = current_node->parent;
-		free(temp);
-	}
-
-	/* Crée un nouveau nœud pour éviter les problèmes de mémoire */
-	Node* next_move_node = (Node*)malloc(sizeof(Node));
-	*next_move_node = *current_node;
-
-	/* Libère les nœuds restants */
-	while (current_node != NULL) {
-		Node* temp = current_node;
-		current_node = current_node->parent;
-		free(temp);
-	}
-
-	return next_move_node;
-}
-
-Point get_acceleration(Node* path, int speedX, int speedY)
-{
-	Point acceleration = { 0, 0 };
-
-	if (path != NULL && path->parent != NULL) {
-		acceleration.x = path->parent->point.x - path->point.x - speedX;
-		acceleration.y = path->parent->point.y - path->point.y - speedY;
-	}
-
-	return acceleration;
 }
 
 int main()
@@ -261,12 +200,9 @@ int main()
 	char action[100];
 	char line_buffer[MAX_LINE_LENGTH];
 	char** grid;
-	Point start;
-	Point end;
 	int x;
 	int y;
 	Node* path;
-	Point acceleration;
 	int depart;
 	depart = 1;
 
@@ -298,53 +234,44 @@ int main()
 		gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, 0);
 		speedX += accelerationX;
 		speedY += accelerationY;
-		start.x = myX;
-		start.y = myY;
-		end.x = -1;
-		end.y = -1;
-		for (y = 0; y < height; y++) {
-			for (x = 0; x < width; x++) {
+		/* Trouver la position d'arrivée */
+		int finish_x, finish_y;
+		for (int y = 0; y < height; ++y) {
+			for (int x = 0; x < width; ++x) {
 				if (grid[y][x] == '=') {
-					end.x = x;
-					end.y = y;
+					finish_x = x;
+					finish_y = y;
 					break;
 				}
 			}
-			if (end.x != -1) {
-				break;
-			}
 		}
-		if (depart != 0) {
-			fprintf(stderr, "Start: (%d, %d)\n", start.x, start.y);
-			fprintf(stderr, "End: (%d, %d)\n", end.x, end.y);
-			path = next_move(start, end, grid, width, height);
-			Node* temp = path;
-			fprintf(stderr, "Path: ");
-			while (temp != NULL) {
-				fprintf(stderr, "(%d, %d) -> ", temp->point.x, temp->point.y);
-				temp = temp->parent;
-			}
-			fprintf(stderr, "NULL\n");
-			int path_length = 0;
-			temp = path;
-			while (temp != NULL) {
-				path_length++;
-				temp = temp->parent;
-			}
 
-			if (path_length >= 3) {
-				acceleration = get_acceleration(path, speedX, speedY);
-			} else {
-				fprintf(stderr, "Path too short, using default acceleration\n");
-				acceleration = (Point){ 0, 0 };
+		/* Utiliser l'algorithme A* pour trouver le chemin le plus court */
+		Node* last_node = a_star(myX, myY, finish_x, finish_y, grid, width, height);
+		Node* first_move = NULL;
+		if (last_node != NULL) {
+			Node* current_node = last_node;
+			while (current_node->parent != NULL && current_node->parent->parent != NULL) {
+				current_node = current_node->parent;
 			}
-			acceleration = get_acceleration(path, speedX, speedY);
-			accelerationX = acceleration.x;
-			accelerationY = acceleration.y;
+			first_move = current_node;
+		}
+
+		/* Utiliser les coordonnées de first_move pour déterminer le mouvement */
+		if (first_move != NULL) {
+			accelerationX = first_move->x - myX;
+			accelerationY = first_move->y - myY;
 		} else {
-			accelerationX = 1;
+			accelerationX = 0;
 			accelerationY = 0;
-			depart++;
+		}
+
+		/* Libérer les nœuds du chemin */
+		Node* current_node = last_node;
+		while (current_node != NULL) {
+			Node* tmp_node = current_node;
+			current_node = current_node->parent;
+			free(tmp_node);
 		}
 
 		/* Write the acceleration request to the race manager (stdout). */
@@ -359,13 +286,7 @@ int main()
 			fflush(stderr);
 			*p = 0;
 		}
-		/* free_nodes(&path, 0); */
 	}
-	/* Free memory */
-	for (row = 0; row < height; ++row) {
-		free(grid[row]);
-	}
-	free(grid);
 
 	return EXIT_SUCCESS;
 }
