@@ -184,7 +184,7 @@ Node* a_star(Point start, Point end, char** grid, int width, int height)
 				continue;
 			}
 
-			tentative_g_cost = current_node->g_cost + ((grid[neighbor->point.y][neighbor->point.x] == '.') ? 10 : 1);
+			tentative_g_cost = current_node->g_cost + ((grid[neighbor->point.y][neighbor->point.x] == '.') ? 1000 : 1);
 
 			if (!in_set(open_set, open_set_size, neighbor->point)) {
 				open_set[open_set_size++] = neighbor;
@@ -208,13 +208,13 @@ Node* a_star(Point start, Point end, char** grid, int width, int height)
 	return NULL;
 }
 
-Point get_acceleration(Node* path)
+Point get_acceleration(Node* path, int speedX, int speedY)
 {
 	Point acceleration = { 0, 0 };
 
 	if (path != NULL && path->parent != NULL) {
-		acceleration.x = path->parent->point.x - path->point.x;
-		acceleration.y = path->parent->point.y - path->point.y;
+		acceleration.x = path->parent->point.x - path->point.x - speedX;
+		acceleration.y = path->parent->point.y - path->point.y - speedY;
 	}
 
 	return acceleration;
@@ -287,7 +287,7 @@ int main()
 		}
 		if (depart != 0) {
 			path = a_star(start, end, grid, width, height);
-			acceleration = get_acceleration(path);
+			acceleration = get_acceleration(path, speedX, speedY);
 			accelerationX = acceleration.x;
 			accelerationY = acceleration.y;
 		} else {
