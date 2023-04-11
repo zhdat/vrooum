@@ -286,6 +286,8 @@ int main()
 			}
 		}
 		if (depart != 0) {
+			fprintf(stderr, "Start: (%d, %d)\n", start.x, start.y);
+			fprintf(stderr, "End: (%d, %d)\n", end.x, end.y);
 			path = a_star(start, end, grid, width, height);
 			Node* temp = path;
 			fprintf(stderr, "Path: ");
