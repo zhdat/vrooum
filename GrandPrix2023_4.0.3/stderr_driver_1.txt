@@ -1,0 +1,470 @@
+=== >Map< ===
+Size 80 x 40
+Gas at start 300 
+
+................................................................................
+....................#######=...............############.........................
+...............############=...............#################....................
+.............##############=...............###################..................
+............###############=...............####################.................
+...........################=...............######################...............
+..........########~~~~~...........................################..............
+........########~~~.....................................###########.............
+.......#######~~~..........................................#########............
+.......######~~.............................................########............
+......######~~...............................................########...........
+.....######~~.................................................########..........
+.....#####~~...................................................########.........
+....######~.....................................................#######.........
+....#####~~......................................................#######........
+...#####~~........................................................#######.......
+...####~~.........................................................########......
+..####~~~..........................................................#######......
+..###~~~............................................................#######.....
+..##~~~~............................................................########....
+..#~~~~..........................#######.............................#######....
+..#~~~~......................###############..........................#######...
+.##~~~~...................###################.........................#######...
+.##~~~~..................######################........................######...
+.##~~~.................#########################........................~#####..
+.##~~~................##########~~~~~~~~~########.......................~#####..
+.##~~~..............#########~~~~.......~~~#######......................~#####..
+.##~~~.............########~~~............~~~######.....................~#####..
+.###~~............#########~................~#######....................~#####..
+.####~..........##########...................~######....................~#####..
+.####~~........##########.....................######~~.................~~#####..
+.#####~.......#########.......................########~...............~~#####...
+.#####~.....~~########.........................########~~..........~~~~######...
+..####~~...~~########...........................########~~~~~~~~~~~~########....
+..#####~~~~~########.............................###########################....
+..################................................#########################.....
+...##############...................................#####################.......
+....###########.......................................#################.........
+......#######...............................................###.................
+................................................................................
+
+=== Race start ===
+=== ROUND 1
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 299
+=== ROUND 2
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 298
+=== ROUND 3
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 297
+=== ROUND 4
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 296
+=== ROUND 5
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 295
+=== ROUND 6
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 294
+=== ROUND 7
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 293
+=== ROUND 8
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 292
+=== ROUND 9
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 291
+=== ROUND 10
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 290
+=== ROUND 11
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 289
+=== ROUND 12
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 288
+=== ROUND 13
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 287
+=== ROUND 14
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 286
+=== ROUND 15
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 285
+=== ROUND 16
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 284
+=== ROUND 17
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 283
+=== ROUND 18
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 282
+=== ROUND 19
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 281
+=== ROUND 20
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 280
+=== ROUND 21
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 279
+=== ROUND 22
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 278
+=== ROUND 23
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 277
+=== ROUND 24
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 276
+=== ROUND 25
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 275
+=== ROUND 26
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 274
+=== ROUND 27
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 273
+=== ROUND 28
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 272
+=== ROUND 29
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 271
+=== ROUND 30
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 270
+=== ROUND 31
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 269
+=== ROUND 32
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 268
+=== ROUND 33
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 267
+=== ROUND 34
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 266
+=== ROUND 35
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 265
+=== ROUND 36
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 264
+=== ROUND 37
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 263
+=== ROUND 38
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 262
+=== ROUND 39
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 261
+=== ROUND 40
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 260
+=== ROUND 41
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 259
+=== ROUND 42
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 258
+=== ROUND 43
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 257
+=== ROUND 44
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 256
+=== ROUND 45
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 255
+=== ROUND 46
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 254
+=== ROUND 47
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 253
+=== ROUND 48
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 252
+=== ROUND 49
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 251
+=== ROUND 50
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 250
+=== ROUND 51
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 249
+=== ROUND 52
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 248
+=== ROUND 53
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 247
+=== ROUND 54
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 246
+=== ROUND 55
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 245
+=== ROUND 56
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 244
+=== ROUND 57
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 243
+=== ROUND 58
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 242
+=== ROUND 59
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 241
+=== ROUND 60
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 240
+=== ROUND 61
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 239
+=== ROUND 62
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 238
+=== ROUND 63
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 237
+=== ROUND 64
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 236
+=== ROUND 65
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 235
+=== ROUND 66
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 234
+=== ROUND 67
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 233
+=== ROUND 68
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 232
+=== ROUND 69
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 231
+=== ROUND 70
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 230
+=== ROUND 71
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 229
+=== ROUND 72
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 228
+=== ROUND 73
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 227
+=== ROUND 74
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 226
+=== ROUND 75
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 225
+=== ROUND 76
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 224
+=== ROUND 77
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 223
+=== ROUND 78
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 222
+=== ROUND 79
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 221
+=== ROUND 80
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 220
+=== ROUND 81
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 219
+=== ROUND 82
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 218
+=== ROUND 83
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 217
+=== ROUND 84
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 216
+=== ROUND 85
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 215
+=== ROUND 86
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 214
+=== ROUND 87
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 213
+=== ROUND 88
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 212
+=== ROUND 89
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 211
+=== ROUND 90
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 210
+=== ROUND 91
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 209
+=== ROUND 92
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 208
+=== ROUND 93
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 207
+=== ROUND 94
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 206
+=== ROUND 95
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 205
+=== ROUND 96
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 204
+=== ROUND 97
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 203
+=== ROUND 98
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 202
+=== ROUND 99
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 201
+=== ROUND 100
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 200
+=== ROUND 101
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 199
+=== ROUND 102
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 198
+=== ROUND 103
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 197
+=== ROUND 104
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 196
+=== ROUND 105
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 195
+=== ROUND 106
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 194
+=== ROUND 107
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 193
+=== ROUND 108
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 192
+=== ROUND 109
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 191
+=== ROUND 110
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 190
+=== ROUND 111
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 189
+=== ROUND 112
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 188
+=== ROUND 113
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 187
+=== ROUND 114
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 186
+=== ROUND 115
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 185
+=== ROUND 116
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 184
+=== ROUND 117
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 183
+=== ROUND 118
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 182
+=== ROUND 119
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 181
+=== ROUND 120
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 180
+=== ROUND 121
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 179
+=== ROUND 122
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 178
+=== ROUND 123
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 177
+=== ROUND 124
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 176
+=== ROUND 125
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 175
+=== ROUND 126
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 174
+=== ROUND 127
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 173
+=== ROUND 128
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 172
+=== ROUND 129
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 171
+=== ROUND 130
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 170
+=== ROUND 131
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 169
+=== ROUND 132
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 168
+=== ROUND 133
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 167
+=== ROUND 134
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 166
+=== ROUND 135
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 165
+=== ROUND 136
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 164
+=== ROUND 137
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 163
+=== ROUND 138
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 162
+=== ROUND 139
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 161
+=== ROUND 140
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 160
+=== ROUND 141
+    Positions: Me(43,1)  A(43,3), B(43,5)
+    Action: 0 0   Gas remaining: 159
+=== ROUND 142
