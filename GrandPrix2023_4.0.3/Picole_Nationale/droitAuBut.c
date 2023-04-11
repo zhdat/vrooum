@@ -205,7 +205,7 @@ Node* a_star(Point start, Point end, char** grid, int width, int height)
 		free(neighbors);
 	}
 
-	// Retourne le noeud avec le f_cost le plus faible dans l'open_set
+	/* Retourne le noeud avec le f_cost le plus faible dans l'open_set */
 	Node* result = (Node*)malloc(sizeof(Node));
 	*result = *lowest_f_cost_node(open_set, open_set_size);
 	free_nodes(open_set, open_set_size);
