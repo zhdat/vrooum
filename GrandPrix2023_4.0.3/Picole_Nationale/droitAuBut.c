@@ -164,7 +164,11 @@ Node* a_star(Point start, Point end, char** grid, int width, int height)
 		Node* current_node = lowest_f_cost_node(open_set, open_set_size);
 
 		if (points_are_equal(current_node->point, end)) {
-			return current_node;
+			Node* result = (Node*)malloc(sizeof(Node));
+			*result = *current_node;
+			free_nodes(open_set, open_set_size);
+			free_nodes(closed_set, closed_set_size);
+			return result;
 		}
 
 		remove_node_from_set(open_set, &open_set_size, current_node->point);
@@ -183,8 +187,7 @@ Node* a_star(Point start, Point end, char** grid, int width, int height)
 				free(neighbor);
 				continue;
 			}
-
-			tentative_g_cost = current_node->g_cost + ((grid[neighbor->point.y][neighbor->point.x] == '.') ? 1000 : 1);
+			tentative_g_cost = current_node->g_cost + 1;
 
 			if (!in_set(open_set, open_set_size, neighbor->point)) {
 				open_set[open_set_size++] = neighbor;
@@ -202,10 +205,12 @@ Node* a_star(Point start, Point end, char** grid, int width, int height)
 		free(neighbors);
 	}
 
+	// Retourne le noeud avec le f_cost le plus faible dans l'open_set
+	Node* result = (Node*)malloc(sizeof(Node));
+	*result = *lowest_f_cost_node(open_set, open_set_size);
 	free_nodes(open_set, open_set_size);
 	free_nodes(closed_set, closed_set_size);
-
-	return NULL;
+	return result;
 }
 
 Point get_acceleration(Node* path, int speedX, int speedY)
