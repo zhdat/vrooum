@@ -361,9 +361,9 @@ int main()
 		fflush(stderr); */
 
 		/* Avoid obstacles */
-		avoid_obstacles(&accelerationX, &accelerationY, speedX, speedY, myX, myY, width, height, grid);
+		/* avoid_obstacles(&accelerationX, &accelerationY, speedX, speedY, myX, myY, width, height, grid);
 		fprintf(stderr, "    Acceleration after obstacle avoidance: (%d,%d)\n", accelerationX, accelerationY);
-		fflush(stderr);
+		fflush(stderr); */
 
 		/* Find shortest path */
 		pathDistance = find_shortest_path(myX, myY, secondX, secondY, width, height, grid);
