@@ -201,7 +201,7 @@ int find_shortest_path(int startX, int startY, int endX, int endY, int width, in
 
 	for (i = 0; i < height; i++) {
 		for (j = 0; j < width; j++) {
-			distance[i][j] = INFINITY;
+			distance[i][j] = INT_MAX;
 			visited[i][j] = 0;
 		}
 	}
