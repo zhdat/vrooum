@@ -209,7 +209,7 @@ int find_shortest_path(int startX, int startY, int endX, int endY, int width, in
 	distance[startY][startX] = 0;
 
 	while (1) {
-		int min_distance = INFINITY;
+		int min_distance = INT_MAX;
 		int min_x = -1;
 		int min_y = -1;
 
