@@ -238,7 +238,7 @@ int find_shortest_path(int startX, int startY, int endX, int endY, int width, in
 				int new_x = min_x + j;
 				int new_y = min_y + i;
 
-				if (new_x >= 0 && new_y >= 0 && new_x < width && new_y < height && map[new_y][new_x] != '#' && !visited[new_y][new_x]) {
+				if (new_x >= 0 && new_y >= 0 && new_x < width && new_y < height && map[new_y][new_x] != '.' && !visited[new_y][new_x]) {
 					int new_distance = distance[min_y][min_x] + 1;
 					if (new_distance < distance[new_y][new_x]) {
 						distance[new_y][new_x] = new_distance;
