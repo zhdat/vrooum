@@ -352,11 +352,11 @@ int main()
 		accelerationY = accel.y;
 
 		/* Detection collisions */
-		collision = detect_collisions(myX, myY, speedX, speedY, width, height, grid);
+		/* collision = detect_collisions(myX, myY, speedX, speedY, width, height, grid);
 		if (collision == 0) {
 			fprintf(stderr, " Collision !!!\n");
 		}
-		fflush(stderr);
+		fflush(stderr); */
 
 		/* Avoid obstacles */
 		avoid_obstacles(&accelerationX, &accelerationY, speedX, speedY, myX, myY, width, height, grid);
