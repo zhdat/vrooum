@@ -8,7 +8,7 @@
 #define BOOSTS_AT_START 5
 
 #include <limits.h>
-
+#include "follow_line.h"
 #define INF INT_MAX
 
 typedef struct {
@@ -188,6 +188,8 @@ int main()
 	Position start;
 	Position end;
 	Position next;
+	InfoLine lineInfo;
+	Pos2Dint currentPoint;
 
 	boosts = boosts;							/* Prevent warning "unused variable" */
 	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
@@ -230,9 +232,14 @@ int main()
 				}
 			}
 		}
+
 		next = dijkstra_next_move(grid, width, height, start, end);
-		accelerationX = next.x - myX;
-		accelerationY = next.y - myY;
+		/* accelerationX = next.x - myX;
+		accelerationY = next.y - myY; */
+		initLine(myX, myY, next.x, next.y, &lineInfo);
+		nextPoint(&lineInfo, &currentPoint, 1);
+		accelerationX = currentPoint.x - myX;
+		accelerationY = currentPoint.y - myY;
 		/* Write the acceleration request to the race manager (stdout). */
 		sprintf(action, "%d %d", accelerationX, accelerationY);
 		fprintf(stdout, "%s", action);
