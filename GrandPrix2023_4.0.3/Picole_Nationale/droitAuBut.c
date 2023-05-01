@@ -117,7 +117,7 @@ Pos2Dint calculate_optimal_acceleration(int myX, int myY, int speedX, int speedY
 		for (accY = -1; accY <= 1; accY++) {
 			int newX = myX + speedX + accX;
 			int newY = myY + speedY + accY;
-			if (newX >= 0 && newX < width && newY >= 0 && newY < height && map[newY][newX] != '#') {
+			if (newX >= 0 && newX < width && newY >= 0 && newY < height && map[newY][newX] != '.') {
 				int gasCost = gasConsumption(accX, accY, speedX, speedY, map[newY][newX] == '~');
 				if (gasCost < minGasCost && gasLevel + gasCost > 0) {
 					minGasCost = gasCost;
