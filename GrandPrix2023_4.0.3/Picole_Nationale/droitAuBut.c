@@ -193,88 +193,62 @@ void avoid_obstacles(int* accelerationX, int* accelerationY, int speedX, int spe
 	*accelerationY = bestAccY;
 }
 
-typedef struct {
-	int x, y;
-} Node;
-
-int node_to_index(int x, int y, int width)
-{
-	return y * width + x;
-}
-
-void index_to_node(int index, int width, int* x, int* y)
-{
-	*y = index / width;
-	*x = index % width;
-}
-
 int find_shortest_path(int startX, int startY, int endX, int endY, int width, int height, char** map)
 {
-	int i;
-	int j;
-	int dx;
-	int dy;
-	int mapSize = width * height;
-	int* dist = (int*)malloc(mapSize * sizeof(int));
-	int* visited = (int*)calloc(mapSize, sizeof(int));
-	Node* prev = (Node*)malloc(mapSize * sizeof(Node));
+	int distance[height][width];
+	int visited[height][width];
+	int i, j;
 
-	for (i = 0; i < mapSize; ++i) {
-		dist[i] = INT_MAX;
-		prev[i].x = -1;
-		prev[i].y = -1;
+	for (i = 0; i < height; i++) {
+		for (j = 0; j < width; j++) {
+			distance[i][j] = INFINITY;
+			visited[i][j] = 0;
+		}
 	}
 
-	int startIndex = node_to_index(startX, startY, width);
-	dist[startIndex] = 0;
+	distance[startY][startX] = 0;
 
-	for (i = 0; i < mapSize; ++i) {
-		int minDist = INT_MAX;
-		int minIndex = -1;
+	while (1) {
+		int min_distance = INFINITY;
+		int min_x = -1;
+		int min_y = -1;
 
-		for (j = 0; j < mapSize; ++j) {
-			if (!visited[j] && dist[j] < minDist) {
-				minDist = dist[j];
-				minIndex = j;
+		for (i = 0; i < height; i++) {
+			for (j = 0; j < width; j++) {
+				if (!visited[i][j] && distance[i][j] < min_distance) {
+					min_distance = distance[i][j];
+					min_x = j;
+					min_y = i;
+				}
 			}
 		}
 
-		if (minIndex == -1) {
+		if (min_x == -1 && min_y == -1) {
 			break;
 		}
 
-		int x, y;
-		index_to_node(minIndex, width, &x, &y);
-		visited[minIndex] = 1;
+		if (min_x == endX && min_y == endY) {
+			break;
+		}
 
-		for (dx = -1; dx <= 1; ++dx) {
-			for (dy = -1; dy <= 1; ++dy) {
-				if (dx * dy != 0) {
-					continue;
-				}
+		visited[min_y][min_x] = 1;
 
-				int newX = x + dx;
-				int newY = y + dy;
-				if (newX >= 0 && newX < width && newY >= 0 && newY < height && map[newY][newX] != '#') {
-					int neighborIndex = node_to_index(newX, newY, width);
-					int altDist = dist[minIndex] + 1;
+		for (i = -1; i <= 1; i++) {
+			for (j = -1; j <= 1; j++) {
+				int new_x = min_x + j;
+				int new_y = min_y + i;
 
-					if (altDist < dist[neighborIndex]) {
-						dist[neighborIndex] = altDist;
-						prev[neighborIndex].x = x;
-						prev[neighborIndex].y = y;
+				if (new_x >= 0 && new_y >= 0 && new_x < width && new_y < height && map[new_y][new_x] != '#' && !visited[new_y][new_x]) {
+					int new_distance = distance[min_y][min_x] + 1;
+					if (new_distance < distance[new_y][new_x]) {
+						distance[new_y][new_x] = new_distance;
 					}
 				}
 			}
 		}
 	}
 
-	int pathDistance = dist[node_to_index(endX, endY, width)];
-	free(dist);
-	free(visited);
-	free(prev);
-
-	return pathDistance;
+	return distance[endY][endX];
 }
 
 int apply_boost(int* boosts, int* accelerationX, int* accelerationY, int speedX, int speedY, int myX, int myY, int width, int height, char** map)
