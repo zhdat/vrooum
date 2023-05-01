@@ -175,6 +175,7 @@ void avoid_obstacles(int* accelerationX, int* accelerationY, int speedX, int spe
 
 typedef struct {
 	int x, y;
+	int dif;
 } Node;
 
 int node_to_index(int x, int y, int width)
