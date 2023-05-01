@@ -278,6 +278,7 @@ int main()
 	int boosts = BOOSTS_AT_START;
 	int round = 0;
 	int accelerationX = 1, accelerationY = 0;
+	int accelerationX_old = 0, accelerationY_old = 0;
 	int speedX = 0, speedY = 0;
 	char action[100];
 	char line_buffer[MAX_LINE_LENGTH];
@@ -340,6 +341,13 @@ int main()
 		nextPoint(&lineInfo, &currentPoint, 1);
 		accelerationX = currentPoint.x - myX;
 		accelerationY = currentPoint.y - myY;
+		if (accelerationX != accelerationX_old && accelerationY != accelerationY_old) {
+			accelerationX = 0;
+			accelerationY = 0;
+		}
+		accelerationX_old = accelerationX;
+		accelerationY_old = accelerationY;
+
 		/* Write the acceleration request to the race manager (stdout). */
 		sprintf(action, "%d %d", accelerationX, accelerationY);
 		fprintf(stdout, "%s", action);
