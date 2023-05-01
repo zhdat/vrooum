@@ -350,6 +350,8 @@ int main()
 		accel = calculate_optimal_acceleration(myX, myY, speedX, speedY, gasLevel, width, height, grid);
 		accelerationX = accel.x;
 		accelerationY = accel.y;
+		fprintf(stderr, "    Acceleration: (%d,%d)\n", accelerationX, accelerationY);
+		fflush(stderr);
 
 		/* Detection collisions */
 		/* collision = detect_collisions(myX, myY, speedX, speedY, width, height, grid);
