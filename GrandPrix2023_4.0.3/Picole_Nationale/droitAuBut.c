@@ -341,7 +341,7 @@ int main()
 		nextPoint(&lineInfo, &currentPoint, 1);
 		accelerationX = currentPoint.x - myX;
 		accelerationY = currentPoint.y - myY;
-		if (accelerationX != accelerationX_old && accelerationY != accelerationY_old) {
+		if (accelerationX == accelerationX_old && accelerationY == accelerationY_old) {
 			accelerationX = 0;
 			accelerationY = 0;
 		}
