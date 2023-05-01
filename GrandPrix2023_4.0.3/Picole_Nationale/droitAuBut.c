@@ -11,7 +11,19 @@ typedef struct {
 	int y;
 } Pos2Dint;
 
-#include "follow_line.h"
+typedef struct {
+	float x;
+	float y;
+} Pos2Dfloat;
+
+typedef struct {
+	Pos2Dint start;
+	Pos2Dint end;
+	Pos2Dfloat currentPosition;
+	Pos2Dfloat delta; /*< Shift vector */
+	int len;		  /*< Length along the main axis */
+	int pos;		  /*< Reference position on the line */
+} InfoLine;
 
 void initLine(int x1, int y1, int x2, int y2, InfoLine* infoLine)
 {
@@ -97,10 +109,12 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
 
 Pos2Dint calculate_optimal_acceleration(int myX, int myY, int speedX, int speedY, int gasLevel, int width, int height, char** map)
 {
+	int accX;
+	int accY;
 	Pos2Dint optimalAcceleration = { 0, 0 };
 	int minGasCost = 1000000;
-	for (int accX = -1; accX <= 1; accX++) {
-		for (int accY = -1; accY <= 1; accY++) {
+	for (accX = -1; accX <= 1; accX++) {
+		for (accY = -1; accY <= 1; accY++) {
 			int newX = myX + speedX + accX;
 			int newY = myY + speedY + accY;
 			if (newX >= 0 && newX < width && newY >= 0 && newY < height && map[newY][newX] != '#') {
@@ -119,14 +133,18 @@ Pos2Dint calculate_optimal_acceleration(int myX, int myY, int speedX, int speedY
 
 int detect_collisions(int myX, int myY, int speedX, int speedY, int width, int height, char** map)
 {
-	Pos2Dint start = { myX, myY };
-	Pos2Dint end = { myX + speedX, myY + speedY };
+	Pos2Dint start;
+	Pos2Dint end;
+	InfoLine lineInfo;
+	start.x = myX;
+	start.y = myY;
+	end.x = myX + speedX;
+	end.y = myY + speedY;
 
 	if (end.x < 0 || end.x >= width || end.y < 0 || end.y >= height) {
 		return 1;
 	}
 
-	InfoLine lineInfo;
 	initLine(start.x, start.y, end.x, end.y, &lineInfo);
 
 	Pos2Dint currentPosition;
@@ -143,11 +161,13 @@ int detect_collisions(int myX, int myY, int speedX, int speedY, int width, int h
 
 void avoid_obstacles(int* accelerationX, int* accelerationY, int speedX, int speedY, int myX, int myY, int width, int height, char** map)
 {
+	int accX;
+	int accY;
 	int bestAccX = 0, bestAccY = 0;
 	int minCollisionDistance = -1;
 
-	for (int accX = -1; accX <= 1; ++accX) {
-		for (int accY = -1; accY <= 1; ++accY) {
+	for (accX = -1; accX <= 1; ++accX) {
+		for (accY = -1; accY <= 1; ++accY) {
 			int newX = myX + speedX + accX;
 			int newY = myY + speedY + accY;
 
@@ -175,7 +195,6 @@ void avoid_obstacles(int* accelerationX, int* accelerationY, int speedX, int spe
 
 typedef struct {
 	int x, y;
-	int dif;
 } Node;
 
 int node_to_index(int x, int y, int width)
@@ -191,12 +210,16 @@ void index_to_node(int index, int width, int* x, int* y)
 
 int find_shortest_path(int startX, int startY, int endX, int endY, int width, int height, char** map)
 {
+	int i;
+	int j;
+	int dx;
+	int dy;
 	int mapSize = width * height;
 	int* dist = (int*)malloc(mapSize * sizeof(int));
 	int* visited = (int*)calloc(mapSize, sizeof(int));
 	Node* prev = (Node*)malloc(mapSize * sizeof(Node));
 
-	for (int i = 0; i < mapSize; ++i) {
+	for (i = 0; i < mapSize; ++i) {
 		dist[i] = INT_MAX;
 		prev[i].x = -1;
 		prev[i].y = -1;
@@ -205,11 +228,11 @@ int find_shortest_path(int startX, int startY, int endX, int endY, int width, in
 	int startIndex = node_to_index(startX, startY, width);
 	dist[startIndex] = 0;
 
-	for (int i = 0; i < mapSize; ++i) {
+	for (i = 0; i < mapSize; ++i) {
 		int minDist = INT_MAX;
 		int minIndex = -1;
 
-		for (int j = 0; j < mapSize; ++j) {
+		for (j = 0; j < mapSize; ++j) {
 			if (!visited[j] && dist[j] < minDist) {
 				minDist = dist[j];
 				minIndex = j;
@@ -224,8 +247,8 @@ int find_shortest_path(int startX, int startY, int endX, int endY, int width, in
 		index_to_node(minIndex, width, &x, &y);
 		visited[minIndex] = 1;
 
-		for (int dx = -1; dx <= 1; ++dx) {
-			for (int dy = -1; dy <= 1; ++dy) {
+		for (dx = -1; dx <= 1; ++dx) {
+			for (dy = -1; dy <= 1; ++dy) {
 				if (dx * dy != 0) {
 					continue;
 				}
