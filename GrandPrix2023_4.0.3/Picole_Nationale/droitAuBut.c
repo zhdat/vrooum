@@ -279,14 +279,13 @@ int find_shortest_path(int startX, int startY, int endX, int endY, int width, in
 
 int apply_boost(int* boosts, int* accelerationX, int* accelerationY, int speedX, int speedY, int myX, int myY, int width, int height, char** map)
 {
+	int i;
 	if (*boosts <= 0) {
-		return 0; // No boosts remaining
+		return 0;
 	}
 
-	// You can define a condition based on the current position, speed, or other factors.
-	// For example, we can decide to use a boost when the racer is on a straight line without any obstacles ahead.
 	int straight_line_length = 0;
-	for (int i = 1; i <= 5; ++i) {
+	for (i = 1; i <= 5; ++i) {
 		int newX = myX + i * (*accelerationX);
 		int newY = myY + i * (*accelerationY);
 		if (newX >= 0 && newX < width && newY >= 0 && newY < height && map[newY][newX] != '#') {
@@ -296,14 +295,14 @@ int apply_boost(int* boosts, int* accelerationX, int* accelerationY, int speedX,
 		}
 	}
 
-	if (straight_line_length >= 4) { // Apply boost if there's a straight line of at least 4 cells
+	if (straight_line_length >= 4) {
 		*boosts -= 1;
 		*accelerationX *= 2;
 		*accelerationY *= 2;
-		return 1; // Boost applied
+		return 1;
 	}
 
-	return 0; // Boost not applied
+	return 0;
 }
 
 int main()
