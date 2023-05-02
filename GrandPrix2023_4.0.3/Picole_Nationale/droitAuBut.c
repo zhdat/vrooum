@@ -222,7 +222,7 @@ Position dijkstra_next_move(char** map, int width, int height, Position start, P
 			int nx = x + dx;
 			int ny = y + dy;
 
-			if (is_valid_move(map, nx, ny, width, height) && !visited[ny][nx] && is_valid_move(map, nx + 1, ny + 1, width, height)) {
+			if (is_valid_move(map, nx, ny, width, height) && !visited[ny][nx]) {
 				int new_cost = dist[y][x] + get_cost(map[ny][nx]);
 				if (new_cost < dist[ny][nx]) {
 					dist[ny][nx] = new_cost;
