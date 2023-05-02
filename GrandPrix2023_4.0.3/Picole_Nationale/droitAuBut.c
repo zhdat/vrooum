@@ -342,19 +342,6 @@ int main()
 		accelerationX = currentPoint.x - myX;
 		accelerationY = currentPoint.y - myY;
 
-		if ((currentPoint.x == myX || currentPoint.x == myX - 1 || currentPoint.x == myX + 1) && currentPoint.y == myY) {
-			accelerationX = 0;
-		}
-		if ((currentPoint.y == myY || currentPoint.y == myY - 1 || currentPoint.y == myY + 1) && currentPoint.x == myX) {
-			accelerationY = 0;
-		}
-		/* if (accelerationX == accelerationX_old && accelerationY == accelerationY_old) {
-			accelerationX = 0;
-			accelerationY = 0;
-		}
-		accelerationX_old = accelerationX;
-		accelerationY_old = accelerationY; */
-
 		/* Write the acceleration request to the race manager (stdout). */
 		sprintf(action, "%d %d", accelerationX, accelerationY);
 		fprintf(stdout, "%s", action);
