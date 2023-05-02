@@ -64,13 +64,13 @@ Node* findNodeInList(Node* node, List* list)
 		Node* currentNode = (Node*)currentElement->data;
 
 		if (currentNode->x == node->x && currentNode->y == node->y) {
-			return currentNode; // Noeud trouvé, le renvoyer
+			return currentNode; /* Noeud trouvé, le renvoyer */
 		}
 
 		currentElement = currentElement->next;
 	}
 
-	return NULL; // Noeud non trouvé, renvoyer NULL
+	return NULL; /* Noeud non trouvé, renvoyer NULL */
 }
 
 void addNodeToList(Node* node, List* list)
