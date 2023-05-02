@@ -282,6 +282,9 @@ int main()
 
 	/* Trouver les positions de départ et d'arrivée sur la carte */
 	findStartAndEndPositions(map, width, height, &start, &end);
+	fprintf(stderr, "Start: (%d,%d)\n", start->x, start->y);
+	fprintf(stderr, "End: (%d,%d)\n", end->x, end->y);
+	fflush(stderr);
 
 	/* Executer l'algorithme A* pour trouver le chemin */
 	path = aStar(start, end, map, width, height);
