@@ -246,7 +246,7 @@ void findStartAndEndPositions(char** map, int width, int height, Node** start, N
 }
 
 /* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
-void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int* accelerationY)
+void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY)
 {
 	if (path == NULL || path->head == NULL || path->head->data == NULL) {
 		fprintf(stderr, "Path is NULL\n");
@@ -256,8 +256,17 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
 	}
 
 	Node* first = path->head->next->data;
-	*accelerationX = first->x - myX;
-	*accelerationY = first->y - myY;
+	int nextX = first->x;
+	int nextY = first->y;
+
+	/* Vérifier si la vitesse actuelle est suffisante pour atteindre la case suivante */
+	if (myX + speedX == nextX && myY + speedY == nextY) {
+		*accelerationX = 0;
+		*accelerationY = 0;
+	} else {
+		*accelerationX = nextX - myX - speedX;
+		*accelerationY = nextY - myY - speedY;
+	}
 
 	fprintf(stderr, "First node in path: (%d, %d)\n", first->x, first->y);
 	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
@@ -357,11 +366,10 @@ int main()
 
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height);
-		printPath(path);
 		reverseList(path);
 		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
-		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY);
+		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY);
 		fprintf(stderr, "    Acceleration: (%d, %d)\n", accelerationX, accelerationY);
 
 		/* Gas consumption cannot be accurate here. */
