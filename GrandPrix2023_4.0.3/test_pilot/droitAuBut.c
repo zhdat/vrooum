@@ -191,6 +191,7 @@ void findStartAndEndPositions(char** map, int width, int height, Node** start, N
 void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int* accelerationY)
 {
 	if (path == NULL || path->head == NULL || path->head->data == NULL) {
+		fprintf(stderr, "Path is NULL\n");
 		*accelerationX = 0;
 		*accelerationY = 0;
 		return;
