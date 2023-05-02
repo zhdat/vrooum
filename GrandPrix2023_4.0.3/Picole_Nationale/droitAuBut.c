@@ -123,7 +123,7 @@ int nextPoint(InfoLine* infoLine, Pos2Dint* point, int direction)
 
 int is_valid_move(char** map, int x, int y, int width, int height)
 {
-	if ((x < 0 || x >= width || y < 0 || y >= height) || (map[y - 1][x] == '.' || map[y + 1][x] == '.')) {
+	if (x < 0 || x >= width || y < 0 || y >= height) {
 		return 0;
 	}
 	return map[y][x] != '.';
@@ -317,10 +317,6 @@ int main()
 		sscanf(line_buffer, "%d %d %d %d %d %d", &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
 		fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
 		fflush(stderr);
-		/* Gas consumption cannot be accurate here. */
-		gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, 0);
-		speedX += accelerationX;
-		speedY += accelerationY;
 
 		/* Calcul de la position d'arrivée */
 		start.x = myX;
@@ -341,6 +337,19 @@ int main()
 		nextPoint(&lineInfo, &currentPoint, 1);
 		accelerationX = currentPoint.x - myX;
 		accelerationY = currentPoint.y - myY;
+		if (round > 1) {
+			if (accelerationX == accelerationX_old && accelerationY == accelerationY_old) {
+				accelerationX = 0;
+				accelerationY = 0;
+			}
+		}
+		accelerationX_old = accelerationX;
+		accelerationY_old = accelerationY;
+
+		/* Gas consumption cannot be accurate here. */
+		gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, 0);
+		speedX += accelerationX;
+		speedY += accelerationY;
 
 		/* Write the acceleration request to the race manager (stdout). */
 		sprintf(action, "%d %d", accelerationX, accelerationY);
