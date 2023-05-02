@@ -123,7 +123,7 @@ int nextPoint(InfoLine* infoLine, Pos2Dint* point, int direction)
 
 int is_valid_move(char** map, int x, int y, int width, int height)
 {
-	if ((x < 0 || x >= width || y < 0 || y >= height) &&
+	if ((x < 0 || x >= width || y < 0 || y >= height) ||
 		(map[y - 1][x] == '.' || map[y + 1][x] == '.' || map[y][x - 1] == '.' || map[y][x + 1] == '.')) {
 		return 0;
 	}
