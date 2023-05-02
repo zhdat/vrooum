@@ -263,13 +263,13 @@ int main()
 	Node* end = NULL;
 	List* path = NULL;
 
-	map = (char**)malloc(height * sizeof(char*));
 	boosts = boosts;							/* Prevent warning "unused variable" */
 	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
 	sscanf(line_buffer, "%d %d %d", &width, &height, &gasLevel);
 	fprintf(stderr, "=== >Map< ===\n");
 	fprintf(stderr, "Size %d x %d\n", width, height);
 	fprintf(stderr, "Gas at start %d \n\n", gasLevel);
+	map = (char**)malloc(height * sizeof(char*));
 	for (row = 0; row < height; ++row) { /* Read map data, line per line */
 		fgets(line_buffer, MAX_LINE_LENGTH, stdin);
 		fputs(line_buffer, stderr);
