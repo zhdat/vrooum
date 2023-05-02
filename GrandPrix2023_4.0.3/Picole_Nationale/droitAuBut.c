@@ -346,7 +346,7 @@ int main()
 			accelerationX = 0;
 		}
 		if ((currentPoint.y == myY || currentPoint.y == myY - 1 || currentPoint.y == myY + 1) && currentPoint.x == myX) {
-			accelerationX = 0;
+			accelerationY = 0;
 		}
 		/* if (accelerationX == accelerationX_old && accelerationY == accelerationY_old) {
 			accelerationX = 0;
