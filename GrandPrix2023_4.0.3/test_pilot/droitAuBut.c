@@ -182,7 +182,6 @@ void findStartAndEndPositions(char** map, int width, int height, Node** start, N
 		for (x = 0; x < width; x++) {
 			if (map[y][x] == '=') {
 				*end = createNode(x, y, NULL);
-				fprintf(stderr, "end : %d %d\n", x, y);
 			}
 		}
 	}
@@ -304,6 +303,7 @@ int main()
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY);
+		fprintf(stderr, "    Acceleration: (%d, %d)\n", accelerationX, accelerationY);
 
 		/* Gas consumption cannot be accurate here. */
 		gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, 0);
