@@ -56,6 +56,23 @@ int nodeInList(Node* node, List* list)
 	return 0;
 }
 
+Node* findNodeInList(Node* node, List* list)
+{
+	ListElement* currentElement = list->head;
+
+	while (currentElement != NULL) {
+		Node* currentNode = (Node*)currentElement->data;
+
+		if (currentNode->x == node->x && currentNode->y == node->y) {
+			return currentNode; // Noeud trouvé, le renvoyer
+		}
+
+		currentElement = currentElement->next;
+	}
+
+	return NULL; // Noeud non trouvé, renvoyer NULL
+}
+
 void addNodeToList(Node* node, List* list)
 {
 	ListElement* newElement = (ListElement*)malloc(sizeof(ListElement));
@@ -161,7 +178,12 @@ List* aStar(Node* start, Node* end, char** map, int width, int height)
 					neighbour->h_cost = heuristicCost(neighbour, end);
 					neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
-					if (nodeInList(neighbour, closedSet) && !nodeInList(neighbour, openSet)) {
+					if (!nodeInList(neighbour, closedSet)) {
+						/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
+						Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet);
+						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
+							addNodeToList(neighbour, openSet);
+						}
 						addNodeToList(neighbour, openSet);
 					}
 				}
