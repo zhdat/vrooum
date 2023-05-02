@@ -282,14 +282,6 @@ int main()
 	fflush(stderr);
 	fprintf(stderr, "\n=== Race start ===\n");
 
-	/* Trouver les positions de départ et d'arrivée sur la carte */
-	findStartAndEndPositions(map, width, height, &start, &end);
-	fprintf(stderr, "Start: (%d,%d)\n", start->x, start->y);
-	fprintf(stderr, "End: (%d,%d)\n", end->x, end->y);
-	fflush(stderr);
-
-	/* Executer l'algorithme A* pour trouver le chemin */
-	path = aStar(start, end, map, width, height);
 	while (!feof(stdin)) {
 		int myX, myY, secondX, secondY, thirdX, thirdY;
 		round++;
@@ -299,6 +291,15 @@ int main()
 		sscanf(line_buffer, "%d %d %d %d %d %d", &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
 		fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
 		fflush(stderr);
+
+		/* Trouver les positions de départ et d'arrivée sur la carte */
+		findStartAndEndPositions(map, width, height, &start, &end);
+		fprintf(stderr, "Start: (%d,%d)\n", start->x, start->y);
+		fprintf(stderr, "End: (%d,%d)\n", end->x, end->y);
+		fflush(stderr);
+
+		/* Executer l'algorithme A* pour trouver le chemin */
+		path = aStar(start, end, map, width, height);
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY);
