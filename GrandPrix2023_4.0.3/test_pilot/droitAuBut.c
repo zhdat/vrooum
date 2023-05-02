@@ -135,7 +135,8 @@ int isListEmpty(List* list)
 void printPath(List* path)
 {
 	if (path == NULL || path->head == NULL) {
-		fprintf(stderr, "Path is empty\n") return;
+		fprintf(stderr, "Path is empty\n");
+		return;
 	}
 
 	fprintf(stderr, "Path: ");
