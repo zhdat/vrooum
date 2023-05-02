@@ -132,6 +132,21 @@ int isListEmpty(List* list)
 	return list->head == NULL;
 }
 
+void printPath(List* path)
+{
+	if (path == NULL || path->head == NULL) {
+		fprintf(stderr, "Path is empty\n") return;
+	}
+
+	fprintf(stderr, "Path: ");
+	ListElement* currentElement = path->head;
+	while (currentElement != NULL) {
+		Node* currentNode = (Node*)currentElement->data;
+		fprintf(stderr, "(%d, %d) ", currentNode->x, currentNode->y);
+		currentElement = currentElement->next;
+	}
+}
+
 /* A star */
 List* aStar(Node* start, Node* end, char** map, int width, int height)
 {
@@ -323,7 +338,7 @@ int main()
 
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height);
-
+		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY);
 		fprintf(stderr, "    Acceleration: (%d, %d)\n", accelerationX, accelerationY);
