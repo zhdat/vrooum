@@ -148,6 +148,26 @@ void printPath(List* path)
 	}
 }
 
+void reverseList(List* list)
+{
+	if (list == NULL || list->head == NULL) {
+		return;
+	}
+
+	ListElement* prevElement = NULL;
+	ListElement* currentElement = list->head;
+	ListElement* nextElement = NULL;
+
+	while (currentElement != NULL) {
+		nextElement = currentElement->next;
+		currentElement->next = prevElement;
+		prevElement = currentElement;
+		currentElement = nextElement;
+	}
+
+	list->head = prevElement;
+}
+
 /* A star */
 List* aStar(Node* start, Node* end, char** map, int width, int height)
 {
@@ -339,6 +359,8 @@ int main()
 
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height);
+		printPath(path);
+		reverseList(path);
 		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY);
