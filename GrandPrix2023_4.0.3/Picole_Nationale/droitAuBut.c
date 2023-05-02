@@ -326,7 +326,7 @@ int main()
 			for (y = 0; y < height; y++) {
 				if (grid[y][x] == '=') {
 					end.x = x;
-					end.y = y;
+					end.y = y + 2;
 				}
 			}
 		}
