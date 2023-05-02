@@ -180,10 +180,7 @@ void findStartAndEndPositions(char** map, int width, int height, Node** start, N
 	int y;
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
-			if (map[y][x] == '1' || map[y][x] == '2' || map[y][x] == '3') {
-				*start = createNode(x, y, NULL);
-				fprintf(stderr, "start : %d %d\n", x, y);
-			} else if (map[y][x] == '=') {
+			if (map[y][x] == '=') {
 				*end = createNode(x, y, NULL);
 				fprintf(stderr, "end : %d %d\n", x, y);
 			}
@@ -293,6 +290,9 @@ int main()
 		fflush(stderr);
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
+		if (round == 1) {
+			start = createNode(myX, myY, NULL);
+		}
 		findStartAndEndPositions(map, width, height, &start, &end);
 		fprintf(stderr, "Start: (%d,%d)\n", start->x, start->y);
 		fprintf(stderr, "End: (%d,%d)\n", end->x, end->y);
