@@ -182,8 +182,10 @@ void findStartAndEndPositions(char** map, int width, int height, Node** start, N
 		for (x = 0; x < width; x++) {
 			if (map[y][x] == '1' || map[y][x] == '2' || map[y][x] == '3') {
 				*start = createNode(x, y, NULL);
+				fprintf(stderr, "start : %d %d\n", x, y);
 			} else if (map[y][x] == '=') {
 				*end = createNode(x, y, NULL);
+				fprintf(stderr, "end : %d %d\n", x, y);
 			}
 		}
 	}
