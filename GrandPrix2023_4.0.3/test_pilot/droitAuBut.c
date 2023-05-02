@@ -352,9 +352,7 @@ int main()
 		fflush(stderr);
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
-		if (round == 1) {
-			start = createNode(myX, myY, NULL);
-		}
+		start = createNode(myX, myY, NULL);
 		findStartAndEndPositions(map, width, height, &start, &end);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
