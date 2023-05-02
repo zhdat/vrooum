@@ -200,16 +200,10 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
 	Node* first = path->head->next->data;
 	*accelerationX = first->x - myX;
 	*accelerationY = first->y - myY;
-}
 
-void printList(List* list)
-{
-	ListElement* current = list->head;
-	while (current != NULL) {
-		Node* node = (Node*)current->data;
-		fprintf(stderr, "%d %d\n", node->x, node->y);
-		current = current->next;
-	}
+	fprintf(stderr, "First node in path: (%d, %d)\n", first->x, first->y);
+	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
+	fprintf(stderr, "Acceleration: (%d, %d)\n", *accelerationX, *accelerationY);
 }
 
 /* Libérer la mémoire utilisée par la liste */
@@ -307,10 +301,6 @@ int main()
 
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height);
-		fprintf(stderr, "    Path: ");
-		printList(path);
-		fprintf(stderr, "\n");
-		fflush(stderr);
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY);
