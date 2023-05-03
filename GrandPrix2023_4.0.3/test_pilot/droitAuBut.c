@@ -91,7 +91,7 @@ void addNodeToList(Node* node, List* list)
 		current->next = newElement;
 	}
 }
-/* Node* removeNodeWithLowestFCost(List* list)
+Node* removeNodeWithLowestFCost(List* list)
 {
 	ListElement* current = list->head;
 	ListElement* previous = NULL;
@@ -120,7 +120,7 @@ void addNodeToList(Node* node, List* list)
 	Node* result = (Node*)lowest->data;
 	free(lowest);
 	return result;
-} */
+}
 
 List* initList()
 {
@@ -170,103 +170,35 @@ void reverseList(List* list)
 	list->head = prevElement;
 }
 
-/* Hashtable */
-Node* findNodeInHashTable(Node* node, struct hsearch_data* hashTable)
-{
-	ENTRY e;
-	ENTRY* ep;
-
-	e.key = malloc(10);
-	sprintf(e.key, "%d,%d", node->x, node->y);
-	hsearch_r(e, FIND, &ep, hashTable);
-	free(e.key);
-
-	return ep != NULL ? (Node*)ep->data : NULL;
-}
-
-void addNodeToHashTable(Node* node, struct hsearch_data* hashTable)
-{
-	ENTRY e;
-	ENTRY* ep;
-
-	e.key = malloc(10);
-	sprintf(e.key, "%d,%d", node->x, node->y);
-	e.data = (void*)node;
-	hsearch_r(e, ENTER, &ep, hashTable);
-}
-
-Node* removeNodeWithLowestFCost(struct hsearch_data* openSet_hash)
-{
-	ENTRY e, *ep;
-	Node* currentNode = NULL;
-	Node* nodeWithLowestFCost = NULL;
-	int lowestCost = INFINITE;
-
-	for (int i = 0; i < openSet_hash->size; ++i) {
-		ep = &openSet_hash->table[i];
-		if (ep->key != NULL) {
-			currentNode = (Node*)ep->data;
-			if (currentNode->f_cost < lowestCost) {
-				lowestCost = currentNode->f_cost;
-				nodeWithLowestFCost = currentNode;
-			}
-		}
-	}
-
-	if (nodeWithLowestFCost != NULL) {
-		char key[32];
-		snprintf(key, sizeof(key), "%d,%d", nodeWithLowestFCost->x, nodeWithLowestFCost->y);
-		e.key = key;
-		hsearch_r(e, FIND, &ep, openSet_hash);
-		if (ep != NULL) {
-			hsearch_r(e, REMOVE, &ep, openSet_hash);
-		}
-	}
-
-	return nodeWithLowestFCost;
-}
-
 /* A star */
 List* aStar(Node* start, Node* end, char** map, int width, int height)
 {
 	int dx;
 	int dy;
-	/* List* openSet = initList();
-	List* closedSet = initList(); */
-	ENTRY e;
-	ENTRY* ep;
-	struct hsearch_data openSet;
-	struct hsearch_data closedSet;
-	memset(&openSet, 0, sizeof(openSet));
-	memset(&closedSet, 0, sizeof(closedSet));
-	hcreate_r(100, &openSet);
-	hcreate_r(100, &closedSet);
+	List* openSet = initList();
+	List* closedSet = initList();
 
 	start->g_cost = 0;
 	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 
-	/* addNodeToList(start, openSet); */
-	addNodeToHashTable(start, &openSet);
+	addNodeToList(start, openSet);
 
 	while (!isListEmpty(openSet)) {
-		/* Node* currentNode = removeNodeWithLowestFCost(openSet); */
-		Node* currentNode = removeNodeWithLowestFCost(&openSet);
+		Node* currentNode = removeNodeWithLowestFCost(openSet);
 
 		if (currentNode->x == end->x && currentNode->y == end->y) {
 			/* Chemin trouvé, reconstruire le chemin et le retourner */
 			List* path = initList();
 			Node* pathNode = currentNode;
 			while (pathNode != NULL) {
-				/* addNodeToList(pathNode, path); */
-				addNodeToHashTable(pathNode, &closedSet);
+				addNodeToList(pathNode, path);
 				pathNode = pathNode->parent;
 			}
 			return path;
 		}
 
-		/* addNodeToList(currentNode, closedSet); */
-		addNodeToHashTable(currentNode, &closedSet);
+		addNodeToList(currentNode, closedSet);
 
 		/* Générer les voisins */
 		for (dx = -1; dx <= 1; dx++) {
@@ -289,11 +221,9 @@ List* aStar(Node* start, Node* end, char** map, int width, int height)
 						/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
 						Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet);
 						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
-							/* addNodeToList(neighbour, openSet); */
-							addNodeToHashTable(neighbour, &openSet);
+							addNodeToList(neighbour, openSet);
 						}
-						/* addNodeToList(neighbour, openSet); */
-						addNodeToHashTable(neighbour, &openSet);
+						addNodeToList(neighbour, openSet);
 					}
 				}
 			}
