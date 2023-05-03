@@ -216,6 +216,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height)
 					neighbour->g_cost = currentNode->g_cost + 1;
 					neighbour->h_cost = heuristicCost(neighbour, end);
 					neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+					fprintf(stderr, "Neighbour: (%d, %d) g=%d h=%d f=%d\n", neighbour->x, neighbour->y, neighbour->g_cost, neighbour->h_cost,
+							neighbour->f_cost);
 
 					if (!nodeInList(neighbour, closedSet)) {
 						/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
