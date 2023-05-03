@@ -221,6 +221,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height)
 
 					if (!nodeInList(neighbour, closedSet)) {
 						/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
+						fprintf(stderr, "Neighbour not in closed set\n");
 						Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet);
 						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 							/* addNodeToList(neighbour, openSet); */
