@@ -223,7 +223,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height)
 						/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
 						Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet);
 						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
-							addNodeToList(neighbour, openSet);
+							/* addNodeToList(neighbour, openSet); */
+							existingNodeInOpenSet->h_cost = neighbour->h_cost;
+							existingNodeInOpenSet->f_cost = neighbour->f_cost;
+							existingNodeInOpenSet->parent = currentNode;
 						}
 						addNodeToList(neighbour, openSet);
 					}
