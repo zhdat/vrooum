@@ -225,6 +225,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height)
 				}
 			}
 		}
+		fprintf(stderr, "hello\n ");
 	}
 
 	/* Pas de chemin trouvé */
