@@ -369,7 +369,7 @@ int main()
 
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height);
-		/* reversePath(path); */
+		reverseList(path);
 		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY);
