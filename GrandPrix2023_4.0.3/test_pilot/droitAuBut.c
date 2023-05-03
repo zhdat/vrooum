@@ -25,17 +25,6 @@ typedef struct List {
 	ListElement* head;
 } List;
 
-typedef struct MinHeapNode {
-	Node* node;
-	int f_cost;
-} MinHeapNode;
-
-typedef struct MinHeap {
-	int size;
-	int capacity;
-	MinHeapNode** array;
-} MinHeap;
-
 /* Fonctions utiles pour la gestion des noeuds, listes, coûts... */
 Node* createNode(int x, int y, Node* parent)
 {
@@ -179,213 +168,31 @@ void reverseList(List* list)
 	list->head = prevElement;
 }
 
-/* MinHeap fonctions */
-MinHeapNode* newMinHeapNode(Node* node)
-{
-	MinHeapNode* minHeapNode = (MinHeapNode*)malloc(sizeof(MinHeapNode));
-	minHeapNode->node = node;
-	minHeapNode->f_cost = node->f_cost;
-	return minHeapNode;
-}
-
-MinHeap* createMinHeap(int capacity)
-{
-	MinHeap* minHeap = (MinHeap*)malloc(sizeof(MinHeap));
-	minHeap->size = 0;
-	minHeap->capacity = capacity;
-	minHeap->array = (MinHeapNode**)malloc(capacity * sizeof(MinHeapNode*));
-	return minHeap;
-}
-
-void swapMinHeapNode(MinHeapNode** a, MinHeapNode** b)
-{
-	MinHeapNode* temp = *a;
-	*a = *b;
-	*b = temp;
-}
-
-void minHeapify(MinHeap* minHeap, int index)
-{
-	int smallest = index;
-	int left = 2 * index + 1;
-	int right = 2 * index + 2;
-
-	if (left < minHeap->size && minHeap->array[left]->f_cost < minHeap->array[smallest]->f_cost) {
-		smallest = left;
-	}
-
-	if (right < minHeap->size && minHeap->array[right]->f_cost < minHeap->array[smallest]->f_cost) {
-		smallest = right;
-	}
-
-	if (smallest != index) {
-		swapMinHeapNode(&minHeap->array[smallest], &minHeap->array[index]);
-		minHeapify(minHeap, smallest);
-	}
-}
-
-int isMinHeapEmpty(MinHeap* minHeap)
-{
-	return minHeap->size == 0;
-}
-
-MinHeapNode* extractMin(MinHeap* minHeap)
-{
-	if (isMinHeapEmpty(minHeap)) {
-		return NULL;
-	}
-
-	MinHeapNode* root = minHeap->array[0];
-	minHeap->array[0] = minHeap->array[minHeap->size - 1];
-	minHeap->size--;
-	minHeapify(minHeap, 0);
-
-	return root;
-}
-
-void insertMinHeap(MinHeap* minHeap, MinHeapNode* minHeapNode)
-{
-	minHeap->size++;
-	int i = minHeap->size - 1;
-	while (i && minHeapNode->f_cost < minHeap->array[(i - 1) / 2]->f_cost) {
-		minHeap->array[i] = minHeap->array[(i - 1) / 2];
-		i = (i - 1) / 2;
-	}
-
-	minHeap->array[i] = minHeapNode;
-}
-
-void decreaseKey(MinHeap* minHeap, Node* node)
-{
-	int i;
-	for (i = 0; i < minHeap->size; ++i) {
-		if (minHeap->array[i]->node == node) {
-			break;
-		}
-	}
-
-	while (i && minHeap->array[i]->f_cost < minHeap->array[(i - 1) / 2]->f_cost) {
-		swapMinHeapNode(&minHeap->array[i], &minHeap->array[(i - 1) / 2]);
-		i = (i - 1) / 2;
-	}
-}
-
-int isInMinHeap(MinHeap* minHeap, Node* node)
-{
-	int i;
-	for (i = 0; i < minHeap->size; ++i) {
-		if (minHeap->array[i]->node == node) {
-			return 1;
-		}
-	}
-	return 0;
-}
-
-Node* reversePath(Node* path)
-{
-	Node* prev = NULL;
-	Node* current = path;
-	Node* next = NULL;
-
-	while (current != NULL) {
-		next = current->parent;
-		current->parent = prev;
-		prev = current;
-		current = next;
-	}
-
-	return prev;
-}
-
-void printPathNode(Node* path)
-{
-	path = reversePath(path);
-
-	while (path != NULL) {
-		printf("(%d, %d) -> ", path->x, path->y);
-		path = path->parent;
-	}
-
-	printf("GOAL\n");
-}
-
-void determineAccelerationNode(Node* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY)
-{
-	path = reversePath(path);
-
-	if (path->parent == NULL) {
-		*accelerationX = 0;
-		*accelerationY = 0;
-		fprintf(stderr, "No path found\n");
-		return;
-	}
-
-	int targetX = path->parent->x;
-	int targetY = path->parent->y;
-
-	*accelerationX = targetX - myX - speedX;
-	*accelerationY = targetY - myY - speedY;
-}
-
-MinHeapNode* findNodeInMinHeap(Node* targetNode, MinHeap* minHeap)
-{
-	int i;
-	for (i = 0; i < minHeap->size; ++i) {
-		if (minHeap->array[i]->node->x == targetNode->x && minHeap->array[i]->node->y == targetNode->y) {
-			return minHeap->array[i];
-		}
-	}
-	return NULL;
-}
-
-void removeNodeFromMinHeap(MinHeap* minHeap, MinHeapNode* targetNode)
-{
-	int i;
-	for (i = 0; i < minHeap->size; ++i) {
-		if (minHeap->array[i] == targetNode) {
-			break;
-		}
-	}
-
-	if (i < minHeap->size) {
-		minHeap->array[i] = minHeap->array[minHeap->size - 1];
-		--minHeap->size;
-		minHeapify(minHeap, i);
-	}
-}
-
 /* A star */
-Node* aStar(Node* start, Node* end, char** map, int width, int height)
+List* aStar(Node* start, Node* end, char** map, int width, int height)
 {
 	int dx;
 	int dy;
-	/* List* openSet = initList(); */
-	MinHeap* openSet = createMinHeap(width * height);
+	List* openSet = initList();
 	List* closedSet = initList();
 	start->g_cost = 0;
 	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 
-	/* addNodeToList(start, openSet); */
-	insertMinHeap(openSet, newMinHeapNode(start));
+	addNodeToList(start, openSet);
 
-	/* while (!isListEmpty(openSet)) { */
-	while (!isMinHeapEmpty(openSet)) {
-		/* Node* currentNode = removeNodeWithLowestFCost(openSet); */
-		MinHeapNode* currentMinHeapNode = extractMin(openSet);
-		Node* currentNode = currentMinHeapNode->node;
-		free(currentMinHeapNode);
+	while (!isListEmpty(openSet)) {
+		Node* currentNode = removeNodeWithLowestFCost(openSet);
 
 		if (currentNode->x == end->x && currentNode->y == end->y) {
 			/* Chemin trouvé, reconstruire le chemin et le retourner */
-			/* List* path = initList();
+			List* path = initList();
 			Node* pathNode = currentNode;
 			while (pathNode != NULL) {
 				addNodeToList(pathNode, path);
 				pathNode = pathNode->parent;
 			}
-			return path; */
-			return currentNode;
+			return path;
 		}
 
 		addNodeToList(currentNode, closedSet);
@@ -409,16 +216,11 @@ Node* aStar(Node* start, Node* end, char** map, int width, int height)
 
 					if (!nodeInList(neighbour, closedSet)) {
 						/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
-						/* Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet); */
-						MinHeapNode* existingNodeInOpenSet = findNodeInMinHeap(neighbour, openSet);
-						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->node->g_cost) {
-							/* addNodeToList(neighbour, openSet); */
-							if (existingNodeInOpenSet != NULL) {
-								removeNodeFromMinHeap(openSet, existingNodeInOpenSet);
-							}
-							insertMinHeap(openSet, newMinHeapNode(neighbour));
+						Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet);
+						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
+							addNodeToList(neighbour, openSet);
 						}
-						/* addNodeToList(neighbour, openSet); */
+						addNodeToList(neighbour, openSet);
 					}
 				}
 			}
@@ -529,7 +331,7 @@ int main()
 
 	Node* start = NULL;
 	Node* end = NULL;
-	Node* path = NULL;
+	List* path = NULL;
 
 	boosts = boosts;							/* Prevent warning "unused variable" */
 	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
@@ -568,9 +370,9 @@ int main()
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height);
 		/* reversePath(path); */
-		printPathNode(path);
+		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
-		determineAccelerationNode(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY);
+		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY);
 		fprintf(stderr, "    Acceleration: (%d, %d)\n", accelerationX, accelerationY);
 
 		/* Gas consumption cannot be accurate here. */
