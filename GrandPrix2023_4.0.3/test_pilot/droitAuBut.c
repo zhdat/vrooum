@@ -225,6 +225,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height)
 						Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet);
 						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 							/* addNodeToList(neighbour, openSet); */
+							fprintf(stderr, "Neighbour not in open set or better path\n");
 							existingNodeInOpenSet->h_cost = neighbour->h_cost;
 							existingNodeInOpenSet->f_cost = neighbour->f_cost;
 							existingNodeInOpenSet->parent = currentNode;
