@@ -58,7 +58,7 @@ int nodeInList(Node* node, List* list)
 	return 0;
 }
 
-Node* findNodeInList(Node* node, List* list)
+Node* findNodeInList(Node* node, List* list, ListElement** elementInList)
 {
 	ListElement* currentElement = list->head;
 
@@ -66,13 +66,16 @@ Node* findNodeInList(Node* node, List* list)
 		Node* currentNode = (Node*)currentElement->data;
 
 		if (currentNode->x == node->x && currentNode->y == node->y) {
-			return currentNode; /* Noeud trouvé, le renvoyer */
+			if (elementInList != NULL) {
+				*elementInList = currentElement;
+			}
+			return currentNode;
 		}
 
 		currentElement = currentElement->next;
 	}
 
-	return NULL; /* Noeud non trouvé, renvoyer NULL */
+	return NULL;
 }
 
 void addNodeToList(Node* node, List* list)
@@ -216,24 +219,31 @@ List* aStar(Node* start, Node* end, char** map, int width, int height)
 					neighbour->g_cost = currentNode->g_cost + 1;
 					neighbour->h_cost = heuristicCost(neighbour, end);
 					neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
-					fprintf(stderr, "Neighbour: (%d, %d) g=%d h=%d f=%d\n", neighbour->x, neighbour->y, neighbour->g_cost, neighbour->h_cost,
-							neighbour->f_cost);
 
 					if (!nodeInList(neighbour, closedSet)) {
+						ListElement* existingElementInOpenSet;
 						/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
-						fprintf(stderr, "Neighbour not in closed set\n");
-						Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet);
+						Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
 						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
+							if (existingNodeInOpenSet != NULL) {
+								if (existingElementInOpenSet == openSet->head) {
+									openSet->head = existingElementInOpenSet->next;
+								} else {
+									ListElement* previous = openSet->head;
+									while (previous->next != existingElementInOpenSet) {
+										previous = previous->next;
+									}
+									previous->next = existingElementInOpenSet->next;
+								}
+								free(existingElementInOpenSet);
+							}
 							addNodeToList(neighbour, openSet);
-							fprintf(stderr, "Neighbour not in open set or better path\n");
 						}
-						addNodeToList(neighbour, openSet);
 					}
 				}
 			}
 		}
 	}
-
 	/* Pas de chemin trouvé */
 	return NULL;
 }
