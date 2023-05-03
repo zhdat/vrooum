@@ -316,6 +316,7 @@ void determineAccelerationNode(Node* path, int myX, int myY, int* accelerationX,
 	if (path->parent == NULL) {
 		*accelerationX = 0;
 		*accelerationY = 0;
+		fprintf(stderr, "No path found\n");
 		return;
 	}
 
