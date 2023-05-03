@@ -272,7 +272,8 @@ void decreaseKey(MinHeap* minHeap, Node* node)
 
 int isInMinHeap(MinHeap* minHeap, Node* node)
 {
-	for (int i = 0; i < minHeap->size; ++i) {
+	int i;
+	for (i = 0; i < minHeap->size; ++i) {
 		if (minHeap->array[i]->node == node) {
 			return 1;
 		}
@@ -327,7 +328,8 @@ void determineAccelerationNode(Node* path, int myX, int myY, int* accelerationX,
 
 MinHeapNode* findNodeInMinHeap(Node* targetNode, MinHeap* minHeap)
 {
-	for (int i = 0; i < minHeap->size; ++i) {
+	int i;
+	for (i = 0; i < minHeap->size; ++i) {
 		if (minHeap->array[i]->node->x == targetNode->x && minHeap->array[i]->node->y == targetNode->y) {
 			return minHeap->array[i];
 		}
