@@ -60,7 +60,8 @@ int nodeInList(Node* node, List* list)
 	ListElement* current = list->head;
 	while (current != NULL) {
 		Node* current_node = (Node*)current->data;
-		if (current_node->x == node->x && current_node->y == node->y) {
+		if (current_node->x == node->x && current_node->y == node->y && current_node->speedX == node->speedX &&
+			current_node->speedY == node->speedY) {
 			return 1;
 		}
 		current = current->next;
@@ -248,7 +249,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
 					(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
 					Node* neighbour = createNode(newX, newY, currentNode, speedX, speedY);
-					neighbour->g_cost = currentNode->g_cost + 1;
+					neighbour->g_cost = currentNode->g_cost + 1 + abs(accX) + abs(accY);
 					if (map[newY][newX] == '~') {
 						neighbour->g_cost = currentNode->g_cost + 4;
 					}
