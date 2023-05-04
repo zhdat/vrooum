@@ -257,8 +257,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue; /* ignorer le noeud lui-même */
 				}
 
-				for (dSpeedX = -5; dSpeedX <= 5; dSpeedX++) {
-					for (dSpeedY = -5; dSpeedY <= 5; dSpeedY++) {
+				for (dSpeedX = -3; dSpeedX <= 3; dSpeedX++) {
+					for (dSpeedY = -3; dSpeedY <= 3; dSpeedY++) {
 						int newX = currentNode->x + dx;
 						int newY = currentNode->y + dy;
 						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
