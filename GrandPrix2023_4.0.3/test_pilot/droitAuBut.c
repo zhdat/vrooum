@@ -173,6 +173,11 @@ void reverseList(List* list)
 	list->head = prevElement;
 }
 
+int isPositionOccupied(int x, int y, int secondX, int secondY, int thirdX, int thirdY)
+{
+	return (x == secondX && y == secondY) || (x == thirdX && y == thirdY);
+}
+
 /* A star */
 List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
 {
@@ -216,8 +221,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 				/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
 				if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
-					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') && (newX != secondX && newY != secondY) &&
-					(newX != thirdX && newY != thirdY)) {
+					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
+					(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
 					Node* neighbour = createNode(newX, newY, currentNode);
 					neighbour->g_cost = currentNode->g_cost + 1;
 					if (map[newY][newX] == '~') {
