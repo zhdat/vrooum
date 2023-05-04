@@ -226,11 +226,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
-				int newSpeedX = speedX + accX;
-				int newSpeedY = speedY + accY;
-
-				int newX = currentNode->x + newSpeedX;
-				int newY = currentNode->y + newSpeedY;
+				int newX = currentNode->x + accX;
+				int newY = currentNode->y + accY;
 				if (newX == currentNode->x && newY == currentNode->y) {
 					continue; /* ignorer le noeud lui-même */
 				}
