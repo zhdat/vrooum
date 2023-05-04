@@ -317,6 +317,8 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
 	int nextY = first->y;
 
 	fprintf(stderr, "Next node in path: (%d, %d)\n", nextX, nextY);
+	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
+	fprintf(stderr, "Current speed: (%d, %d)\n", speedX, speedY);
 
 	/* Vérifier si la vitesse actuelle est suffisante pour atteindre la case suivante */
 	if (myX + speedX == nextX && myY + speedY == nextY) {
