@@ -50,8 +50,8 @@ int heuristicCost(Node* a, Node* b)
 {
 	int dx = abs(a->x - b->x);
 	int dy = abs(a->y - b->y);
-	int D = 1;		  // coût pour se déplacer horizontalement ou verticalement
-	int D2 = sqrt(2); // coût pour se déplacer en diagonale
+	int D = 1;		  /* coût pour se déplacer horizontalement ou verticalement */
+	int D2 = sqrt(2); /* coût pour se déplacer en diagonale */
 
 	return D * (dx + dy) + (D2 - 2 * D) * min(dx, dy);
 }
