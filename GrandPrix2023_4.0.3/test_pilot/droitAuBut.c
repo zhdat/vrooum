@@ -397,7 +397,7 @@ int main()
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
 		start = createNode(myX, myY, NULL);
-		findEndPositions(map, width, height, &end, start);
+		findEndPositions(map, width, height, &end, &start);
 		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 		fflush(stderr);
