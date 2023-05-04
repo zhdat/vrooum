@@ -313,33 +313,25 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
 	}
 
 	Node* first = path->head->next->data;
-	int nextX = first->x;
-	int nextY = first->y;
+	int nextX = myX + speedX;
+	int nextY = myY + speedY;
 
-	fprintf(stderr, "Next node in path: (%d, %d)\n", nextX, nextY);
+	ListElement* current = path->head;
+	while (current != NULL && current->next != NULL) {
+		Node* candidate = current->next->data;
+		if (candidate->x == nextX && candidate->y == nextY) {
+			first = candidate;
+			break;
+		}
+		current = current->next;
+	}
+
+	fprintf(stderr, "Next node in path: (%d, %d)\n", first->x, first->y);
 	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
 	fprintf(stderr, "Current speed: (%d, %d)\n", speedX, speedY);
 
-	/* Vérifier si la vitesse actuelle est suffisante pour atteindre la case suivante */
-	if (myX + speedX == nextX && myY + speedY == nextY) {
-		*accelerationX = 0;
-		*accelerationY = 0;
-	} else {
-		*accelerationX = nextX - myX;
-		*accelerationY = nextY - myY;
-	}
-	/* if (*accelerationX > 1) {
-		*accelerationX = 1;
-	}
-	if (*accelerationX < -1) {
-		*accelerationX = -1;
-	}
-	if (*accelerationY > 1) {
-		*accelerationY = 1;
-	}
-	if (*accelerationY < -1) {
-		*accelerationY = -1;
-	} */
+	*accelerationX = first->x - myX - speedX;
+	*accelerationY = first->y - myY - speedY;
 
 	fprintf(stderr, "First node in path: (%d, %d)\n", first->x, first->y);
 	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
