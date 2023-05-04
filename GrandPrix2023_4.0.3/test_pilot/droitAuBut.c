@@ -287,9 +287,14 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
 			if (map[y][x] == '=') {
-				Node node = { .x = x, .y = y };
+				Node node;
+				node.x = x;
+				node.y = y;
 				int distance = heuristicCost(start, &node);
-				EndPosition endPosition = { .x = x, .y = y, .distance = distance };
+				EndPosition endPosition;
+				endPosition.x = x;
+				endPosition.y = y;
+				endPosition.distance = distance;
 				endPositions[endPositionCount++] = endPosition;
 			}
 		}
