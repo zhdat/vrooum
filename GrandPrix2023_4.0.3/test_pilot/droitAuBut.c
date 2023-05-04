@@ -250,20 +250,20 @@ List* aStar(Node* start, Node* end, char** map, int width, int height)
 }
 
 /* Trouver les positions de départ et d'arrivée sur la carte */
-void findEndPositions(char** map, int width, int height, Node** end, Node* start)
+void findEndPositions(char** map, int width, int height, Node** end, Node** start)
 {
 	int x;
 	int y;
 	int i;
 	int distance;
 	int best_distance;
-	Node** tmp_end;
+	Node*** tmp_end;
 	i = 0;
 	best_distance = INFINITE;
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
 			if (map[y][x] == '=') {
-				tmp_end[i] = createNode(x, y, NULL);
+				*tmp_end[i] = createNode(x, y, NULL);
 				i++;
 			}
 		}
@@ -271,9 +271,9 @@ void findEndPositions(char** map, int width, int height, Node** end, Node* start
 	i = 0;
 
 	while (tmp_end[i] != NULL) {
-		distance = heuristicCost(start, tmp_end[i]);
+		distance = heuristicCost(*start, *tmp_end[i]);
 		if (distance < best_distance) {
-			*end = tmp_end[i];
+			*end = *tmp_end[i];
 			best_distance = distance;
 		}
 		i++;
