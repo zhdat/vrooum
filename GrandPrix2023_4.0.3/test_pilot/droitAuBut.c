@@ -15,7 +15,6 @@ typedef struct Node {
 	int g_cost;
 	int h_cost;
 	int f_cost;
-	int gas;
 	struct Node* parent;
 } Node;
 
@@ -44,7 +43,6 @@ Node* createNode(int x, int y, Node* parent)
 	newNode->g_cost = 0;
 	newNode->h_cost = 0;
 	newNode->f_cost = 0;
-	newNode->gas = 0;
 	return newNode;
 }
 
@@ -218,12 +216,10 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
 }
 
 /* A star */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int speedX, int speedY)
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
 {
 	int dx;
 	int dy;
-	int dSpeedX;
-	int dSpeedY;
 
 	List* openSet = initList();
 	List* closedSet = initList();
@@ -256,45 +252,38 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				if (dx == 0 && dy == 0) {
 					continue; /* ignorer le noeud lui-même */
 				}
+				int newX = currentNode->x + dx;
+				int newY = currentNode->y + dy;
+				/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
+				if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
+					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
+					(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
+					Node* neighbour = createNode(newX, newY, currentNode);
+					neighbour->g_cost = currentNode->g_cost + 1;
+					if (map[newY][newX] == '~') {
+						neighbour->g_cost = currentNode->g_cost + 4;
+					}
+					neighbour->h_cost = heuristicCost(neighbour, end);
+					neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
-				for (dSpeedX = -3; dSpeedX <= 3; dSpeedX++) {
-					for (dSpeedY = -3; dSpeedY <= 3; dSpeedY++) {
-						int newX = currentNode->x + dx;
-						int newY = currentNode->y + dy;
-						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
-						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
-							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
-							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
-							Node* neighbour = createNode(newX, newY, currentNode);
-							neighbour->g_cost = currentNode->g_cost + 1;
-							if (map[newY][newX] == '~') {
-								neighbour->g_cost = currentNode->g_cost + 4;
-								neighbour->gas++;
-							}
-							neighbour->h_cost = heuristicCost(neighbour, end);
-							neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
-							neighbour->gas = currentNode->gas + gasConsumption(dSpeedX, dSpeedY, speedX, speedY, map[newY][newX] == '#');
-
-							if (!nodeInList(neighbour, closedSet)) {
-								ListElement* existingElementInOpenSet;
-								/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
-								Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
-								if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
-									if (existingNodeInOpenSet != NULL) {
-										if (existingElementInOpenSet == openSet->head) {
-											openSet->head = existingElementInOpenSet->next;
-										} else {
-											ListElement* previous = openSet->head;
-											while (previous->next != existingElementInOpenSet) {
-												previous = previous->next;
-											}
-											previous->next = existingElementInOpenSet->next;
-										}
-										free(existingElementInOpenSet);
+					if (!nodeInList(neighbour, closedSet)) {
+						ListElement* existingElementInOpenSet;
+						/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
+						Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
+						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
+							if (existingNodeInOpenSet != NULL) {
+								if (existingElementInOpenSet == openSet->head) {
+									openSet->head = existingElementInOpenSet->next;
+								} else {
+									ListElement* previous = openSet->head;
+									while (previous->next != existingElementInOpenSet) {
+										previous = previous->next;
 									}
-									addNodeToList(neighbour, openSet);
+									previous->next = existingElementInOpenSet->next;
 								}
+								free(existingElementInOpenSet);
 							}
+							addNodeToList(neighbour, openSet);
 						}
 					}
 				}
@@ -438,7 +427,7 @@ int main()
 		fflush(stderr);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
-		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY);
+		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY);
 		reverseList(path);
 		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
