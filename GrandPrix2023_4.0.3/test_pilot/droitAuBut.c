@@ -15,6 +15,7 @@ typedef struct Node {
 	int g_cost;
 	int h_cost;
 	int f_cost;
+	int gas;
 	struct Node* parent;
 } Node;
 
@@ -43,6 +44,7 @@ Node* createNode(int x, int y, Node* parent)
 	newNode->g_cost = 0;
 	newNode->h_cost = 0;
 	newNode->f_cost = 0;
+	newNode->gas = 0;
 	return newNode;
 }
 
@@ -192,11 +194,36 @@ int compareEndPositions(const void* a, const void* b)
 	return positionA->distance - positionB->distance;
 }
 
+/**
+ * @brief Compute the gas consumption of a requested acceleration
+ *
+ * CAUTION: Even an illegal move will result in gas consumption. Producing
+ * illegal moves should be prevented as much as possible!
+ *
+ * @param accX Acceleration x component
+ * @param accY Acceleration y component
+ * @param speedX Speed x component
+ * @param speedY Speed y component
+ * @param inSand (boolean)
+ * @return Number of gas units consumed
+ */
+int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
+{
+	int gas = accX * accX + accY * accY;
+	gas += (int)(sqrt(speedX * speedX + speedY * speedY) * 3.0 / 2.0);
+	if (inSand) {
+		gas += 1;
+	}
+	return -gas;
+}
+
 /* A star */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int speedX, int speedY)
 {
 	int dx;
 	int dy;
+	int dSpeedX;
+	int dSpeedY;
 
 	List* openSet = initList();
 	List* closedSet = initList();
@@ -233,36 +260,42 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				int newX = currentNode->x + dx;
 				int newY = currentNode->y + dy;
 
-				/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
-				if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
-					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
-					(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
-					Node* neighbour = createNode(newX, newY, currentNode);
-					neighbour->g_cost = currentNode->g_cost + 1;
-					if (map[newY][newX] == '~') {
-						neighbour->g_cost = currentNode->g_cost + 4;
-					}
-					neighbour->h_cost = heuristicCost(neighbour, end);
-					neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
-
-					if (!nodeInList(neighbour, closedSet)) {
-						ListElement* existingElementInOpenSet;
-						/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
-						Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
-						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
-							if (existingNodeInOpenSet != NULL) {
-								if (existingElementInOpenSet == openSet->head) {
-									openSet->head = existingElementInOpenSet->next;
-								} else {
-									ListElement* previous = openSet->head;
-									while (previous->next != existingElementInOpenSet) {
-										previous = previous->next;
-									}
-									previous->next = existingElementInOpenSet->next;
-								}
-								free(existingElementInOpenSet);
+				for (dSpeedX = -1; dSpeedX <= 1; dSpeedX++) {
+					for (dSpeedY = -1; dSpeedY <= 1; dSpeedY++) {
+						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
+						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
+							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
+							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
+							Node* neighbour = createNode(newX, newY, currentNode);
+							neighbour->g_cost = currentNode->g_cost + 1;
+							if (map[newY][newX] == '~') {
+								neighbour->g_cost = currentNode->g_cost + 4;
+								neighbour->gas++;
 							}
-							addNodeToList(neighbour, openSet);
+							neighbour->h_cost = heuristicCost(neighbour, end);
+							neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+							neighbour->gas = currentNode->gas + gasConsumption(dSpeedX, dSpeedY, speedX, speedY, map[newY][newX] == '#');
+
+							if (!nodeInList(neighbour, closedSet)) {
+								ListElement* existingElementInOpenSet;
+								/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
+								Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
+								if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
+									if (existingNodeInOpenSet != NULL) {
+										if (existingElementInOpenSet == openSet->head) {
+											openSet->head = existingElementInOpenSet->next;
+										} else {
+											ListElement* previous = openSet->head;
+											while (previous->next != existingElementInOpenSet) {
+												previous = previous->next;
+											}
+											previous->next = existingElementInOpenSet->next;
+										}
+										free(existingElementInOpenSet);
+									}
+									addNodeToList(neighbour, openSet);
+								}
+							}
 						}
 					}
 				}
@@ -354,29 +387,6 @@ void freeNode(Node* node)
 	}
 }
 
-/**
- * @brief Compute the gas consumption of a requested acceleration
- *
- * CAUTION: Even an illegal move will result in gas consumption. Producing
- * illegal moves should be prevented as much as possible!
- *
- * @param accX Acceleration x component
- * @param accY Acceleration y component
- * @param speedX Speed x component
- * @param speedY Speed y component
- * @param inSand (boolean)
- * @return Number of gas units consumed
- */
-int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
-{
-	int gas = accX * accX + accY * accY;
-	gas += (int)(sqrt(speedX * speedX + speedY * speedY) * 3.0 / 2.0);
-	if (inSand) {
-		gas += 1;
-	}
-	return -gas;
-}
-
 int main()
 {
 	int row;
@@ -429,7 +439,7 @@ int main()
 		fflush(stderr);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
-		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY);
+		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY);
 		reverseList(path);
 		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
