@@ -282,6 +282,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 	int i;
 	EndPosition* endPositions;
 	int distance;
+	EndPosition endPosition;
 	int endPositionCount = 0;
 	endPositions = (EndPosition*)malloc(sizeof(EndPosition) * width * height);
 
@@ -292,7 +293,6 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 				node.x = x;
 				node.y = y;
 				distance = heuristicCost(start, &node);
-				EndPosition endPosition;
 				endPosition.x = x;
 				endPosition.y = y;
 				endPosition.distance = distance;
