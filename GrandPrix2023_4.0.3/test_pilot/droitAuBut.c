@@ -325,8 +325,8 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
 		*accelerationX = 0;
 		*accelerationY = 0;
 	} else {
-		*accelerationX = nextX - myX - speedX;
-		*accelerationY = nextY - myY - speedY;
+		*accelerationX = nextX - myX;
+		*accelerationY = nextY - myY;
 	}
 	/* if (*accelerationX > 1) {
 		*accelerationX = 1;
