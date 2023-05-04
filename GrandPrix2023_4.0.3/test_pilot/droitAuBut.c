@@ -27,6 +27,12 @@ typedef struct List {
 	ListElement* head;
 } List;
 
+typedef struct {
+	int x;
+	int y;
+	int distance;
+} EndPosition;
+
 /* Fonctions utiles pour la gestion des noeuds, listes, coûts... */
 Node* createNode(int x, int y, Node* parent)
 {
@@ -178,6 +184,14 @@ int isPositionOccupied(int x, int y, int secondX, int secondY, int thirdX, int t
 	return (x == secondX && y == secondY) || (x == thirdX && y == thirdY);
 }
 
+int compareEndPositions(const void* a, const void* b)
+{
+	const EndPosition* positionA = (const EndPosition*)a;
+	const EndPosition* positionB = (const EndPosition*)b;
+
+	return positionA->distance - positionB->distance;
+}
+
 /* A star */
 List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
 {
@@ -262,19 +276,27 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 /* Trouver les positions de départ et d'arrivée sur la carte */
 void findEndPositions(char** map, int width, int height, Node* start, Node** end, int myX, int myY, int secondX, int secondY, int thirdX, int thirdY)
 {
-	int x;
-	int y;
-	int minDistance = INFINITE;
+	int x, y;
+	EndPosition endPositions[width * height];
+	int endPositionCount = 0;
 
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
 			if (map[y][x] == '=') {
 				int distance = heuristicCost(start, &(Node){ .x = x, .y = y });
-				if (distance < minDistance && (isPositionOccupied(myX, myY, secondX, secondY, thirdX, thirdY) == 0)) {
-					minDistance = distance;
-					*end = createNode(x, y, NULL);
-				}
+				endPositions[endPositionCount++] = (EndPosition){ .x = x, .y = y, .distance = distance };
 			}
+		}
+	}
+
+	qsort(endPositions, endPositionCount, sizeof(EndPosition), compareEndPositions);
+
+	for (int i = 0; i < endPositionCount; i++) {
+		int x = endPositions[i].x;
+		int y = endPositions[i].y;
+		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
+			*end = createNode(x, y, NULL);
+			break;
 		}
 	}
 }
