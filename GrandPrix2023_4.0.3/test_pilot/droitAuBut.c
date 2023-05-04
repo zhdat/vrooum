@@ -277,6 +277,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 void findEndPositions(char** map, int width, int height, Node* start, Node** end, int myX, int myY, int secondX, int secondY, int thirdX, int thirdY)
 {
 	int x, y;
+	int i;
 	EndPosition endPositions[width * height];
 	int endPositionCount = 0;
 
@@ -291,7 +292,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 
 	qsort(endPositions, endPositionCount, sizeof(EndPosition), compareEndPositions);
 
-	for (int i = 0; i < endPositionCount; i++) {
+	for (i = 0; i < endPositionCount; i++) {
 		int x = endPositions[i].x;
 		int y = endPositions[i].y;
 		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
