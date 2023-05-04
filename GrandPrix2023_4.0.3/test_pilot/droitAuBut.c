@@ -283,6 +283,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 	EndPosition* endPositions;
 	int distance;
 	EndPosition endPosition;
+
 	int endPositionCount = 0;
 	endPositions = (EndPosition*)malloc(sizeof(EndPosition) * width * height);
 
