@@ -276,7 +276,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 }
 
 /* Trouver les positions de départ et d'arrivée sur la carte */
-void findEndPositions(char** map, int width, int height, Node* start, Node** end, int myX, int myY, int secondX, int secondY, int thirdX, int thirdY)
+void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY)
 {
 	int x, y;
 	int i;
@@ -287,8 +287,10 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
 			if (map[y][x] == '=') {
-				int distance = heuristicCost(start, &(Node){ .x = x, .y = y });
-				endPositions[endPositionCount++] = (EndPosition){ .x = x, .y = y, .distance = distance };
+				Node node = { .x = x, .y = y };
+				int distance = heuristicCost(start, &node);
+				EndPosition endPosition = { .x = x, .y = y, .distance = distance };
+				endPositions[endPositionCount++] = endPosition;
 			}
 		}
 	}
@@ -308,6 +310,8 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 /* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY)
 {
+	int nextX, nextY;
+	Node* first;
 	if (path == NULL || path->head == NULL || path->head->data == NULL) {
 		fprintf(stderr, "Path is NULL\n");
 		*accelerationX = 0;
@@ -315,9 +319,9 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
 		return;
 	}
 
-	Node* first = path->head->next->data;
-	int nextX = first->x;
-	int nextY = first->y;
+	first = path->head->next->data;
+	nextX = first->x;
+	nextY = first->y;
 
 	fprintf(stderr, "Next node in path: (%d, %d)\n", nextX, nextY);
 	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
