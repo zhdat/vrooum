@@ -46,6 +46,11 @@ Node* createNode(int x, int y, Node* parent)
 	return newNode;
 }
 
+int min(int a, int b)
+{
+	return a < b ? a : b;
+}
+
 int heuristicCost(Node* a, Node* b)
 {
 	int dx = abs(a->x - b->x);
