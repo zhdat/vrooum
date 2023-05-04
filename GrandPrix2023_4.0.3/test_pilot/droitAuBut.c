@@ -259,7 +259,7 @@ void findEndPositions(char** map, int width, int height, Node** end, Node* start
 	int best_distance;
 	Node** tmp_end;
 	i = 0;
-	best_distance = INFINITY;
+	best_distance = INFINITE;
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
 			if (map[y][x] == '=') {
