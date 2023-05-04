@@ -247,8 +247,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		addNodeToList(currentNode, closedSet);
 
 		/* Générer les voisins */
-		for (dx = -1; dx <= 1; dx++) {
-			for (dy = -1; dy <= 1; dy++) {
+		for (dx = -5; dx <= 5; dx++) {
+			for (dy = -5; dy <= 5; dy++) {
 				if (dx == 0 && dy == 0) {
 					continue; /* ignorer le noeud lui-même */
 				}
@@ -259,7 +259,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
 					(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
 					Node* neighbour = createNode(newX, newY, currentNode);
-					neighbour->g_cost = currentNode->g_cost + 1;
+					neighbour->g_cost = currentNode->g_cost + abs(dx) + abs(dy);
 					if (map[newY][newX] == '~') {
 						neighbour->g_cost = currentNode->g_cost + 4;
 					}
