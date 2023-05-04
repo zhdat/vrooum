@@ -322,31 +322,14 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
 	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
 	fprintf(stderr, "Current speed: (%d, %d)\n", speedX, speedY);
 
-	int desiredSpeedX = nextX - myX;
-	int desiredSpeedY = nextY - myY;
-
-	/* Calculer l'accélération nécessaire pour atteindre la vitesse souhaitée */
-	*accelerationX = desiredSpeedX - speedX;
-	*accelerationY = desiredSpeedY - speedY;
-
-	/* S'assurer que l'accélération ne dépasse pas les limites (-1, 0, 1) */
-	if (*accelerationX < -1)
-		*accelerationX = -1;
-	if (*accelerationX > 1)
-		*accelerationX = 1;
-	if (*accelerationY < -1)
-		*accelerationY = -1;
-	if (*accelerationY > 1)
-		*accelerationY = 1;
-
 	/* Vérifier si la vitesse actuelle est suffisante pour atteindre la case suivante */
-	/* if (myX + speedX == nextX && myY + speedY == nextY) {
+	if (myX + speedX == nextX && myY + speedY == nextY) {
 		*accelerationX = 0;
 		*accelerationY = 0;
 	} else {
 		*accelerationX = nextX - myX - speedX;
 		*accelerationY = nextY - myY - speedY;
-	} */
+	}
 
 	fprintf(stderr, "First node in path: (%d, %d)\n", first->x, first->y);
 	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
