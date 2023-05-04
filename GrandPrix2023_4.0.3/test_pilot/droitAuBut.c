@@ -102,6 +102,7 @@ void addNodeToList(Node* node, List* list)
 }
 Node* removeNodeWithLowestFCost(List* list)
 {
+	Node* result;
 	ListElement* current = list->head;
 	ListElement* previous = NULL;
 	ListElement* lowest = current;
@@ -126,7 +127,7 @@ Node* removeNodeWithLowestFCost(List* list)
 		previousLowest->next = lowest->next;
 	}
 
-	Node* result = (Node*)lowest->data;
+	result = (Node*)lowest->data;
 	free(lowest);
 	return result;
 }
@@ -145,15 +146,17 @@ int isListEmpty(List* list)
 
 void printPath(List* path)
 {
+	ListElement* currentElement;
+	Node* currentNode;
 	if (path == NULL || path->head == NULL) {
 		fprintf(stderr, "Path is empty\n");
 		return;
 	}
 
 	fprintf(stderr, "Path: ");
-	ListElement* currentElement = path->head;
+	currentElement = path->head;
 	while (currentElement != NULL) {
-		Node* currentNode = (Node*)currentElement->data;
+		currentNode = (Node*)currentElement->data;
 		fprintf(stderr, "(%d, %d) ", currentNode->x, currentNode->y);
 		currentElement = currentElement->next;
 	}
@@ -161,13 +164,13 @@ void printPath(List* path)
 
 void reverseList(List* list)
 {
-	if (list == NULL || list->head == NULL) {
-		return;
-	}
-
 	ListElement* prevElement = NULL;
 	ListElement* currentElement = list->head;
 	ListElement* nextElement = NULL;
+
+	if (list == NULL || list->head == NULL) {
+		return;
+	}
 
 	while (currentElement != NULL) {
 		nextElement = currentElement->next;
@@ -193,7 +196,7 @@ int compareEndPositions(const void* a, const void* b)
 }
 
 /* A star */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int speedX, int speedY)
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
 {
 	int accX;
 	int accY;
@@ -277,8 +280,9 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 {
 	int x, y;
 	int i;
-	EndPosition endPositions[width * height];
+	EndPosition* endPositions;
 	int endPositionCount = 0;
+	endPositions = (EndPosition*)malloc(sizeof(EndPosition) * width * height);
 
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
@@ -428,7 +432,7 @@ int main()
 		fflush(stderr);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
-		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY);
+		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY);
 		reverseList(path);
 		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
