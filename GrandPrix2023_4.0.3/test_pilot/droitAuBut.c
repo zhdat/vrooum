@@ -215,9 +215,13 @@ List* aStar(Node* start, Node* end, char** map, int width, int height)
 				int newY = currentNode->y + dy;
 
 				/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
-				if (newX >= 0 && newX < width && newY >= 0 && newY < height && (map[newY][newX] == '#' || map[newY][newX] == '=')) {
+				if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
+					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~')) {
 					Node* neighbour = createNode(newX, newY, currentNode);
 					neighbour->g_cost = currentNode->g_cost + 1;
+					if (map[newY][newX] == '~') {
+						neighbour->g_cost = currentNode->g_cost + 4;
+					}
 					neighbour->h_cost = heuristicCost(neighbour, end);
 					neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
