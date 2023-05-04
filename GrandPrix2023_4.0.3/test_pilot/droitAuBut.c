@@ -174,7 +174,7 @@ void reverseList(List* list)
 }
 
 /* A star */
-List* aStar(Node* start, Node* end, char** map, int width, int height)
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
 {
 	int dx;
 	int dy;
@@ -216,7 +216,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height)
 
 				/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
 				if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
-					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~')) {
+					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') && (newX != secondX && newY != secondY) &&
+					(newX != thirdX && newY != thirdY)) {
 					Node* neighbour = createNode(newX, newY, currentNode);
 					neighbour->g_cost = currentNode->g_cost + 1;
 					if (map[newY][newX] == '~') {
@@ -396,7 +397,7 @@ int main()
 		fflush(stderr);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
-		path = aStar(start, end, map, width, height);
+		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY);
 		reverseList(path);
 		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
