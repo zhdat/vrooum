@@ -12,8 +12,6 @@
 typedef struct Node {
 	int x;
 	int y;
-	int speedX;
-	int speedY;
 	int g_cost;
 	int h_cost;
 	int f_cost;
@@ -36,13 +34,11 @@ typedef struct {
 } EndPosition;
 
 /* Fonctions utiles pour la gestion des noeuds, listes, coûts... */
-Node* createNode(int x, int y, Node* parent, int speedX, int speedY)
+Node* createNode(int x, int y, Node* parent)
 {
 	Node* newNode = (Node*)malloc(sizeof(Node));
 	newNode->x = x;
 	newNode->y = y;
-	newNode->speedX = speedX;
-	newNode->speedY = speedY;
 	newNode->parent = parent;
 	newNode->g_cost = 0;
 	newNode->h_cost = 0;
@@ -60,8 +56,7 @@ int nodeInList(Node* node, List* list)
 	ListElement* current = list->head;
 	while (current != NULL) {
 		Node* current_node = (Node*)current->data;
-		if (current_node->x == node->x && current_node->y == node->y && current_node->speedX == node->speedX &&
-			current_node->speedY == node->speedY) {
+		if (current_node->x == node->x && current_node->y == node->y) {
 			return 1;
 		}
 		current = current->next;
@@ -231,15 +226,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
-				int newSpeedX = currentNode->speedX + accX;
-				int newSpeedY = currentNode->speedY + accY;
-
-				/* Limiter la vitesse maximale */
-				if (abs(newSpeedX) > speedX || abs(newSpeedY) > speedY) {
-					continue;
-				}
-				int newX = currentNode->x + newSpeedX;
-				int newY = currentNode->y + newSpeedY;
+				int newX = currentNode->x + accX;
+				int newY = currentNode->y + accY;
 				if (newX == currentNode->x && newY == currentNode->y) {
 					continue; /* ignorer le noeud lui-même */
 				}
@@ -248,8 +236,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
 					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
 					(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
-					Node* neighbour = createNode(newX, newY, currentNode, speedX, speedY);
-					neighbour->g_cost = currentNode->g_cost + 1 + abs(accX) + abs(accY);
+					Node* neighbour = createNode(newX, newY, currentNode);
+					neighbour->g_cost = currentNode->g_cost + 1;
 					if (map[newY][newX] == '~') {
 						neighbour->g_cost = currentNode->g_cost + 4;
 					}
@@ -307,7 +295,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 		int x = endPositions[i].x;
 		int y = endPositions[i].y;
 		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
-			*end = createNode(x, y, NULL, 0, 0);
+			*end = createNode(x, y, NULL);
 			break;
 		}
 	}
@@ -433,7 +421,7 @@ int main()
 		fflush(stderr);
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
-		start = createNode(myX, myY, NULL, 0, 0);
+		start = createNode(myX, myY, NULL);
 		findEndPositions(map, width, height, start, &end, myX, myY, secondX, secondY, thirdX, thirdY);
 		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
