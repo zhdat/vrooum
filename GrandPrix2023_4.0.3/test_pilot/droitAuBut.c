@@ -36,7 +36,7 @@ typedef struct {
 } EndPosition;
 
 /* Fonctions utiles pour la gestion des noeuds, listes, coûts... */
-Node* createNode(int x, int y, Node* parent, int speedX, int speedY);
+Node* createNode(int x, int y, Node* parent, int speedX, int speedY)
 {
 	Node* newNode = (Node*)malloc(sizeof(Node));
 	newNode->x = x;
