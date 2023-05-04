@@ -48,7 +48,12 @@ Node* createNode(int x, int y, Node* parent)
 
 int heuristicCost(Node* a, Node* b)
 {
-	return abs(a->x - b->x) + abs(a->y - b->y);
+	int dx = abs(a->x - b->x);
+	int dy = abs(a->y - b->y);
+	int D = 1;		  // coût pour se déplacer horizontalement ou verticalement
+	int D2 = sqrt(2); // coût pour se déplacer en diagonale
+
+	return D * (dx + dy) + (D2 - 2 * D) * min(dx, dy);
 }
 
 int nodeInList(Node* node, List* list)
@@ -195,8 +200,6 @@ int compareEndPositions(const void* a, const void* b)
 /* A star */
 List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int speedX, int speedY)
 {
-	int dx;
-	int dy;
 	int accX;
 	int accY;
 
