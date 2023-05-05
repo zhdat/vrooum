@@ -257,7 +257,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							double angleDifference = fabs(angle2 - angle1);
 
 							/* Si la différence d'angle est supérieure à un seuil (par exemple, PI/4 radians), ajoutez une pénalité */
-							if (angleDifference > PI / 4) {
+							if (angleDifference > 3.14 / 4) {
 								neighbour->g_cost += 2 * angleDifference; /* Vous pouvez ajuster le coefficient pour modifier l'importance de la
 																			 pénalité */
 							}
