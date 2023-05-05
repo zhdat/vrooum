@@ -200,6 +200,36 @@ int compareEndPositions(const void* a, const void* b)
 	return positionA->distance - positionB->distance;
 }
 
+int isWallBetweenNodes(Node* node1, Node* node2, char** map, int width, int height)
+{
+	int dx = abs(node2->x - node1->x);
+	int dy = abs(node2->y - node1->y);
+	int x = node1->x;
+	int y = node1->y;
+	int n = 1 + dx + dy;
+	int x_inc = (node2->x > node1->x) ? 1 : -1;
+	int y_inc = (node2->y > node1->y) ? 1 : -1;
+	int error = dx - dy;
+	dx *= 2;
+	dy *= 2;
+
+	for (; n > 0; --n) {
+		if (x >= 0 && x < width && y >= 0 && y < height && (map[y][x] == '.')) {
+			return 0; // There's a wall between the nodes.
+		}
+
+		if (error > 0) {
+			x += x_inc;
+			error -= dy;
+		} else {
+			y += y_inc;
+			error += dx;
+		}
+	}
+
+	return 1; // No wall between the nodes.
+}
+
 /* A star */
 List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
 {
@@ -251,7 +281,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
 						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
 							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
-							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
+							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
+							(isWallBetweenNodes(currentNode, createNode(newX, newY, NULL), map, width, height) == 1)) {
 							Node* neighbour = createNode(newX, newY, currentNode);
 							neighbour->g_cost = currentNode->g_cost + 1;
 
