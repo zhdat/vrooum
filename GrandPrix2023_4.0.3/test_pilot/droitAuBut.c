@@ -12,8 +12,6 @@
 typedef struct Node {
 	int x;
 	int y;
-	int speedX;
-	int speedY;
 	int g_cost;
 	int h_cost;
 	int f_cost;
@@ -36,13 +34,11 @@ typedef struct {
 } EndPosition;
 
 /* Fonctions utiles pour la gestion des noeuds, listes, coûts... */
-Node* createNode(int x, int y, Node* parent, int speedX, int speedY)
+Node* createNode(int x, int y, Node* parent)
 {
 	Node* newNode = (Node*)malloc(sizeof(Node));
 	newNode->x = x;
 	newNode->y = y;
-	newNode->speedX = speedX;
-	newNode->speedY = speedY;
 	newNode->parent = parent;
 	newNode->g_cost = 0;
 	newNode->h_cost = 0;
@@ -161,7 +157,7 @@ void printPath(List* path)
 	currentElement = path->head;
 	while (currentElement != NULL) {
 		currentNode = (Node*)currentElement->data;
-		fprintf(stderr, "(%d, %d, %d, %d) ", currentNode->x, currentNode->y, currentNode->speedX, currentNode->speedY);
+		fprintf(stderr, "(%d, %d) ", currentNode->x, currentNode->y);
 		currentElement = currentElement->next;
 	}
 }
@@ -200,12 +196,12 @@ int compareEndPositions(const void* a, const void* b)
 }
 
 /* A star */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int speedX, int speedY)
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
 {
 	int accX;
 	int accY;
-	int newSpeedX;
-	int newSpeedY;
+	int speedX;
+	int speedY;
 
 	List* openSet = initList();
 	List* closedSet = initList();
@@ -233,51 +229,48 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		addNodeToList(currentNode, closedSet);
 
 		/* Générer les voisins */
-		for (accX = -1; accX <= 1; accX++) {
-			for (accY = -1; accY <= 1; accY++) {
-				int newSpeedX = speedX + accX;
-				int newSpeedY = speedY + accY;
+		for (speedX = -4; speedX <= 4; speedX++) {
+			for (speedY = -4; speedY <= 4; speedY++) {
+				for (accX = -1; accX <= 1; accX++) {
+					for (accY = -1; accY <= 1; accY++) {
+						int newX = currentNode->x + speedX + accX;
+						int newY = currentNode->y + speedY + accY;
+						if (newX == currentNode->x && newY == currentNode->y) {
+							continue; /* ignorer le noeud lui-même */
+						}
 
-				if (newSpeedX < -5 || newSpeedX > 5 || newSpeedY < -5 || newSpeedY > 5) {
-					continue; /* ignorer les vitesses non valides */
-				}
-
-				int newX = currentNode->x + newSpeedX;
-				int newY = currentNode->y + newSpeedY;
-				if (newX == currentNode->x && newY == currentNode->y) {
-					continue; /* ignorer le noeud lui-même */
-				}
-
-				/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
-				if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
-					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
-					(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
-					Node* neighbour = createNode(newX, newY, currentNode, speedX, speedY);
-					neighbour->g_cost = currentNode->g_cost + 1;
-					if (map[newY][newX] == '~') {
-						neighbour->g_cost = currentNode->g_cost + 4;
-					}
-					neighbour->h_cost = heuristicCost(neighbour, end);
-					neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
-
-					if (!nodeInList(neighbour, closedSet)) {
-						ListElement* existingElementInOpenSet;
-						/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
-						Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
-						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
-							if (existingNodeInOpenSet != NULL) {
-								if (existingElementInOpenSet == openSet->head) {
-									openSet->head = existingElementInOpenSet->next;
-								} else {
-									ListElement* previous = openSet->head;
-									while (previous->next != existingElementInOpenSet) {
-										previous = previous->next;
-									}
-									previous->next = existingElementInOpenSet->next;
-								}
-								free(existingElementInOpenSet);
+						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
+						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
+							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
+							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
+							Node* neighbour = createNode(newX, newY, currentNode);
+							neighbour->g_cost = currentNode->g_cost + 1;
+							if (map[newY][newX] == '~') {
+								neighbour->g_cost = currentNode->g_cost + 4;
 							}
-							addNodeToList(neighbour, openSet);
+							neighbour->h_cost = heuristicCost(neighbour, end);
+							neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+
+							if (!nodeInList(neighbour, closedSet)) {
+								ListElement* existingElementInOpenSet;
+								/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
+								Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
+								if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
+									if (existingNodeInOpenSet != NULL) {
+										if (existingElementInOpenSet == openSet->head) {
+											openSet->head = existingElementInOpenSet->next;
+										} else {
+											ListElement* previous = openSet->head;
+											while (previous->next != existingElementInOpenSet) {
+												previous = previous->next;
+											}
+											previous->next = existingElementInOpenSet->next;
+										}
+										free(existingElementInOpenSet);
+									}
+									addNodeToList(neighbour, openSet);
+								}
+							}
 						}
 					}
 				}
@@ -289,8 +282,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 }
 
 /* Trouver les positions de départ et d'arrivée sur la carte */
-void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
-					  int speedY)
+void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY)
 {
 	int x, y;
 	int i;
@@ -322,7 +314,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 		int x = endPositions[i].x;
 		int y = endPositions[i].y;
 		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
-			*end = createNode(x, y, NULL, speedX, speedY);
+			*end = createNode(x, y, NULL);
 			break;
 		}
 	}
@@ -450,14 +442,14 @@ int main()
 		fflush(stderr);
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
-		start = createNode(myX, myY, NULL, 0, 0);
-		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
+		start = createNode(myX, myY, NULL);
+		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY);
 		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 		fflush(stderr);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
-		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY);
+		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY);
 		reverseList(path);
 		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
