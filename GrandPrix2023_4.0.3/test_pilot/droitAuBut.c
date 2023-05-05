@@ -279,7 +279,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							continue; /* ignorer le noeud lui-même */
 						}
 
-						if ((map[newY][newX] == '~') && ((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) > 1)) {
+						if ((map[newY][newX] == '~') && ((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) > 2)) {
 							continue;
 						}
 
