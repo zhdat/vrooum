@@ -12,6 +12,8 @@
 typedef struct Node {
 	int x;
 	int y;
+    int speedX;
+    int speedY;
 	int g_cost;
 	int h_cost;
 	int f_cost;
@@ -39,6 +41,8 @@ Node* createNode(int x, int y, Node* parent)
 	Node* newNode = (Node*)malloc(sizeof(Node));
 	newNode->x = x;
 	newNode->y = y;
+    newNode->speedX = 0;
+    newNode->speedY = 0;
 	newNode->parent = parent;
 	newNode->g_cost = 0;
 	newNode->h_cost = 0;
@@ -196,10 +200,12 @@ int compareEndPositions(const void* a, const void* b)
 }
 
 /* A star */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int SpeedX, int SpeedY)
 {
 	int accX;
 	int accY;
+    int newSpeedX;
+    int newSpeedY;
 
 	List* openSet = initList();
 	List* closedSet = initList();
@@ -229,8 +235,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
-				int newX = currentNode->x + accX;
-				int newY = currentNode->y + accY;
+                int newSpeedX = SpeedX + accX;
+                int newSpeedY = SpeedY + accY;
+				int newX = currentNode->x + newSpeedX;
+				int newY = currentNode->y + newSpeedY;
 				if (newX == currentNode->x && newY == currentNode->y) {
 					continue; /* ignorer le noeud lui-même */
 				}
@@ -238,7 +246,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
 				if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
 					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
-					(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
+					(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) && (newSpeedX >= -3 && newSpeedX <= 3) && (newSpeedY >= -3 && newSpeedY <= 3))) {
 					Node* neighbour = createNode(newX, newY, currentNode);
 					neighbour->g_cost = currentNode->g_cost + 1;
 					if (map[newY][newX] == '~') {
@@ -443,7 +451,7 @@ int main()
 		fflush(stderr);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
-		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY);
+		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY);
 		reverseList(path);
 		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
