@@ -161,7 +161,7 @@ void printPath(List* path)
 	currentElement = path->head;
 	while (currentElement != NULL) {
 		currentNode = (Node*)currentElement->data;
-		fprintf(stderr, "(%d, %d) ", currentNode->x, currentNode->y);
+		fprintf(stderr, "(%d, %d, %d, %d) ", currentNode->x, currentNode->y, currentNode->speedX, currentNode->speedY);
 		currentElement = currentElement->next;
 	}
 }
