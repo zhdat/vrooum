@@ -200,18 +200,22 @@ int compareEndPositions(const void* a, const void* b)
 	return positionA->distance - positionB->distance;
 }
 
-int isPathFree(int x1, int y1, int x2, int y2, char** map)
+int isPathFree(int x1, int y1, int x2, int y2, char** map, int width, int height)
 {
-	int i;
 	int dx = x2 - x1;
 	int dy = y2 - y1;
 	int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
 	float stepX = (float)dx / (float)steps;
 	float stepY = (float)dy / (float)steps;
 
-	for (i = 0; i < steps; i++) {
+	for (int i = 0; i < steps; i++) {
 		int currentX = x1 + round(stepX * i);
 		int currentY = y1 + round(stepY * i);
+
+		if (currentX < 0 || currentX >= width || currentY < 0 || currentY >= height) {
+			return 1;
+		}
+
 		if (map[currentY][currentX] == '#' || map[currentY][currentX] == '=' || map[currentY][currentX] == '~') {
 			return 0;
 		}
@@ -272,7 +276,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
 							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
 							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
-							(isPathFree(currentNode->x, currentNode->y, newX, newY, map) == 0)) {
+							(isPathFree(currentNode->x, currentNode->y, newX, newY, map, width, height) == 0)) {
 							Node* neighbour = createNode(newX, newY, currentNode);
 							neighbour->g_cost = currentNode->g_cost + 1;
 
