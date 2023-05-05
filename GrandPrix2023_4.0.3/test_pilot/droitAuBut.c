@@ -215,7 +215,7 @@ int isWallBetweenNodes(Node* node1, Node* node2, char** map, int width, int heig
 
 	for (; n > 0; --n) {
 		if (x >= 0 && x < width && y >= 0 && y < height && (map[y][x] == '.')) {
-			return 0; // There's a wall between the nodes.
+			return 0; /* There's a wall between the nodes. */
 		}
 
 		if (error > 0) {
@@ -227,7 +227,7 @@ int isWallBetweenNodes(Node* node1, Node* node2, char** map, int width, int heig
 		}
 	}
 
-	return 1; // No wall between the nodes.
+	return 1; /* No wall between the nodes. */
 }
 
 /* A star */
