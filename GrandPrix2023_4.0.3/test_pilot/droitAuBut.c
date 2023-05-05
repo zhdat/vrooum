@@ -235,8 +235,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
-				int newSpeedX = currentNode->speedX + accX;
-				int newSpeedY = currentNode->speedY + accY;
+				int newSpeedX = speedX + accX;
+				int newSpeedY = speedY + accY;
 
 				if (newSpeedX < -5 || newSpeedX > 5 || newSpeedY < -5 || newSpeedY > 5) {
 					continue; /* ignorer les vitesses non valides */
