@@ -236,8 +236,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (speedX = -4; speedX <= 4; speedX++) {
 			for (speedY = -4; speedY <= 4; speedY++) {
-				/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
-				if (speedX * speedX + speedY * speedY > 25) {
+				/* Vérifiez que la norme de la vitesse ne dépasse pas 4 */
+				if (speedX * speedX + speedY * speedY > 16) {
 					continue;
 				}
 				for (accX = -1; accX <= 1; accX++) {
