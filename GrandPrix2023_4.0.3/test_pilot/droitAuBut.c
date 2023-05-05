@@ -279,10 +279,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							continue; /* ignorer le noeud lui-même */
 						}
 
-						if ((newX >= 0 && newX < width && newY >= 0) && (map[newY][newX] == '~') &&
+						/* if ((newX >= 0 && newX < width && newY >= 0) && (map[newY][newX] == '~') &&
 							((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) > 2)) {
 							continue;
-						}
+						} */
 
 						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
 						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
