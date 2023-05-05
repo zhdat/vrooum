@@ -252,7 +252,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
 					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
 					(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
-					Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY);
+					Node* neighbour = createNode(newX, newY, currentNode, speedX, speedY);
 					neighbour->g_cost = currentNode->g_cost + 1;
 					if (map[newY][newX] == '~') {
 						neighbour->g_cost = currentNode->g_cost + 4;
