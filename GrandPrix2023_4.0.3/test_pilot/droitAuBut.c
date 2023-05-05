@@ -12,6 +12,8 @@
 typedef struct Node {
 	int x;
 	int y;
+	int speedX;
+	int speedY;
 	int g_cost;
 	int h_cost;
 	int f_cost;
@@ -34,11 +36,13 @@ typedef struct {
 } EndPosition;
 
 /* Fonctions utiles pour la gestion des noeuds, listes, coûts... */
-Node* createNode(int x, int y, Node* parent)
+Node* createNode(int x, int y, Node* parent, int speedX, int speedY)
 {
 	Node* newNode = (Node*)malloc(sizeof(Node));
 	newNode->x = x;
 	newNode->y = y;
+	newNode->speedX = speedX;
+	newNode->speedY = speedY;
 	newNode->parent = parent;
 	newNode->g_cost = 0;
 	newNode->h_cost = 0;
@@ -196,10 +200,12 @@ int compareEndPositions(const void* a, const void* b)
 }
 
 /* A star */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int speedX, int speedY)
 {
 	int accX;
 	int accY;
+	int newSpeedX;
+	int newSpeedY;
 
 	List* openSet = initList();
 	List* closedSet = initList();
@@ -229,8 +235,15 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
-				int newX = currentNode->x + accX;
-				int newY = currentNode->y + accY;
+				int newSpeedX = speedX + accX;
+				int newSpeedY = speedY + accY;
+
+				if (newSpeedX < -5 || newSpeedX > 5 || newSpeedY < -5 || newSpeedY > 5) {
+					continue; /* ignorer les vitesses non valides */
+				}
+
+				int newX = currentNode->x + newSpeedX;
+				int newY = currentNode->y + newSpeedY;
 				if (newX == currentNode->x && newY == currentNode->y) {
 					continue; /* ignorer le noeud lui-même */
 				}
@@ -239,7 +252,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
 					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
 					(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
-					Node* neighbour = createNode(newX, newY, currentNode);
+					Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY);
 					neighbour->g_cost = currentNode->g_cost + 1;
 					if (map[newY][newX] == '~') {
 						neighbour->g_cost = currentNode->g_cost + 4;
@@ -276,7 +289,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 }
 
 /* Trouver les positions de départ et d'arrivée sur la carte */
-void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY)
+void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
+					  int speedY)
 {
 	int x, y;
 	int i;
@@ -308,7 +322,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 		int x = endPositions[i].x;
 		int y = endPositions[i].y;
 		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
-			*end = createNode(x, y, NULL);
+			*end = createNode(x, y, NULL, speedX, speedY);
 			break;
 		}
 	}
@@ -436,14 +450,14 @@ int main()
 		fflush(stderr);
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
-		start = createNode(myX, myY, NULL);
-		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY);
+		start = createNode(myX, myY, NULL, 0, 0);
+		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
 		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 		fflush(stderr);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
-		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY);
+		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY);
 		reverseList(path);
 		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
