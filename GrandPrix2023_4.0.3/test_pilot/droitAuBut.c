@@ -236,6 +236,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (speedX = -4; speedX <= 4; speedX++) {
 			for (speedY = -4; speedY <= 4; speedY++) {
+				/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
+				if (speedX * speedX + speedY * speedY > 25) {
+					continue;
+				}
 				for (accX = -1; accX <= 1; accX++) {
 					for (accY = -1; accY <= 1; accY++) {
 						int newX = currentNode->x + speedX + accX;
@@ -258,7 +262,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 								double angleDifference = fabs(angle2 - angle1);
 
 								/* Si la différence d'angle est supérieure à un seuil (par exemple, PI/4 radians), ajoutez une pénalité */
-								if (angleDifference > 3.14 / 4) {
+								if (angleDifference > 3.1415 / 4) {
 									neighbour->g_cost += 2 * angleDifference; /* Vous pouvez ajuster le coefficient pour modifier l'importance de la
 																			  pénalité */
 								}
