@@ -349,6 +349,19 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
 		*accelerationY = nextY - myY - speedY;
 	}
 
+	if (*accelerationX > 1) {
+		*accelerationX = 1;
+	}
+	if (*accelerationX < -1) {
+		*accelerationX = -1;
+	}
+	if (*accelerationY > 1) {
+		*accelerationY = 1;
+	}
+	if (*accelerationY < -1) {
+		*accelerationY = -1;
+	}
+
 	fprintf(stderr, "First node in path: (%d, %d)\n", first->x, first->y);
 	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
 	fprintf(stderr, "Acceleration: (%d, %d)\n", *accelerationX, *accelerationY);
