@@ -200,6 +200,25 @@ int compareEndPositions(const void* a, const void* b)
 	return positionA->distance - positionB->distance;
 }
 
+int isPathFree(int x1, int y1, int x2, int y2, char** map)
+{
+	int dx = x2 - x1;
+	int dy = y2 - y1;
+	int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+	float stepX = (float)dx / (float)steps;
+	float stepY = (float)dy / (float)steps;
+
+	for (int i = 0; i < steps; i++) {
+		int currentX = x1 + round(stepX * i);
+		int currentY = y1 + round(stepY * i);
+		if (map[currentY][currentX] == '#' || map[currentY][currentX] == '=' || map[currentY][currentX] == '~') {
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
 /* A star */
 List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
 {
@@ -251,7 +270,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
 						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
 							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
-							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0)) {
+							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
+							(isPathFree(currentNode->x, currentNode->y, newX, newY, map) == 0)) {
 							Node* neighbour = createNode(newX, newY, currentNode);
 							neighbour->g_cost = currentNode->g_cost + 1;
 
