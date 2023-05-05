@@ -196,12 +196,10 @@ int compareEndPositions(const void* a, const void* b)
 }
 
 /* A star */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int SpeedX, int SpeedY)
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
 {
 	int accX;
 	int accY;
-	int newSpeedX;
-	int newSpeedY;
 
 	List* openSet = initList();
 	List* closedSet = initList();
@@ -445,7 +443,7 @@ int main()
 		fflush(stderr);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
-		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY);
+		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY);
 		reverseList(path);
 		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
