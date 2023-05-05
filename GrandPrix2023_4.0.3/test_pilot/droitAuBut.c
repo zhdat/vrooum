@@ -269,13 +269,18 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				for (accX = -1; accX <= 1; accX++) {
 					for (accY = -1; accY <= 1; accY++) {
 						/* Vérifiez que la norme de la vitesse ne dépasse pas 4 */
-						if ((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) > 16) {
+						if ((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) > 25) {
 							continue;
 						}
+
 						int newX = currentNode->x + speedX + accX;
 						int newY = currentNode->y + speedY + accY;
 						if (newX == currentNode->x && newY == currentNode->y) {
 							continue; /* ignorer le noeud lui-même */
+						}
+
+						if ((map[newY][newX] == '~') && ((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) > 1)) {
+							continue;
 						}
 
 						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
@@ -294,7 +299,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 								/* Si la différence d'angle est supérieure à un seuil (par exemple, PI/4 radians), ajoutez une pénalité */
 								if (angleDifference > 3.1415 / 4) {
-									neighbour->g_cost += 5 * angleDifference; /* Vous pouvez ajuster le coefficient pour modifier l'importance de la
+									neighbour->g_cost += 3 * angleDifference; /* Vous pouvez ajuster le coefficient pour modifier l'importance de la
 																			  pénalité */
 								}
 							}
