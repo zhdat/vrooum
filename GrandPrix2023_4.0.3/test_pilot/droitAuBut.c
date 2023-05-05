@@ -202,13 +202,14 @@ int compareEndPositions(const void* a, const void* b)
 
 int isPathFree(int x1, int y1, int x2, int y2, char** map, int width, int height)
 {
+	int i;
 	int dx = x2 - x1;
 	int dy = y2 - y1;
 	int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
 	float stepX = (float)dx / (float)steps;
 	float stepY = (float)dy / (float)steps;
 
-	for (int i = 0; i < steps; i++) {
+	for (i = 0; i < steps; i++) {
 		int currentX = x1 + round(stepX * i);
 		int currentY = y1 + round(stepY * i);
 
