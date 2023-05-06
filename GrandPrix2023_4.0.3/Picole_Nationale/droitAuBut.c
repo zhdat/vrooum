@@ -55,7 +55,8 @@ PriorityQueue* initPriorityQueue(size_t capacity)
 
 int pq_find_index(PriorityQueue* pq, Node* node)
 {
-	for (size_t i = 0; i < pq->size; ++i) {
+	size_t i;
+	for (i = 0; i < pq->size; ++i) {
 		if (pq->nodes[i] == node) {
 			return i;
 		}
@@ -65,6 +66,7 @@ int pq_find_index(PriorityQueue* pq, Node* node)
 
 void pq_remove(PriorityQueue* pq, Node* node)
 {
+	size_t i;
 	if (pq == NULL || node == NULL) {
 		return;
 	}
@@ -75,7 +77,7 @@ void pq_remove(PriorityQueue* pq, Node* node)
 	}
 
 	/* Supprimer le noeud en décalant les éléments suivants vers la gauche */
-	for (size_t i = index; i < pq->size - 1; ++i) {
+	for (i = index; i < pq->size - 1; ++i) {
 		pq->nodes[i] = pq->nodes[i + 1];
 	}
 
