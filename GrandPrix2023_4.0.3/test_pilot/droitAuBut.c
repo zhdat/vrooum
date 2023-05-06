@@ -209,7 +209,7 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 	initLine(start.x, start.y, end.x, end.y, &line);
 
 	/* Ajustement pour éviter les erreurs de précision */
-	float margin = 0.1;
+	int margin = 1;
 
 	while (nextPoint(&line, &point, +1) > 0) {
 		/* Ajouter l'ajustement pour éviter les erreurs de précision */
@@ -232,7 +232,7 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 		}
 
 		if (map[adjustedY][adjustedX] == '.') {
-			/*  Mur détecté */
+			/* Mur détecté */
 			return 0;
 		}
 	}
