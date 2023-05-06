@@ -263,7 +263,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				for (accX = -1; accX <= 1; accX++) {
 					for (accY = -1; accY <= 1; accY++) {
 						/* Vérifiez que la norme de la vitesse ne dépasse pas 4 */
-						if ((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) > 25) {
+						if ((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) >= 16) {
 							continue;
 						}
 
