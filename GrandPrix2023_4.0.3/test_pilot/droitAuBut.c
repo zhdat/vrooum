@@ -294,18 +294,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY);
 							neighbour->g_cost = currentNode->g_cost + 1 + 10 / (abs(newSpeedX) + abs(newSpeedY) + 1);
 
-							/* Ajoutez une pénalité pour les virages rapides */
-							if (currentNode->parent != NULL) { /* Vérifiez si le parent existe */
-								double angle1 = calculateAngle(currentNode->x - currentNode->parent->x, currentNode->y - currentNode->parent->y);
-								double angle2 = calculateAngle(newX - currentNode->x, newY - currentNode->y);
-								double angleDifference = fabs(angle2 - angle1);
-
-								/* Si la différence d'angle est supérieure à un seuil (par exemple, PI/4 radians), ajoutez une pénalité */
-								if (angleDifference > 3.1415 / 4) {
-									neighbour->g_cost += 100 * angleDifference; /* Vous pouvez ajuster le coefficient pour modifier l'importance de la
-																			  pénalité */
-								}
-							}
 							if (map[newY][newX] == '~') {
 								neighbour->g_cost = currentNode->g_cost + 4;
 							}
