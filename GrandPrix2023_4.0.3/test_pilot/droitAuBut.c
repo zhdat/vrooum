@@ -13,6 +13,8 @@
 typedef struct Node {
 	int x;
 	int y;
+	int speedX;
+	int speedY;
 	int g_cost;
 	int h_cost;
 	int f_cost;
@@ -35,12 +37,14 @@ typedef struct {
 } EndPosition;
 
 /* Fonctions utiles pour la gestion des noeuds, listes, coûts... */
-Node* createNode(int x, int y, Node* parent)
+Node* createNode(int x, int y, Node* parent, int speedX, int speedY)
 {
 	Node* newNode = (Node*)malloc(sizeof(Node));
 	newNode->x = x;
 	newNode->y = y;
 	newNode->parent = parent;
+	newNode->speedX = speedX;
+	newNode->speedY = speedY;
 	newNode->g_cost = 0;
 	newNode->h_cost = 0;
 	newNode->f_cost = 0;
@@ -268,8 +272,11 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							continue;
 						}
 
-						int newX = currentNode->x + speedX + accX;
-						int newY = currentNode->y + speedY + accY;
+						int newX = currentNode->x + currentNode->speedX + accX;
+						int newY = currentNode->y + currentNode->speedY + accY;
+						int newSpeedX = currentNode->speedX + accX;
+						int newSpeedY = currentNode->speedY + accY;
+
 						if (newX == currentNode->x && newY == currentNode->y) {
 							continue; /* ignorer le noeud lui-même */
 						}
@@ -284,8 +291,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
 							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
 							(isPathClear(map, width, height, (Pos2Dint){ currentNode->x, currentNode->y }, (Pos2Dint){ newX, newY }) == 1)) {
-							Node* neighbour = createNode(newX, newY, currentNode);
-							neighbour->g_cost = currentNode->g_cost + 1;
+							Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY);
+							neighbour->g_cost = currentNode->g_cost + 1 + 10 / (abs(newSpeedX) + abs(newSpeedY) + 1);
 
 							/* Ajoutez une pénalité pour les virages rapides */
 							if (currentNode->parent != NULL) { /* Vérifiez si le parent existe */
@@ -368,7 +375,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 		int x = endPositions[i].x;
 		int y = endPositions[i].y;
 		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
-			*end = createNode(x, y, NULL);
+			*end = createNode(x, y, NULL, 0, 0);
 			break;
 		}
 	}
@@ -509,7 +516,7 @@ int main()
 		fflush(stderr);
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
-		start = createNode(myX, myY, NULL);
+		start = createNode(myX, myY, NULL, 0, 0);
 		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY);
 		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
