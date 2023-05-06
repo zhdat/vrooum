@@ -300,7 +300,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 								/* Si la différence d'angle est supérieure à un seuil (par exemple, PI/4 radians), ajoutez une pénalité */
 								if (angleDifference > 3.1415 / 4) {
-									neighbour->g_cost += 5 * angleDifference; /* Vous pouvez ajuster le coefficient pour modifier l'importance de la
+									neighbour->g_cost += 7 * angleDifference; /* Vous pouvez ajuster le coefficient pour modifier l'importance de la
 																			  pénalité */
 								}
 							}
