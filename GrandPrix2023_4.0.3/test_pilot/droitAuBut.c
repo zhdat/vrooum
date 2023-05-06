@@ -304,7 +304,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						int newSpeedY = currentNode->speedY + accY;
 
 						/* Vérifiez que la norme de la vitesse ne dépasse pas 4 */
-						if ((newSpeedX) * (newSpeedX) + (newSpeedY) * (newSpeedY) >= 10) {
+						if ((newSpeedX) * (newSpeedX) + (newSpeedY) * (newSpeedY) >= 16) {
 							continue;
 						}
 
@@ -316,7 +316,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						}
 
 						/* Calculer le coût en essence */
-						int gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
+						int gasCost = gasConsumption(accX, accY, newSpeedX, newSpeedY, 0);
 						int newGas = currentNode->gas + gasCost;
 
 						if (newGas < 0) {
