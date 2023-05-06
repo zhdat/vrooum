@@ -304,7 +304,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						int newSpeedY = currentNode->speedY + accY;
 
 						/* Vérifiez que la norme de la vitesse ne dépasse pas 4 */
-						if ((newSpeedX) * (newSpeedX) + (newSpeedY) * (newSpeedY) >= 16) {
+						if ((newSpeedX) * (newSpeedX) + (newSpeedY) * (newSpeedY) > 25) {
 							continue;
 						}
 
@@ -323,10 +323,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							continue; /* ignorer les mouvements illégaux */
 						}
 
-						/* if ((newX >= 0 && newX < width && newY >= 0) && (map[newY][newX] == '~') &&
+						if ((newX >= 0 && newX < width && newY >= 0) && (map[newY][newX] == '~') &&
 							((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) > 2)) {
 							continue;
-						} */
+						}
 
 						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
 						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
