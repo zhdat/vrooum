@@ -56,6 +56,11 @@ int heuristicCost(Node* a, Node* b)
 	return abs(a->x - b->x) + abs(a->y - b->y);
 }
 
+int nodeEquals(Node* node1, Node* node2)
+{
+	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY;
+}
+
 int nodeInList(Node* node, List* list)
 {
 	ListElement* current = list->head;
@@ -76,7 +81,7 @@ Node* findNodeInList(Node* node, List* list, ListElement** elementInList)
 	while (currentElement != NULL) {
 		Node* currentNode = (Node*)currentElement->data;
 
-		if (currentNode->x == node->x && currentNode->y == node->y) {
+		if (nodeEquals(currentNode, node)) {
 			if (elementInList != NULL) {
 				*elementInList = currentElement;
 			}
@@ -292,7 +297,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
 							(isPathClear(map, width, height, (Pos2Dint){ currentNode->x, currentNode->y }, (Pos2Dint){ newX, newY }) == 1)) {
 							Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY);
-							neighbour->g_cost = currentNode->g_cost + 1;
+							neighbour->g_cost = currentNode->g_cost + 1 + 10 / (abs(newSpeedX) + abs(newSpeedY) + 1);
+
 							if (map[newY][newX] == '~') {
 								neighbour->g_cost = currentNode->g_cost + 4;
 							}

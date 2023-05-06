@@ -29,6 +29,7 @@ typedef struct {
   int pos;          /*< Reference position on the line */
 } InfoLine;
 
+
 /**
  * Initialize an InfoLine data structure
  */
