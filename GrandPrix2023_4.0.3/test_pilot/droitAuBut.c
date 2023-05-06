@@ -306,9 +306,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 								Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
 								if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 									if (existingNodeInOpenSet != NULL) {
+										fprintf(stderr, "test\n");
 										if (existingElementInOpenSet == openSet->head) {
 											openSet->head = existingElementInOpenSet->next;
-											fprintf(stderr, "test\n");
+											fprintf(stderr, "test1\n");
 										} else {
 											ListElement* previous = openSet->head;
 											fprintf(stderr, "test2\n");
