@@ -2,7 +2,7 @@
 PILOT_NAME = droitAuBut
 
 CC = gcc
-CFLAGS = -Wall -Wextra -ansi -pedantic -Wpedantic -g
+CFLAGS = -Wall -Wextra -ansi -pedantic -Wpedantic -g -I.
 LDLIBS = -lm
 
 SANITIZE=off
@@ -24,12 +24,14 @@ try: install
 $(DRIVERS_PATH)/$(PILOT_NAME): $(PILOT_NAME)
 	cp $(PILOT_NAME) $(DRIVERS_PATH)
 
-$(PILOT_NAME): $(PILOT_NAME).c
+$(PILOT_NAME): $(PILOT_NAME).c follow_line.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
+follow_line.o: follow_line.c follow_line.h
+	$(CC) $(CFLAGS) -c follow_line.c
 
 distclean: clean
 	rm -f $(PILOT_NAME)
 
 clean:
-	rm -f *~ ./obj/*.o
-	rm -f *~ ./obj/*.d
+	rm -f *~ *.o

@@ -1,250 +1,385 @@
-#include <limits.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <search.h>
+#include "follow_line.h"
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
+#define INFINITE 9999999
 
-#include <limits.h>
-#define INF INT_MAX
+/* Structures utiles au projet */
 
-typedef struct {
+typedef struct Node {
 	int x;
 	int y;
-} Position;
-
-typedef struct {
-	int cost;
-	Position pos;
+	int speedX;
+	int speedY;
+	int gas;
+	int g_cost;
+	int h_cost;
+	int f_cost;
+	struct Node* parent;
 } Node;
 
-/* follow_line */
+typedef struct ListElement {
+	void* data;
+	struct ListElement* next;
+} ListElement;
 
-/**
- * Position on a map (integer coordinates)
- */
+typedef struct List {
+	ListElement* head;
+} List;
+
 typedef struct {
 	int x;
 	int y;
-} Pos2Dint;
+	int distance;
+} EndPosition;
 
-/**
- * Position with floating point coordinates
- */
-typedef struct {
-	float x;
-	float y;
-} Pos2Dfloat;
+typedef struct PriorityQueue {
+	size_t size;
+	size_t capacity;
+	Node** nodes;
+} PriorityQueue;
 
-/**
- * Dicrete line traversal information
- */
-typedef struct {
-	Pos2Dint start;
-	Pos2Dint end;
-	Pos2Dfloat currentPosition;
-	Pos2Dfloat delta; /*< Shift vector */
-	int len;		  /*< Length along the main axis */
-	int pos;		  /*< Reference position on the line */
-} InfoLine;
-
-/**
- * Initialize an InfoLine data structure
- */
-void initLine(int x1, int y1, int x2, int y2, InfoLine* infoLine)
+/* Fonction pour initialiser la file de priorité */
+PriorityQueue* initPriorityQueue(size_t capacity)
 {
-	int adxi, adyi, dxi, dyi;
-	infoLine->start.x = x1;
-	infoLine->start.y = y1;
-	infoLine->currentPosition.x = x1 + 0.5;
-	infoLine->currentPosition.y = y1 + 0.5;
-	infoLine->end.x = x2;
-	infoLine->end.y = y2;
-
-	adxi = dxi = x2 - x1;
-	adyi = dyi = y2 - y1;
-	if (adxi < 0) {
-		adxi = -dxi;
-	}
-	if (adyi < 0) {
-		adyi = -dyi;
-	}
-	infoLine->pos = 0;
-	infoLine->len = adxi;
-	if (adyi > adxi) {
-		infoLine->len = adyi;
-	}
-	infoLine->delta.x = ((float)dxi) / infoLine->len;
-	infoLine->delta.y = ((float)dyi) / infoLine->len;
+	PriorityQueue* queue = (PriorityQueue*)malloc(sizeof(PriorityQueue));
+	queue->size = 0;
+	queue->capacity = capacity;
+	queue->nodes = (Node**)malloc(capacity * sizeof(Node*));
+	return queue;
 }
 
-/**
- * @brief nextPoint Move a point along a line in one direction
- *
- * @param infoLine Line traversal information
- * @param point current/next position
- * @param direction (+1 forward, -1 backward)
- * @return 1 if point is a new point in the line, otherwise -1 (info is
- *         already at the end point)
- */
-int nextPoint(InfoLine* infoLine, Pos2Dint* point, int direction)
+int pq_find_index(PriorityQueue* pq, Node* node)
 {
-	if (direction > 0) {
-		if (infoLine->pos == infoLine->len) {
-			point->x = infoLine->end.x;
-			point->y = infoLine->end.y;
-			return -1; /* End of the line */
+	for (size_t i = 0; i < pq->size; ++i) {
+		if (pq->nodes[i] == node) {
+			return i;
 		}
-		infoLine->currentPosition.x += infoLine->delta.x;
-		infoLine->currentPosition.y += infoLine->delta.y;
-		point->x = ((int)infoLine->currentPosition.x);
-		point->y = ((int)infoLine->currentPosition.y);
-		infoLine->pos++;
-		return 1; /* a new point is found */
 	}
-	if (direction < 0) {
-		if (infoLine->pos == 0) {
-			point->x = infoLine->start.x;
-			point->y = infoLine->start.y;
-			return -1; /* End of the line */
-		}
-		infoLine->currentPosition.x -= infoLine->delta.x;
-		infoLine->currentPosition.y -= infoLine->delta.y;
-		point->x = ((int)infoLine->currentPosition.x);
-		point->y = ((int)infoLine->currentPosition.y);
-		infoLine->pos--;
-
-		return 1; /* a new point is found */
-	}
-	return 1;	  /* direction == 0 => no motion */
+	return -1;
 }
 
-int is_valid_move(char** map, int x, int y, int width, int height)
+void pq_remove(PriorityQueue* pq, Node* node)
 {
-	if (x < 0 || x >= width || y < 0 || y >= height) {
-		return 0;
+	if (pq == NULL || node == NULL) {
+		return;
 	}
-	return map[y][x] != '.';
+
+	int index = pq_find_index(pq, node);
+	if (index == -1) {
+		return; /* Le noeud n'est pas trouvé dans la file de priorité */
+	}
+
+	/* Supprimer le noeud en décalant les éléments suivants vers la gauche */
+	for (size_t i = index; i < pq->size - 1; ++i) {
+		pq->nodes[i] = pq->nodes[i + 1];
+	}
+
+	pq->size--;
+
+	/* Réduire la capacité de la file de priorité si nécessaire */
+	if (pq->size < pq->capacity / 4) {
+		pq->capacity /= 2;
+		pq->nodes = (Node**)realloc(pq->nodes, sizeof(Node*) * pq->capacity);
+	}
 }
 
-int get_cost(char terrain)
+/* Fonction pour comparer deux noeuds */
+int compareNodes(const void* a, const void* b)
 {
-	if (terrain == '#') {
+	Node* nodeA = (Node*)a;
+	Node* nodeB = (Node*)b;
+
+	if (nodeA->f_cost < nodeB->f_cost) {
+		return -1;
+	} else if (nodeA->f_cost > nodeB->f_cost) {
 		return 1;
-	} else if (terrain == '~') {
-		return 5;
-	} else {
-		return INF;
+	}
+	return 0;
+}
+
+/* Fonction pour redimensionner la file de priorité */
+void resizePriorityQueue(PriorityQueue* queue)
+{
+	queue->capacity *= 2;
+	queue->nodes = (Node**)realloc(queue->nodes, queue->capacity * sizeof(Node*));
+}
+
+/* Fonction pour permuter deux noeuds dans la file de priorité */
+void swapNodes(PriorityQueue* queue, size_t a, size_t b)
+{
+	Node* temp = queue->nodes[a];
+	queue->nodes[a] = queue->nodes[b];
+	queue->nodes[b] = temp;
+}
+
+/* Fonction pour ajuster la file de priorité vers le haut */
+void upHeap(PriorityQueue* queue, size_t index)
+{
+	while (index > 0) {
+		size_t parent = (index - 1) / 2;
+		if (compareNodes(queue->nodes[index], queue->nodes[parent]) >= 0)
+			break;
+		swapNodes(queue, index, parent);
+		index = parent;
 	}
 }
 
-Position dijkstra_next_move(char** map, int width, int height, Position start, Position end)
+/* Fonction pour ajuster la file de priorité vers le bas */
+void downHeap(PriorityQueue* queue, size_t index)
 {
-	int** visited;
-	int** dist;
-	int y;
-	int x;
-	int i;
-	Position** prev;
-	Position directions[] = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }, { -1, -1 }, { 1, 1 }, { -1, 1 }, { 1, -1 } };
-	int dir_count;
-
-	visited = malloc(height * sizeof(int*));
-	if (visited == NULL) {
-		perror("Memory allocation failed");
-	}
-	for (i = 0; i < height; i++) {
-		visited[i] = malloc(width * sizeof(int));
-		if (visited[i] == NULL) {
-			perror("Memory allocation failed");
-		}
-	}
-
-	dist = malloc(height * sizeof(int*));
-	if (dist == NULL) {
-		perror("Memory allocation failed");
-	}
-	for (i = 0; i < height; i++) {
-		dist[i] = malloc(width * sizeof(int));
-		if (dist[i] == NULL) {
-			perror("Memory allocation failed");
-		}
-	}
-	prev = malloc(height * sizeof(Position*));
-	if (prev == NULL) {
-		perror("Memory allocation failed");
-	}
-	for (i = 0; i < height; i++) {
-		prev[i] = malloc(width * sizeof(Position));
-		if (prev[i] == NULL) {
-			perror("Memory allocation failed");
-		}
-	}
-
-	dir_count = sizeof(directions) / sizeof(directions[0]);
-
-	for (y = 0; y < height; y++) {
-		for (x = 0; x < width; x++) {
-			visited[y][x] = 0;
-			dist[y][x] = INF;
-		}
-	}
-
-	dist[start.y][start.x] = 0;
-
 	while (1) {
-		Node min_node;
-		min_node.cost = INF;
+		size_t left = index * 2 + 1;
+		size_t right = index * 2 + 2;
+		size_t smallest = index;
 
-		for (y = 0; y < height; y++) {
-			for (x = 0; x < width; x++) {
-				if (!visited[y][x] && dist[y][x] < min_node.cost) {
-					min_node.cost = dist[y][x];
-					min_node.pos.x = x;
-					min_node.pos.y = y;
-				}
-			}
+		if (left < queue->size && compareNodes(queue->nodes[left], queue->nodes[smallest]) < 0) {
+			smallest = left;
 		}
 
-		if (min_node.cost == INF || (min_node.pos.x == end.x && min_node.pos.y == end.y)) {
+		if (right < queue->size && compareNodes(queue->nodes[right], queue->nodes[smallest]) < 0) {
+			smallest = right;
+		}
+
+		if (smallest == index)
 			break;
+
+		swapNodes(queue, index, smallest);
+		index = smallest;
+	}
+}
+
+/* Fonction pour ajouter un noeud à la file de priorité */
+void pushPriorityQueue(Node* node, PriorityQueue* queue)
+{
+	if (queue->size == queue->capacity) {
+		resizePriorityQueue(queue);
+	}
+
+	queue->nodes[queue->size++] = node;
+	upHeap(queue, queue->size - 1);
+}
+
+/* Fonction pour supprimer le noeud avec le coût F le plus bas de la file de priorité */
+Node* popPriorityQueue(PriorityQueue* queue)
+{
+	if (queue->size == 0) {
+		return NULL;
+	}
+
+	Node* result = queue->nodes[0];
+	queue->nodes[0] = queue->nodes[--queue->size];
+	downHeap(queue, 0);
+	return result;
+}
+
+/* Fonction pour vérifier si la file de priorité est vide */
+int isPriorityQueueEmpty(PriorityQueue* queue)
+{
+	return queue->size == 0;
+}
+
+/* Fonctions utiles pour la gestion des noeuds, listes, coûts... */
+Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas)
+{
+	Node* newNode = (Node*)malloc(sizeof(Node));
+	newNode->x = x;
+	newNode->y = y;
+	newNode->parent = parent;
+	newNode->speedX = speedX;
+	newNode->speedY = speedY;
+	newNode->gas = gas;
+	newNode->g_cost = 0;
+	newNode->h_cost = 0;
+	newNode->f_cost = 0;
+	return newNode;
+}
+
+int heuristicCost(Node* a, Node* b)
+{
+	return abs(a->x - b->x) + abs(a->y - b->y);
+}
+
+int nodeEquals(Node* node1, Node* node2)
+{
+	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY;
+}
+
+int nodeInList(Node* node, List* list)
+{
+	ListElement* current = list->head;
+	while (current != NULL) {
+		Node* current_node = (Node*)current->data;
+		if (current_node->x == node->x && current_node->y == node->y) {
+			return 1;
 		}
+		current = current->next;
+	}
+	return 0;
+}
 
-		x = min_node.pos.x;
-		y = min_node.pos.y;
-		visited[y][x] = 1;
+Node* findNodeInList(Node* node, List* list, ListElement** elementInList)
+{
+	ListElement* currentElement = list->head;
 
-		for (i = 0; i < dir_count; i++) {
-			int dx = directions[i].x;
-			int dy = directions[i].y;
-			int nx = x + dx;
-			int ny = y + dy;
+	while (currentElement != NULL) {
+		Node* currentNode = (Node*)currentElement->data;
 
-			if (is_valid_move(map, nx, ny, width, height) && !visited[ny][nx]) {
-				int new_cost = dist[y][x] + get_cost(map[ny][nx]);
-				if (new_cost < dist[ny][nx]) {
-					dist[ny][nx] = new_cost;
-					prev[ny][nx].x = x;
-					prev[ny][nx].y = y;
-				}
+		if (nodeEquals(currentNode, node)) {
+			if (elementInList != NULL) {
+				*elementInList = currentElement;
 			}
+			return currentNode;
+		}
+
+		currentElement = currentElement->next;
+	}
+
+	return NULL;
+}
+
+void addNodeToList(Node* node, List* list)
+{
+	ListElement* newElement = (ListElement*)malloc(sizeof(ListElement));
+	newElement->data = node;
+	newElement->next = NULL;
+
+	if (list->head == NULL) {
+		list->head = newElement;
+	} else {
+		ListElement* current = list->head;
+		while (current->next != NULL) {
+			current = current->next;
+		}
+		current->next = newElement;
+	}
+}
+Node* removeNodeWithLowestFCost(List* list)
+{
+	Node* result;
+	ListElement* current = list->head;
+	ListElement* previous = NULL;
+	ListElement* lowest = current;
+	ListElement* previousLowest = NULL;
+
+	int lowestCost = ((Node*)current->data)->f_cost;
+
+	while (current != NULL) {
+		Node* current_node = (Node*)current->data;
+		if (current_node->f_cost < lowestCost) {
+			lowestCost = current_node->f_cost;
+			lowest = current;
+			previousLowest = previous;
+		}
+		previous = current;
+		current = current->next;
+	}
+
+	if (previousLowest == NULL) {
+		list->head = lowest->next;
+	} else {
+		previousLowest->next = lowest->next;
+	}
+
+	result = (Node*)lowest->data;
+	free(lowest);
+	return result;
+}
+
+List* initList()
+{
+	List* newList = (List*)malloc(sizeof(List));
+	newList->head = NULL;
+	return newList;
+}
+
+int isListEmpty(List* list)
+{
+	return list->head == NULL;
+}
+
+void printPath(List* path)
+{
+	ListElement* currentElement;
+	Node* currentNode;
+	if (path == NULL || path->head == NULL) {
+		fprintf(stderr, "Path is empty\n");
+		return;
+	}
+
+	fprintf(stderr, "Path: ");
+	currentElement = path->head;
+	while (currentElement != NULL) {
+		currentNode = (Node*)currentElement->data;
+		fprintf(stderr, "(%d, %d) ", currentNode->x, currentNode->y);
+		currentElement = currentElement->next;
+	}
+}
+
+void reverseList(List* list)
+{
+	if (list == NULL) {
+		fprintf(stderr, "List is NULL\n");
+		return;
+	}
+	ListElement* prevElement = NULL;
+	ListElement* currentElement = list->head;
+	ListElement* nextElement = NULL;
+
+	if (list == NULL || list->head == NULL) {
+		fprintf(stderr, "List is empty\n");
+		return;
+	}
+
+	while (currentElement != NULL) {
+		nextElement = currentElement->next;
+		currentElement->next = prevElement;
+		prevElement = currentElement;
+		currentElement = nextElement;
+	}
+
+	list->head = prevElement;
+}
+
+int isPositionOccupied(int x, int y, int secondX, int secondY, int thirdX, int thirdY)
+{
+	return (x == secondX && y == secondY) || (x == thirdX && y == thirdY);
+}
+
+int compareEndPositions(const void* a, const void* b)
+{
+	const EndPosition* positionA = (const EndPosition*)a;
+	const EndPosition* positionB = (const EndPosition*)b;
+
+	return positionA->distance - positionB->distance;
+}
+
+int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
+{
+	InfoLine line;
+	Pos2Dint point;
+
+	initLine(start.x, start.y, end.x, end.y, &line);
+
+	/* Parcourir les points de la ligne */
+	while (nextPoint(&line, &point, +1) > 0) {
+		if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height) {
+			/* Point en dehors des limites de la carte */
+			return 0;
+		}
+
+		if (map[point.y][point.x] == '.') {
+			/* Mur détecté */
+			return 0;
 		}
 	}
 
-	if (dist[end.y][end.x] == INF) {
-		Position pos;
-		pos.x = -1;
-		pos.y = -1;
-		return pos;
-	} else {
-		Position current = end;
-		while (!(prev[current.y][current.x].x == start.x && prev[current.y][current.x].y == start.y)) {
-			current = prev[current.y][current.x];
-		}
-		return current;
-	}
+	/* Aucun mur détecté, le chemin est dégagé */
+	return 1;
 }
 
 /**
@@ -257,7 +392,7 @@ Position dijkstra_next_move(char** map, int width, int height, Position start, P
  * @param accY Acceleration y component
  * @param speedX Speed x component
  * @param speedY Speed y component
- * @param inSand (0 or 1)
+ * @param inSand (boolean)
  * @return Number of gas units consumed
  */
 int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
@@ -270,6 +405,226 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
 	return -gas;
 }
 
+/* A star */
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int startSpeedX,
+			int startSpeedY, int maxGas)
+{
+	int accX;
+	int accY;
+	int speedX;
+	int speedY;
+	int gasCost;
+	int newGas;
+
+	PriorityQueue* openSet = initPriorityQueue(10);
+	List* closedSet = initList();
+
+	start->g_cost = 0;
+	start->h_cost = heuristicCost(start, end);
+	start->f_cost = start->g_cost + start->h_cost;
+
+	pushPriorityQueue(start, openSet);
+
+	while (!isPriorityQueueEmpty(openSet)) {
+		Node* currentNode = (Node*)popPriorityQueue(openSet);
+
+		if (currentNode->x == end->x && currentNode->y == end->y) {
+			/* Chemin trouvé, reconstruire le chemin et le retourner */
+			List* path = initList();
+			Node* pathNode = currentNode;
+			while (pathNode != NULL) {
+				addNodeToList(pathNode, path);
+				pathNode = pathNode->parent;
+			}
+			return path;
+		}
+
+		addNodeToList(currentNode, closedSet);
+
+		/* Générer les voisins */
+		for (speedX = -1; speedX <= 1; speedX++) {
+			for (speedY = -1; speedY <= 1; speedY++) {
+				for (accX = -1; accX <= 1; accX++) {
+					for (accY = -1; accY <= 1; accY++) {
+						int newSpeedX = currentNode->speedX + accX;
+						int newSpeedY = currentNode->speedY + accY;
+
+						/* Vérifiez que la norme de la vitesse ne dépasse pas 4 */
+						if ((newSpeedX) * (newSpeedX) + (newSpeedY) * (newSpeedY) > 25) {
+							continue;
+						}
+
+						int newX = currentNode->x + newSpeedX;
+						int newY = currentNode->y + newSpeedY;
+
+						if (newX == currentNode->x && newY == currentNode->y) {
+							continue; /* ignorer le noeud lui-même */
+						}
+
+						/* Calculer le coût en essence */
+						int gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
+						int newGas = currentNode->gas + gasCost;
+
+						if (newGas < 0 || newGas > maxGas) {
+							continue; /* ignorer les mouvements illégaux */
+						}
+
+						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
+						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
+							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
+							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
+							(isPathClear(map, width, height, (Pos2Dint){ currentNode->x, currentNode->y }, (Pos2Dint){ newX, newY }) == 1)) {
+							/* Vérifier si la norme de la vitesse est supérieure à 1 sur le sable */
+							if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
+								continue;
+							}
+							Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
+							neighbour->g_cost = currentNode->g_cost + sqrt((newX - currentNode->x) * (newX - currentNode->x) +
+																		   (newY - currentNode->y) * (newY - currentNode->y));
+
+							if (map[newY][newX] == '~') {
+								neighbour->g_cost = currentNode->g_cost + 4;
+							}
+							neighbour->h_cost = heuristicCost(neighbour, end);
+
+							/* Ajouter une vérification pour s'assurer qu'il y a suffisamment de gaz pour atteindre le nœud d'arrivée */
+							if (neighbour->gas < neighbour->h_cost) {
+								free(neighbour);
+								continue; /* Ignorer le voisin s'il n'a pas assez de gaz pour atteindre la fin */
+							}
+							neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+
+							if (!nodeInList(neighbour, closedSet)) {
+								ListElement* existingElementInOpenSet;
+								/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
+								Node* existingNodeInOpenSet = findNodeInList(neighbour, (List*)openSet->nodes, &existingElementInOpenSet);
+								if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
+									if (existingNodeInOpenSet != NULL) {
+										pq_remove(openSet, existingNodeInOpenSet);
+									}
+									pushPriorityQueue(neighbour, openSet);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	/* Pas de chemin trouvé */
+	return NULL;
+}
+
+/* Trouver les positions de départ et d'arrivée sur la carte */
+void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
+					  int speedY)
+{
+	int x, y;
+	int i;
+	EndPosition* endPositions;
+	int distance;
+	EndPosition endPosition;
+
+	int endPositionCount = 0;
+	endPositions = (EndPosition*)malloc(sizeof(EndPosition) * width * height);
+
+	for (y = 0; y < height; y++) {
+		for (x = 0; x < width; x++) {
+			if (map[y][x] == '=') {
+				Node node;
+				node.x = x;
+				node.y = y;
+				distance = heuristicCost(start, &node);
+				endPosition.x = x;
+				endPosition.y = y;
+				endPosition.distance = distance;
+				endPositions[endPositionCount++] = endPosition;
+			}
+		}
+	}
+
+	qsort(endPositions, endPositionCount, sizeof(EndPosition), compareEndPositions);
+
+	for (i = 0; i < endPositionCount; i++) {
+		int x = endPositions[i].x;
+		int y = endPositions[i].y;
+		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
+			*end = createNode(x, y, NULL, speedX, speedY, 0);
+			break;
+		}
+	}
+}
+
+/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
+void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY)
+{
+	int nextX, nextY;
+	Node* first;
+	if (path == NULL || path->head == NULL || path->head->data == NULL) {
+		fprintf(stderr, "Path is NULL\n");
+		*accelerationX = 0;
+		*accelerationY = 0;
+		return;
+	}
+
+	first = path->head->next->data;
+	nextX = first->x;
+	nextY = first->y;
+
+	fprintf(stderr, "Next node in path: (%d, %d)\n", nextX, nextY);
+	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
+	fprintf(stderr, "Current speed: (%d, %d)\n", speedX, speedY);
+
+	/* Vérifier si la vitesse actuelle est suffisante pour atteindre la case suivante */
+	if (myX + speedX == nextX && myY + speedY == nextY) {
+		*accelerationX = 0;
+		*accelerationY = 0;
+	} else {
+		int desiredSpeedX = nextX - myX;
+		int desiredSpeedY = nextY - myY;
+
+		*accelerationX = desiredSpeedX - speedX;
+		*accelerationY = desiredSpeedY - speedY;
+	}
+
+	if (*accelerationX > 1) {
+		*accelerationX = 1;
+	}
+	if (*accelerationX < -1) {
+		*accelerationX = -1;
+	}
+	if (*accelerationY > 1) {
+		*accelerationY = 1;
+	}
+	if (*accelerationY < -1) {
+		*accelerationY = -1;
+	}
+
+	fprintf(stderr, "First node in path: (%d, %d)\n", first->x, first->y);
+	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
+	fprintf(stderr, "Acceleration: (%d, %d)\n", *accelerationX, *accelerationY);
+}
+
+/* Libérer la mémoire utilisée par la liste */
+void freePath(List* path)
+{
+	ListElement* current = path->head;
+	ListElement* tmp;
+	while (current != NULL) {
+		tmp = current;
+		current = current->next;
+		free(tmp);
+	}
+	free(path);
+}
+
+void freeNode(Node* node)
+{
+	if (node != NULL) {
+		free(node);
+	}
+}
+
 int main()
 {
 	int row;
@@ -278,19 +633,15 @@ int main()
 	int boosts = BOOSTS_AT_START;
 	int round = 0;
 	int accelerationX = 1, accelerationY = 0;
-	int accelerationX_old = 0, accelerationY_old = 0;
 	int speedX = 0, speedY = 0;
 	char action[100];
 	char line_buffer[MAX_LINE_LENGTH];
-	char** grid;
-	int x;
-	int y;
-	int j;
-	Position start;
-	Position end;
-	Position next;
-	InfoLine lineInfo;
-	Pos2Dint currentPoint;
+	char** map;
+	int myX, myY, secondX, secondY, thirdX, thirdY;
+
+	Node* start = NULL;
+	Node* end = NULL;
+	List* path = NULL;
 
 	boosts = boosts;							/* Prevent warning "unused variable" */
 	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
@@ -298,57 +649,78 @@ int main()
 	fprintf(stderr, "=== >Map< ===\n");
 	fprintf(stderr, "Size %d x %d\n", width, height);
 	fprintf(stderr, "Gas at start %d \n\n", gasLevel);
-	grid = (char**)malloc(height * sizeof(char*));
+	map = (char**)malloc(height * sizeof(char*));
 	for (row = 0; row < height; ++row) { /* Read map data, line per line */
 		fgets(line_buffer, MAX_LINE_LENGTH, stdin);
 		fputs(line_buffer, stderr);
-		grid[row] = (char*)malloc((width + 1) * sizeof(char));
-		strcpy(grid[row], line_buffer);
-		grid[row][width] = '\0';
+		map[row] = (char*)malloc(width * sizeof(char));
+		strcpy(map[row], line_buffer);
+		map[row][width] = '\0'; /* Remove trailing \n */
 	}
 	fflush(stderr);
 	fprintf(stderr, "\n=== Race start ===\n");
+
+	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read positions of pilots */
+	sscanf(line_buffer, "%d %d %d %d %d %d", &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
+	fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
+	fflush(stderr);
+
+	/* Trouver les positions de départ et d'arrivée sur la carte */
+	start = createNode(myX, myY, NULL, 0, 0, gasLevel);
+	findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
+	fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
+	fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
+	fflush(stderr);
+
+	/* Executer l'algorithme A* pour trouver le chemin */
+	path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel);
+	fprintf(stderr, "    Path found: \n");
+	reverseList(path);
+	printPath(path);
+
 	while (!feof(stdin)) {
-		int myX, myY, secondX, secondY, thirdX, thirdY;
 		round++;
 		fprintf(stderr, "=== ROUND %d\n", round);
 		fflush(stderr);
-		fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read positions of pilots */
-		sscanf(line_buffer, "%d %d %d %d %d %d", &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
-		fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
-		fflush(stderr);
-
-		/* Calcul de la position d'arrivée */
-		start.x = myX;
-		start.y = myY;
-		for (x = 0; x < width; x++) {
-			for (y = 0; y < height; y++) {
-				if (grid[y][x] == '=') {
-					end.x = x;
-					end.y = y;
-				}
-			}
+		if (round != 1) {
+			fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read positions of pilots */
+			sscanf(line_buffer, "%d %d %d %d %d %d", &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
+			fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
+			fflush(stderr);
 		}
 
-		next = dijkstra_next_move(grid, width, height, start, end);
-		/* accelerationX = next.x - myX;
-		accelerationY = next.y - myY; */
-		initLine(myX, myY, next.x, next.y, &lineInfo);
-		nextPoint(&lineInfo, &currentPoint, 1);
-		accelerationX = currentPoint.x - myX;
-		accelerationY = currentPoint.y - myY;
-		if (accelerationX == accelerationX_old && accelerationY == accelerationY_old) {
-			accelerationX = 0;
-			accelerationY = 0;
+		/* Trouver les positions de départ et d'arrivée sur la carte */
+		start = createNode(myX, myY, NULL, 0, 0, 0);
+		if (isPositionOccupied(myX, myY, secondX, secondY, thirdX, thirdY) == 1) {
+			findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
+			fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
+			fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
+			fflush(stderr);
+
+			/* Executer l'algorithme A* pour trouver le chemin */
+			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel);
+			fprintf(stderr, "    Path found: \n");
+			reverseList(path);
+			printPath(path);
 		}
-		accelerationX_old = accelerationX;
-		accelerationY_old = accelerationY;
+
+		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
+		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY);
+		fprintf(stderr, "    Acceleration: (%d, %d)\n", accelerationX, accelerationY);
 
 		/* Gas consumption cannot be accurate here. */
 		gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, 0);
 		speedX += accelerationX;
 		speedY += accelerationY;
 
+		/* Passer au noeud suivant dans le path */
+		if (path != NULL) {
+			if (path->head != NULL) {
+				ListElement* nextElement = path->head->next;
+				free(path->head);
+				path->head = nextElement;
+			}
+		}
 		/* Write the acceleration request to the race manager (stdout). */
 		sprintf(action, "%d %d", accelerationX, accelerationY);
 		fprintf(stdout, "%s", action);
@@ -363,10 +735,14 @@ int main()
 		}
 	}
 
-	for (j = 0; j < height; ++j) {
-		free(grid[j]);
+	/* Nettoyage des ressources allouées */
+	for (row = 0; row < height; ++row) {
+		free(map[row]);
 	}
-	free(grid);
+	free(map);
+	freePath(path);
+	freeNode(start);
+	freeNode(end);
 
 	return EXIT_SUCCESS;
 }
