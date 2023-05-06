@@ -547,15 +547,6 @@ int main()
 			fflush(stderr);
 		}
 
-		/* Passer au noeud suivant dans le path */
-		if (path != NULL) {
-			if (path->head != NULL) {
-				ListElement* nextElement = path->head->next;
-				free(path->head);
-				path->head = nextElement;
-			}
-		}
-
 		/* Trouver les positions de départ et d'arrivée sur la carte */
 		start = createNode(myX, myY, NULL, 0, 0, 0);
 		if (isPositionOccupied(myX, myY, secondX, secondY, thirdX, thirdY) == 1) {
@@ -579,6 +570,15 @@ int main()
 		gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, 0);
 		speedX += accelerationX;
 		speedY += accelerationY;
+
+		/* Passer au noeud suivant dans le path */
+		if (path != NULL) {
+			if (path->head != NULL) {
+				ListElement* nextElement = path->head->next;
+				free(path->head);
+				path->head = nextElement;
+			}
+		}
 		/* Write the acceleration request to the race manager (stdout). */
 		sprintf(action, "%d %d", accelerationX, accelerationY);
 		fprintf(stdout, "%s", action);
