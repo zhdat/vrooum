@@ -208,30 +208,14 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 
 	initLine(start.x, start.y, end.x, end.y, &line);
 
-	/* Ajustement pour éviter les erreurs de précision */
-	int margin = 1;
-
+	/* Parcourir les points de la ligne */
 	while (nextPoint(&line, &point, +1) > 0) {
-		/* Ajouter l'ajustement pour éviter les erreurs de précision */
-		int adjustedX = point.x;
-		int adjustedY = point.y;
-		if (line.delta.x > 0) {
-			adjustedX = point.x + margin;
-		} else if (line.delta.x < 0) {
-			adjustedX = point.x - margin;
-		}
-		if (line.delta.y > 0) {
-			adjustedY = point.y + margin;
-		} else if (line.delta.y < 0) {
-			adjustedY = point.y - margin;
-		}
-
-		if (adjustedX < 0 || adjustedX >= width || adjustedY < 0 || adjustedY >= height) {
+		if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height) {
 			/* Point en dehors des limites de la carte */
 			return 0;
 		}
 
-		if (map[adjustedY][adjustedX] == '.') {
+		if (map[point.y][point.x] == '.') {
 			/* Mur détecté */
 			return 0;
 		}
