@@ -313,7 +313,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 										free(existingElementInOpenSet);
 									}
 									addNodeToList(neighbour, openSet);
-									fprintf(stderr, "Ajout du noeud (%d, %d) au chemin\n", neighbour->x, neighbour->y);
 								}
 							}
 						}
@@ -508,6 +507,7 @@ int main()
 
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY);
+		fprintf(stderr, "    Path found: \n");
 		reverseList(path);
 		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
