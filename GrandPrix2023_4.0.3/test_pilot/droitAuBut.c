@@ -316,7 +316,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						}
 
 						/* Calculer le coût en essence */
-						int gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
+						int gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
 						int newGas = currentNode->gas + gasCost;
 
 						if (newGas < 0) {
