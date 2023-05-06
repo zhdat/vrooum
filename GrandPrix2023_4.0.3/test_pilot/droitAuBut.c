@@ -179,6 +179,7 @@ void reverseList(List* list)
 	}
 
 	while (currentElement != NULL) {
+		fprintf(stderr, "Reversing list\n");
 		nextElement = currentElement->next;
 		currentElement->next = prevElement;
 		prevElement = currentElement;
