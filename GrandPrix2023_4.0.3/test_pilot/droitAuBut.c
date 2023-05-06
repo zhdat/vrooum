@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <search.h>
+#include "follow_line.h"
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
 #define INFINITE 9999999
@@ -200,34 +201,27 @@ int compareEndPositions(const void* a, const void* b)
 	return positionA->distance - positionB->distance;
 }
 
-int isWallBetweenNodes(Node* node1, Node* node2, char** map, int width, int height)
+int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 {
-	int dx = abs(node2->x - node1->x);
-	int dy = abs(node2->y - node1->y);
-	int x = node1->x;
-	int y = node1->y;
-	int n = 1 + dx + dy;
-	int x_inc = (node2->x > node1->x) ? 1 : -1;
-	int y_inc = (node2->y > node1->y) ? 1 : -1;
-	int error = dx - dy;
-	dx *= 2;
-	dy *= 2;
+	InfoLine line;
+	Pos2Dint point;
 
-	for (; n > 0; --n) {
-		if (x >= 0 && x < width && y >= 0 && y < height && (map[y][x] == '.')) {
-			return 1; /* There's a wall between the nodes. */
+	initLine(start.x, start.y, end.x, end.y, &line);
+
+	while (nextPoint(&line, &point, +1) > 0) {
+		if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height) {
+			// Point en dehors des limites de la carte
+			return 0;
 		}
 
-		if (error > 0) {
-			x += x_inc;
-			error -= dy;
-		} else {
-			y += y_inc;
-			error += dx;
+		if (map[point.y][point.x] == '.') {
+			// Mur détecté
+			return 0;
 		}
 	}
 
-	return 0; /* No wall between the nodes. */
+	// Aucun mur détecté, le chemin est dégagé
+	return 1;
 }
 
 /* A star */
@@ -288,7 +282,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
 							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
 							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
-							(isWallBetweenNodes(currentNode, createNode(newX, newY, NULL), map, width, height) == 0)) {
+							(isPathClear(map, width, height, (Pos2Dint){ currentNode->x, currentNode->y }, (Pos2Dint){ newX, newY }) == 1)) {
 							Node* neighbour = createNode(newX, newY, currentNode);
 							neighbour->g_cost = currentNode->g_cost + 1;
 
