@@ -293,13 +293,14 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							(isPathClear(map, width, height, (Pos2Dint){ currentNode->x, currentNode->y }, (Pos2Dint){ newX, newY }) == 1)) {
 							Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY);
 							neighbour->g_cost = currentNode->g_cost + 1 + 10 / (abs(newSpeedX) + abs(newSpeedY) + 1);
-							fprintf(stderr, "g_cost : %d\n", neighbour->g_cost);
 
 							if (map[newY][newX] == '~') {
 								neighbour->g_cost = currentNode->g_cost + 4;
 							}
 							neighbour->h_cost = heuristicCost(neighbour, end);
 							neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+							fprintf(stderr, "neighbour: %d %d %d %d %d %d\n", neighbour->x, neighbour->y, neighbour->speedX, neighbour->speedY,
+									neighbour->g_cost, neighbour->h_cost);
 
 							if (!nodeInList(neighbour, closedSet)) {
 								ListElement* existingElementInOpenSet;
@@ -309,6 +310,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 									if (existingNodeInOpenSet != NULL) {
 										if (existingElementInOpenSet == openSet->head) {
 											openSet->head = existingElementInOpenSet->next;
+											fprintf(stderr, "test\n");
 										} else {
 											ListElement* previous = openSet->head;
 											while (previous->next != existingElementInOpenSet) {
