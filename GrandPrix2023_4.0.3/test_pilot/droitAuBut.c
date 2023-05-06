@@ -268,7 +268,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				for (accX = -1; accX <= 1; accX++) {
 					for (accY = -1; accY <= 1; accY++) {
 						/* Vérifiez que la norme de la vitesse ne dépasse pas 4 */
-						if ((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) >= 16) {
+						if ((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) > 25) {
 							continue;
 						}
 
@@ -292,8 +292,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
 							(isPathClear(map, width, height, (Pos2Dint){ currentNode->x, currentNode->y }, (Pos2Dint){ newX, newY }) == 1)) {
 							Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY);
-							neighbour->g_cost = currentNode->g_cost + 1 + 10 / (abs(newSpeedX) + abs(newSpeedY) + 1);
-
+							neighbour->g_cost = currentNode->g_cost + 1;
 							if (map[newY][newX] == '~') {
 								neighbour->g_cost = currentNode->g_cost + 4;
 							}
@@ -306,15 +305,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 								Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
 								if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 									if (existingNodeInOpenSet != NULL) {
-										fprintf(stderr, "test\n");
-										fprintf(stderr, "existingNodeInOpenSet->x = %d\n", existingNodeInOpenSet->x);
-										fprintf(stderr, "existingNodeInOpenSet->y = %d\n", existingNodeInOpenSet->y);
 										if (existingElementInOpenSet == openSet->head) {
 											openSet->head = existingElementInOpenSet->next;
-											fprintf(stderr, "test1\n");
 										} else {
 											ListElement* previous = openSet->head;
-											fprintf(stderr, "test2\n");
 											while (previous->next != existingElementInOpenSet) {
 												previous = previous->next;
 											}
