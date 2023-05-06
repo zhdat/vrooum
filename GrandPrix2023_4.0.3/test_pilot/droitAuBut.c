@@ -210,17 +210,17 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 
 	while (nextPoint(&line, &point, +1) > 0) {
 		if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height) {
-			// Point en dehors des limites de la carte
+			/* Point en dehors des limites de la carte */
 			return 0;
 		}
 
 		if (map[point.y][point.x] == '.') {
-			// Mur détecté
+			/* Mur détecté */
 			return 0;
 		}
 	}
 
-	// Aucun mur détecté, le chemin est dégagé
+	/* Aucun mur détecté, le chemin est dégagé */
 	return 1;
 }
 
