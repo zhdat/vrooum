@@ -15,6 +15,7 @@ typedef struct Node {
 	int y;
 	int speedX;
 	int speedY;
+	int gas;
 	int g_cost;
 	int h_cost;
 	int f_cost;
@@ -37,7 +38,7 @@ typedef struct {
 } EndPosition;
 
 /* Fonctions utiles pour la gestion des noeuds, listes, coûts... */
-Node* createNode(int x, int y, Node* parent, int speedX, int speedY)
+Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas)
 {
 	Node* newNode = (Node*)malloc(sizeof(Node));
 	newNode->x = x;
@@ -45,6 +46,7 @@ Node* createNode(int x, int y, Node* parent, int speedX, int speedY)
 	newNode->parent = parent;
 	newNode->speedX = speedX;
 	newNode->speedY = speedY;
+	newNode->gas = gas;
 	newNode->g_cost = 0;
 	newNode->h_cost = 0;
 	newNode->f_cost = 0;
@@ -234,6 +236,29 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 	return 1;
 }
 
+/**
+ * @brief Compute the gas consumption of a requested acceleration
+ *
+ * CAUTION: Even an illegal move will result in gas consumption. Producing
+ * illegal moves should be prevented as much as possible!
+ *
+ * @param accX Acceleration x component
+ * @param accY Acceleration y component
+ * @param speedX Speed x component
+ * @param speedY Speed y component
+ * @param inSand (boolean)
+ * @return Number of gas units consumed
+ */
+int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
+{
+	int gas = accX * accX + accY * accY;
+	gas += (int)(sqrt(speedX * speedX + speedY * speedY) * 3.0 / 2.0);
+	if (inSand) {
+		gas += 1;
+	}
+	return -gas;
+}
+
 /* A star */
 List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int startSpeedX,
 			int startSpeedY)
@@ -242,6 +267,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int accY;
 	int speedX;
 	int speedY;
+	int gasCost;
+	int newGas;
 
 	List* openSet = initList();
 	List* closedSet = initList();
@@ -288,6 +315,14 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							continue; /* ignorer le noeud lui-même */
 						}
 
+						/* Calculer le coût en essence */
+						int gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
+						int newGas = currentNode->gas + gasCost;
+
+						if (newGas < 0) {
+							continue; /* ignorer les mouvements illégaux */
+						}
+
 						/* if ((newX >= 0 && newX < width && newY >= 0) && (map[newY][newX] == '~') &&
 							((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) > 2)) {
 							continue;
@@ -298,7 +333,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
 							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
 							(isPathClear(map, width, height, (Pos2Dint){ currentNode->x, currentNode->y }, (Pos2Dint){ newX, newY }) == 1)) {
-							Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY);
+							Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 							neighbour->g_cost = currentNode->g_cost + sqrt((newX - currentNode->x) * (newX - currentNode->x) +
 																		   (newY - currentNode->y) * (newY - currentNode->y));
 
@@ -371,7 +406,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 		int x = endPositions[i].x;
 		int y = endPositions[i].y;
 		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
-			*end = createNode(x, y, NULL, 0, 0);
+			*end = createNode(x, y, NULL, 0, 0, 0);
 			break;
 		}
 	}
@@ -447,29 +482,6 @@ void freeNode(Node* node)
 	}
 }
 
-/**
- * @brief Compute the gas consumption of a requested acceleration
- *
- * CAUTION: Even an illegal move will result in gas consumption. Producing
- * illegal moves should be prevented as much as possible!
- *
- * @param accX Acceleration x component
- * @param accY Acceleration y component
- * @param speedX Speed x component
- * @param speedY Speed y component
- * @param inSand (boolean)
- * @return Number of gas units consumed
- */
-int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
-{
-	int gas = accX * accX + accY * accY;
-	gas += (int)(sqrt(speedX * speedX + speedY * speedY) * 3.0 / 2.0);
-	if (inSand) {
-		gas += 1;
-	}
-	return -gas;
-}
-
 int main()
 {
 	int row;
@@ -511,7 +523,7 @@ int main()
 	fflush(stderr);
 
 	/* Trouver les positions de départ et d'arrivée sur la carte */
-	start = createNode(myX, myY, NULL, 0, 0);
+	start = createNode(myX, myY, NULL, 0, 0, gasLevel);
 	findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY);
 	fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 	fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
