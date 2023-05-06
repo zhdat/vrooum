@@ -293,6 +293,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							(isPathClear(map, width, height, (Pos2Dint){ currentNode->x, currentNode->y }, (Pos2Dint){ newX, newY }) == 1)) {
 							Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY);
 							neighbour->g_cost = currentNode->g_cost + 1 + 10 / (abs(newSpeedX) + abs(newSpeedY) + 1);
+							fprintf(stderr, "g_cost : %d\n", neighbour->g_cost);
 
 							if (map[newY][newX] == '~') {
 								neighbour->g_cost = currentNode->g_cost + 4;
