@@ -509,6 +509,7 @@ int main()
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY);
 		fprintf(stderr, "    Path found: \n");
 		reverseList(path);
+		fprintf(stderr, " reversed: \n");
 		printPath(path);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY);
