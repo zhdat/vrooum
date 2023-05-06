@@ -304,7 +304,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						int newSpeedY = currentNode->speedY + accY;
 
 						/* Vérifiez que la norme de la vitesse ne dépasse pas 4 */
-						if ((newSpeedX) * (newSpeedX) + (newSpeedY) * (newSpeedY) > 25) {
+						if ((newSpeedX) * (newSpeedX) + (newSpeedY) * (newSpeedY) >= 10) {
 							continue;
 						}
 
