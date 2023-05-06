@@ -53,21 +53,9 @@ Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas)
 	return newNode;
 }
 
-/* int heuristicCost(Node* a, Node* b)
-{
-	return abs(a->x - b->x) + abs(a->y - b->y);
-} */
-
 int heuristicCost(Node* a, Node* b)
 {
-	int dx = abs(a->x - b->x);
-	int dy = abs(a->y - b->y);
-	int distance = sqrt(dx * dx + dy * dy);
-
-	int gasCostFactor = 1;
-	int gas_cost = gasCostFactor * (a->gas - b->gas);
-
-	return distance + gas_cost;
+	return abs(a->x - b->x) + abs(a->y - b->y);
 }
 
 int nodeEquals(Node* node1, Node* node2)
@@ -273,7 +261,7 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
 
 /* A star */
 List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int startSpeedX,
-			int startSpeedY)
+			int startSpeedY, int maxGas)
 {
 	int accX;
 	int accY;
@@ -331,7 +319,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						int gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
 						int newGas = currentNode->gas + gasCost;
 
-						if (newGas < 0) {
+						if (newGas < 0 || newGas > maxGas) {
 							continue; /* ignorer les mouvements illégaux */
 						}
 
@@ -549,7 +537,7 @@ int main()
 	fflush(stderr);
 
 	/* Executer l'algorithme A* pour trouver le chemin */
-	path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY);
+	path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel);
 	fprintf(stderr, "    Path found: \n");
 	reverseList(path);
 	printPath(path);
@@ -574,7 +562,7 @@ int main()
 			fflush(stderr);
 
 			/* Executer l'algorithme A* pour trouver le chemin */
-			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY);
+			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel);
 			fprintf(stderr, "    Path found: \n");
 			reverseList(path);
 			printPath(path);
