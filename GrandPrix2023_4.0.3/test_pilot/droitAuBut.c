@@ -323,10 +323,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							continue; /* ignorer les mouvements illégaux */
 						}
 
-						if ((newX >= 0 && newX < width && newY >= 0) && (map[newY][newX] == '~') &&
+						/* if ((newX >= 0 && newX < width && newY >= 0) && (map[newY][newX] == '~') &&
 							((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) > 2)) {
 							continue;
-						}
+						} */
 
 						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
 						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
@@ -407,7 +407,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 		int x = endPositions[i].x;
 		int y = endPositions[i].y;
 		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
-			*end = createNode(x, y, NULL, 0, 0, 0);
+			*end = createNode(x, y, NULL, speedX, speedY, 0);
 			break;
 		}
 	}
