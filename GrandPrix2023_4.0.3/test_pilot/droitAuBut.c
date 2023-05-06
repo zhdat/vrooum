@@ -169,6 +169,7 @@ void printPath(List* path)
 
 void reverseList(List* list)
 {
+	fprintf(stderr, "Reversing list\n");
 	ListElement* prevElement = NULL;
 	ListElement* currentElement = list->head;
 	ListElement* nextElement = NULL;
