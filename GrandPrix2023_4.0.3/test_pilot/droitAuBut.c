@@ -215,7 +215,7 @@ int isWallBetweenNodes(Node* node1, Node* node2, char** map, int width, int heig
 
 	for (; n > 0; --n) {
 		if (x >= 0 && x < width && y >= 0 && y < height && (map[y][x] == '.')) {
-			return 0; /* There's a wall between the nodes. */
+			return 1; /* There's a wall between the nodes. */
 		}
 
 		if (error > 0) {
@@ -227,7 +227,7 @@ int isWallBetweenNodes(Node* node1, Node* node2, char** map, int width, int heig
 		}
 	}
 
-	return 1; /* No wall between the nodes. */
+	return 0; /* No wall between the nodes. */
 }
 
 /* A star */
@@ -288,7 +288,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
 							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
 							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
-							(isWallBetweenNodes(currentNode, createNode(newX, newY, NULL), map, width, height) == 1)) {
+							(isWallBetweenNodes(currentNode, createNode(newX, newY, NULL), map, width, height) == 0)) {
 							Node* neighbour = createNode(newX, newY, currentNode);
 							neighbour->g_cost = currentNode->g_cost + 1;
 
@@ -300,7 +300,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 								/* Si la différence d'angle est supérieure à un seuil (par exemple, PI/4 radians), ajoutez une pénalité */
 								if (angleDifference > 3.1415 / 4) {
-									neighbour->g_cost += 10 * angleDifference; /* Vous pouvez ajuster le coefficient pour modifier l'importance de la
+									neighbour->g_cost += 15 * angleDifference; /* Vous pouvez ajuster le coefficient pour modifier l'importance de la
 																			  pénalité */
 								}
 							}
