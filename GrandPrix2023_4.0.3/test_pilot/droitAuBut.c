@@ -296,8 +296,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		addNodeToList(currentNode, closedSet);
 
 		/* Générer les voisins */
-		for (speedX = -4; speedX <= 4; speedX++) {
-			for (speedY = -4; speedY <= 4; speedY++) {
+		for (speedX = -1; speedX <= 1; speedX++) {
+			for (speedY = -1; speedY <= 1; speedY++) {
 				for (accX = -1; accX <= 1; accX++) {
 					for (accY = -1; accY <= 1; accY++) {
 						int newSpeedX = currentNode->speedX + accX;
