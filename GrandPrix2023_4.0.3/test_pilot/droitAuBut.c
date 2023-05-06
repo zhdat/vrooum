@@ -529,10 +529,12 @@ int main()
 		round++;
 		fprintf(stderr, "=== ROUND %d\n", round);
 		fflush(stderr);
-		fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read positions of pilots */
-		sscanf(line_buffer, "%d %d %d %d %d %d", &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
-		fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
-		fflush(stderr);
+		if (round != 1) {
+			fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read positions of pilots */
+			sscanf(line_buffer, "%d %d %d %d %d %d", &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
+			fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
+			fflush(stderr);
+		}
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
 		start = createNode(myX, myY, NULL, 0, 0);
