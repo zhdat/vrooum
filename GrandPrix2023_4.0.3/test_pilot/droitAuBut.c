@@ -272,8 +272,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						int newSpeedX = currentNode->speedX + accX;
 						int newSpeedY = currentNode->speedY + accY;
 
-						fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d\n", newX, newY, newSpeedX, newSpeedY);
-
 						if (newX == currentNode->x && newY == currentNode->y) {
 							continue; /* ignorer le noeud lui-même */
 						}
@@ -289,6 +287,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
 							(isPathClear(map, width, height, (Pos2Dint){ currentNode->x, currentNode->y }, (Pos2Dint){ newX, newY }) == 1)) {
 							Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY);
+							fprintf(stderr, "Neighbour: %d %d %d %d\n", neighbour->x, neighbour->y, neighbour->speedX, neighbour->speedY);
 							neighbour->g_cost = currentNode->g_cost + 1 + 10 / (abs(newSpeedX) + abs(newSpeedY) + 1);
 
 							if (map[newY][newX] == '~') {
