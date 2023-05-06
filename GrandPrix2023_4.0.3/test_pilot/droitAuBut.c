@@ -224,6 +224,23 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 	return 1;
 }
 
+int distanceToWall(int x, int y, char** map, int width, int height)
+{
+	int distance = 0;
+	int directions[4][2] = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+
+	for (int i = 0; i < 4; i++) {
+		int newX = x + directions[i][0];
+		int newY = y + directions[i][1];
+
+		if (newX >= 0 && newX < width && newY >= 0 && newY < height && map[newY][newX] == '.') {
+			distance++;
+		}
+	}
+
+	return distance;
+}
+
 /* A star */
 List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
 {
@@ -285,6 +302,12 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							(isPathClear(map, width, height, (Pos2Dint){ currentNode->x, currentNode->y }, (Pos2Dint){ newX, newY }) == 1)) {
 							Node* neighbour = createNode(newX, newY, currentNode);
 							neighbour->g_cost = currentNode->g_cost + 1;
+
+							int distance = distanceToWall(newX, newY, map, width, height);
+							if (distance <= 1) {
+								int speedNorm = (speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY);
+								neighbour->g_cost += speedNorm * 5;
+							}
 
 							/* Ajoutez une pénalité pour les virages rapides */
 							if (currentNode->parent != NULL) { /* Vérifiez si le parent existe */
