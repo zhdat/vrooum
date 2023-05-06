@@ -556,7 +556,7 @@ int main()
 		}
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
-		start = createNode(myX, myY, NULL, 0, 0);
+		start = createNode(myX, myY, NULL, 0, 0, 0);
 		if (isPositionOccupied(myX, myY, secondX, secondY, thirdX, thirdY) == 1) {
 			findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY);
 			fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
