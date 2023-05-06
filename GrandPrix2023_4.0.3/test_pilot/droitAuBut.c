@@ -172,6 +172,7 @@ void reverseList(List* list)
 	ListElement* prevElement = NULL;
 	ListElement* currentElement = list->head;
 	ListElement* nextElement = NULL;
+	fprintf(stderr, "Reversing list\n");
 
 	if (list == NULL || list->head == NULL) {
 		fprintf(stderr, "List is empty\n");
