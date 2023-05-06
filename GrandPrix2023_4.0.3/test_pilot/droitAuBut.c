@@ -287,7 +287,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
 							(isPathClear(map, width, height, (Pos2Dint){ currentNode->x, currentNode->y }, (Pos2Dint){ newX, newY }) == 1)) {
 							Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY);
-							fprintf(stderr, "Neighbour: %d %d %d %d\n", neighbour->x, neighbour->y, neighbour->speedX, neighbour->speedY);
 							neighbour->g_cost = currentNode->g_cost + 1 + 10 / (abs(newSpeedX) + abs(newSpeedY) + 1);
 
 							if (map[newY][newX] == '~') {
@@ -299,6 +298,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							if (!nodeInList(neighbour, closedSet)) {
 								ListElement* existingElementInOpenSet;
 								/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
+								fprintf(stderr, "neighbour: %d %d\n", neighbour->x, neighbour->y);
 								Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
 								if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 									if (existingNodeInOpenSet != NULL) {
