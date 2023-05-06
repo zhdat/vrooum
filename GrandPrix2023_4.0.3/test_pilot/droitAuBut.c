@@ -235,7 +235,8 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 }
 
 /* A star */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY)
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int startSpeedX,
+			int startSpeedY)
 {
 	int accX;
 	int accY;
@@ -277,10 +278,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							continue;
 						}
 
-						int newX = currentNode->x + currentNode->speedX + accX;
-						int newY = currentNode->y + currentNode->speedY + accY;
-						int newSpeedX = currentNode->speedX + accX;
-						int newSpeedY = currentNode->speedY + accY;
+						int newX = currentNode->x + startSpeedX;
+						int newY = currentNode->y + startSpeedY;
+						int newSpeedX = startSpeedX + speedX + accX;
+						int newSpeedY = startSpeedY + speedY + accY;
 
 						if (newX == currentNode->x && newY == currentNode->y) {
 							continue; /* ignorer le noeud lui-même */
@@ -468,6 +469,8 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
 	return -gas;
 }
 
+List* globalPath = NULL;
+
 int main()
 {
 	int row;
@@ -520,7 +523,7 @@ int main()
 		fflush(stderr);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
-		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY);
+		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY);
 		fprintf(stderr, "    Path found: \n");
 		reverseList(path);
 		printPath(path);
