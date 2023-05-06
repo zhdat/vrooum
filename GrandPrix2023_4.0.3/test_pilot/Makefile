@@ -2,7 +2,7 @@
 PILOT_NAME = droitAuBut
 
 CC = gcc
-CFLAGS = -Wall -Wextra -ansi -pedantic -Wpedantic -g -I.
+CFLAGS = -Wall -Wextra -ansi -pedantic -Wpedantic -g -O3 -I.
 LDLIBS = -lm
 
 SANITIZE=off
