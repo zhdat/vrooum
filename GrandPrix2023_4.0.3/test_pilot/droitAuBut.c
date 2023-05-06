@@ -299,8 +299,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							}
 							neighbour->h_cost = heuristicCost(neighbour, end);
 							neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
-							fprintf(stderr, "neighbour: %d %d %d %d %d %d\n", neighbour->x, neighbour->y, neighbour->speedX, neighbour->speedY,
-									neighbour->g_cost, neighbour->h_cost);
 
 							if (!nodeInList(neighbour, closedSet)) {
 								ListElement* existingElementInOpenSet;
@@ -313,6 +311,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 											fprintf(stderr, "test\n");
 										} else {
 											ListElement* previous = openSet->head;
+											fprintf(stderr, "test2\n");
 											while (previous->next != existingElementInOpenSet) {
 												previous = previous->next;
 											}
