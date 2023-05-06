@@ -169,13 +169,13 @@ void printPath(List* path)
 
 void reverseList(List* list)
 {
-	fprintf(stderr, "Reversing list\n");
+	if (list == NULL) {
+		fprintf(stderr, "List is NULL\n");
+		return;
+	}
 	ListElement* prevElement = NULL;
-	fprintf(stderr, "Reversing list\n");
 	ListElement* currentElement = list->head;
-	fprintf(stderr, "Reversing list\n");
 	ListElement* nextElement = NULL;
-	fprintf(stderr, "Reversing list\n");
 
 	if (list == NULL || list->head == NULL) {
 		fprintf(stderr, "List is empty\n");
@@ -183,7 +183,6 @@ void reverseList(List* list)
 	}
 
 	while (currentElement != NULL) {
-		fprintf(stderr, "Reversing list\n");
 		nextElement = currentElement->next;
 		currentElement->next = prevElement;
 		prevElement = currentElement;
