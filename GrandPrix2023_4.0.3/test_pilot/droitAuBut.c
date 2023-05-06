@@ -307,7 +307,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							int distance = distanceToWall(newX, newY, map, width, height);
 							if (distance <= 1) {
 								int speedNorm = (speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY);
-								neighbour->g_cost += speedNorm * 5;
+								neighbour->g_cost += speedNorm * 30;
 							}
 
 							/* Ajoutez une pénalité pour les virages rapides */
