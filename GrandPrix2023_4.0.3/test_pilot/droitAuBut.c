@@ -226,10 +226,11 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 
 int distanceToWall(int x, int y, char** map, int width, int height)
 {
+	int i;
 	int distance = 0;
 	int directions[4][2] = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
 
-	for (int i = 0; i < 4; i++) {
+	for (i = 0; i < 4; i++) {
 		int newX = x + directions[i][0];
 		int newY = y + directions[i][1];
 
