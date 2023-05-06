@@ -470,8 +470,6 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
 	return -gas;
 }
 
-List* globalPath = NULL;
-
 int main()
 {
 	int row;
@@ -534,6 +532,15 @@ int main()
 			sscanf(line_buffer, "%d %d %d %d %d %d", &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
 			fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
 			fflush(stderr);
+		}
+
+		/* Passer au noeud suivant dans le path */
+		if (path != NULL) {
+			if (path->head != NULL) {
+				ListElement* nextElement = path->head->next;
+				free(path->head);
+				path->head = nextElement;
+			}
 		}
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
