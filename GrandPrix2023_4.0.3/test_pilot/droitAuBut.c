@@ -56,11 +56,6 @@ int heuristicCost(Node* a, Node* b)
 	return abs(a->x - b->x) + abs(a->y - b->y);
 }
 
-double calculateAngle(int dx, int dy)
-{
-	return atan2(dy, dx);
-}
-
 int nodeInList(Node* node, List* list)
 {
 	ListElement* current = list->head;
