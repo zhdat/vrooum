@@ -304,10 +304,11 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 								ListElement* existingElementInOpenSet;
 								/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
 								Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
-								fprintf(stderr, "existingNodeInOpenSet : %p\n", existingNodeInOpenSet);
 								if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 									if (existingNodeInOpenSet != NULL) {
 										fprintf(stderr, "test\n");
+										fprintf(stderr, "existingNodeInOpenSet->x = %d\n", existingNodeInOpenSet->x);
+										fprintf(stderr, "existingNodeInOpenSet->y = %d\n", existingNodeInOpenSet->y);
 										if (existingElementInOpenSet == openSet->head) {
 											openSet->head = existingElementInOpenSet->next;
 											fprintf(stderr, "test1\n");
