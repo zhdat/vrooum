@@ -522,8 +522,6 @@ int main()
 	fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
 	fflush(stderr);
 
-	gasLevel = 1000;
-
 	/* Trouver les positions de départ et d'arrivée sur la carte */
 	start = createNode(myX, myY, NULL, 0, 0, gasLevel);
 	findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY);
