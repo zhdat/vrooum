@@ -484,6 +484,7 @@ int main()
 	char action[100];
 	char line_buffer[MAX_LINE_LENGTH];
 	char** map;
+	int myX, myY, secondX, secondY, thirdX, thirdY;
 
 	Node* start = NULL;
 	Node* end = NULL;
@@ -506,8 +507,25 @@ int main()
 	fflush(stderr);
 	fprintf(stderr, "\n=== Race start ===\n");
 
+	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read positions of pilots */
+	sscanf(line_buffer, "%d %d %d %d %d %d", &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
+	fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
+	fflush(stderr);
+
+	/* Trouver les positions de départ et d'arrivée sur la carte */
+	start = createNode(myX, myY, NULL, 0, 0);
+	findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY);
+	fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
+	fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
+	fflush(stderr);
+
+	/* Executer l'algorithme A* pour trouver le chemin */
+	path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY);
+	fprintf(stderr, "    Path found: \n");
+	reverseList(path);
+	printPath(path);
+
 	while (!feof(stdin)) {
-		int myX, myY, secondX, secondY, thirdX, thirdY;
 		round++;
 		fprintf(stderr, "=== ROUND %d\n", round);
 		fflush(stderr);
@@ -518,16 +536,19 @@ int main()
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
 		start = createNode(myX, myY, NULL, 0, 0);
-		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY);
-		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
-		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
-		fflush(stderr);
+		if (isPositionOccupied(myX, myY, secondX, secondY, thirdX, thirdY) == 1) {
+			findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY);
+			fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
+			fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
+			fflush(stderr);
 
-		/* Executer l'algorithme A* pour trouver le chemin */
-		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY);
-		fprintf(stderr, "    Path found: \n");
-		reverseList(path);
-		printPath(path);
+			/* Executer l'algorithme A* pour trouver le chemin */
+			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY);
+			fprintf(stderr, "    Path found: \n");
+			reverseList(path);
+			printPath(path);
+		}
+
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY);
 		fprintf(stderr, "    Acceleration: (%d, %d)\n", accelerationX, accelerationY);
