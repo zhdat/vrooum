@@ -273,15 +273,16 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 			for (speedY = -4; speedY <= 4; speedY++) {
 				for (accX = -1; accX <= 1; accX++) {
 					for (accY = -1; accY <= 1; accY++) {
+						int newSpeedX = currentNode->speedX + accX;
+						int newSpeedY = currentNode->speedY + accY;
+
 						/* Vérifiez que la norme de la vitesse ne dépasse pas 4 */
-						if ((speedX + accX) * (speedX + accX) + (speedY + accY) * (speedY + accY) > 25) {
+						if ((newSpeedX) * (newSpeedX) + (newSpeedY) * (newSpeedY) > 25) {
 							continue;
 						}
 
-						int newX = currentNode->x + startSpeedX;
-						int newY = currentNode->y + startSpeedY;
-						int newSpeedX = startSpeedX + speedX + accX;
-						int newSpeedY = startSpeedY + speedY + accY;
+						int newX = currentNode->x + newSpeedX;
+						int newY = currentNode->y + newSpeedY;
 
 						if (newX == currentNode->x && newY == currentNode->y) {
 							continue; /* ignorer le noeud lui-même */
