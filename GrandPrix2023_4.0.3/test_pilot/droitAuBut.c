@@ -55,7 +55,7 @@ Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas)
 
 int heuristicCost(Node* a, Node* b)
 {
-	return sqrt((a->x - b->x) * (a->x - b->x) + (a->y - b->y) * (a->y - b->y));
+	return abs(a->x - b->x) + abs(a->y - b->y);
 }
 
 int nodeEquals(Node* node1, Node* node2)
