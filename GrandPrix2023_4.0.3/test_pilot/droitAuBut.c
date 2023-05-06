@@ -53,9 +53,21 @@ Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas)
 	return newNode;
 }
 
-int heuristicCost(Node* a, Node* b)
+/* int heuristicCost(Node* a, Node* b)
 {
 	return abs(a->x - b->x) + abs(a->y - b->y);
+} */
+
+int heuristicCost(Node* a, Node* b)
+{
+	int dx = abs(a->x - b->x);
+	int dy = abs(a->y - b->y);
+	int distance = sqrt(dx * dx + dy * dy);
+
+	int gasCostFactor = 1;
+	int gas_cost = gasCostFactor * (a->gas - b->gas);
+
+	return distance + gas_cost;
 }
 
 int nodeEquals(Node* node1, Node* node2)
