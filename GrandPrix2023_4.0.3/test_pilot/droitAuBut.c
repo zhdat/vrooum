@@ -570,6 +570,38 @@ void removeElementFromList(List* list, ListElement* element)
 	free(element);
 }
 
+int isValidNeighbour(Node* neighbour)
+{
+	return neighbour->gas >= neighbour->h_cost;
+}
+
+Node* calculateNeighbourCosts(Node* currentNode, Node* neighbour, Node* end, char mapTile)
+{
+	double distance =
+		sqrt((neighbour->x - currentNode->x) * (neighbour->x - currentNode->x) + (neighbour->y - currentNode->y) * (neighbour->y - currentNode->y));
+	int penalty = 0;
+
+	if (currentNode->parent != NULL) {
+		int previousSpeedX = currentNode->parent->speedX;
+		int previousSpeedY = currentNode->parent->speedY;
+
+		if (previousSpeedX != neighbour->speedX || previousSpeedY != neighbour->speedY) {
+			penalty = 50;
+		}
+	}
+
+	neighbour->g_cost = currentNode->g_cost + distance + penalty;
+
+	if (mapTile == '~') {
+		neighbour->g_cost = currentNode->g_cost + 4;
+	}
+
+	neighbour->h_cost = heuristicCost(neighbour, end);
+	neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+
+	return neighbour;
+}
+
 /**
  * @brief Calcule le chemin le plus court
  *
@@ -654,7 +686,14 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newGas = currentNode->gas + gasCost;
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
-				distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
+				neighbour = calculateNeighbourCosts(currentNode, neighbour, end, map[newY][newX]);
+
+				if (!isValidNeighbour(neighbour)) {
+					free(neighbour);
+					continue;
+				}
+
+				/* distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
 
 				if (currentNode->parent != NULL) {
 					int previousSpeedX = currentNode->parent->speedX;
@@ -677,7 +716,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost; */
 
 				if (!nodeInList(neighbour, closedSet)) {
 					ListElement* existingElementInOpenSet;
