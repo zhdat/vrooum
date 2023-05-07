@@ -636,7 +636,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				if (!nodeInList(neighbour, closedSet)) {
 					ListElement* existingElementInOpenSet;
 					/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
-					fprintf(stderr, "neighbour->x: %d, neighbour->y: %d\n", neighbour->x, neighbour->y);
 					Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
 					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 						if (existingNodeInOpenSet != NULL) {
@@ -651,6 +650,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							}
 							free(existingElementInOpenSet);
 						}
+						fprintf(stderr, "Adding node (%d, %d) to open set\n", neighbour->x, neighbour->y);
 						addNodeToList(neighbour, openSet);
 					}
 				}
