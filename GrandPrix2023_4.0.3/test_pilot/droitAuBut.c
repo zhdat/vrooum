@@ -618,11 +618,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							}
 							neighbour->h_cost = heuristicCost(neighbour, end);
 
-							/* Ajouter une vérification pour s'assurer qu'il y a suffisamment de gaz pour atteindre le nœud d'arrivée */
-							if (neighbour->gas < neighbour->h_cost) {
+							/* if (neighbour->gas < neighbour->h_cost) {
 								free(neighbour);
-								continue; /* Ignorer le voisin s'il n'a pas assez de gaz pour atteindre la fin */
-							}
+								continue;
+							} */
 							neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
 							if (!nodeInList(neighbour, closedSet)) {
