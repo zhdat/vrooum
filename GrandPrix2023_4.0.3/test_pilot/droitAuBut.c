@@ -618,10 +618,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							}
 							neighbour->h_cost = heuristicCost(neighbour, end);
 
-							/* if (neighbour->gas < neighbour->h_cost) {
+							if (neighbour->gas < neighbour->h_cost) {
 								free(neighbour);
 								continue;
-							} */
+							}
 							neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
 							if (!nodeInList(neighbour, closedSet)) {
