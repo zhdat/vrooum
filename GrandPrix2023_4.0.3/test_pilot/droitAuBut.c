@@ -587,11 +587,11 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						newX = currentNode->x + newSpeedX;
 						newY = currentNode->y + newSpeedY;
 
-						fprintf(stderr, "New position: (%d, %d)\n", newX, newY);
-
 						if (newX == currentNode->x && newY == currentNode->y) {
 							continue; /* ignorer le noeud lui-même */
 						}
+
+						fprintf(stderr, "New position: (%d, %d)\n", newX, newY);
 
 						/* Calculer le coût en essence */
 						gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
@@ -717,9 +717,6 @@ int main()
 		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
 		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
-		fflush(stderr);
-
-		fprintf(stderr, "    Gas level: %d\n", gasLevel);
 		fflush(stderr);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
