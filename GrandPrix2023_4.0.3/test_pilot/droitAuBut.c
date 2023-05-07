@@ -513,27 +513,12 @@ int SpeedNorme(int speedX, int speedY)
 	return (int)(speedX * speedX + speedY * speedY);
 }
 
-/**
- * @brief Calcule le chemin le plus court
- *
- * @param start
- * @param end
- * @param map
- * @param width
- * @param height
- * @param secondX
- * @param secondY
- * @param thirdX
- * @param thirdY
- * @param startSpeedX
- * @param startSpeedY
- * @param maxGas
- * @return List* le chemin le plus court
- */
-
 int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, int newX, int newY, int newSpeedX, int newSpeedY, Pos2Dint currentPos,
-						  Pos2Dint newPos, int secondX, int secondY, int thirdX, int thirdY)
+						  Pos2Dint newPos, int secondX, int secondY, int thirdX, int thirdY, int maxGas, int accX, int accY)
 {
+	int newGas;
+	int gasCost;
+
 	if (newX == currentNode->x && newY == currentNode->y) {
 		return 0; /* ignorer le noeud lui-même */
 	}
@@ -561,9 +546,33 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 	if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
 		return 0;
 	}
+
+	gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
+	newGas = currentNode->gas + gasCost;
+	if (newGas < 0 || newGas > maxGas) {
+		return 0;
+	}
+
 	return 1;
 }
 
+/**
+ * @brief Calcule le chemin le plus court
+ *
+ * @param start
+ * @param end
+ * @param map
+ * @param width
+ * @param height
+ * @param secondX
+ * @param secondY
+ * @param thirdX
+ * @param thirdY
+ * @param startSpeedX
+ * @param startSpeedY
+ * @param maxGas
+ * @return List* le chemin le plus court
+ */
 List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int maxGas,
 			int currentSpeedX, int currentSpeedY)
 {
@@ -623,15 +632,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newPos.y = newY;
 
 				if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
-										  thirdX, thirdY) == 0) {
-					continue;
-				}
-
-				/* Calculer le coût en essence */
-				gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
-				newGas = currentNode->gas + gasCost;
-
-				if (newGas < 0 || newGas > maxGas) {
+										  thirdX, thirdY, maxGas, accX, accY) == 0) {
 					continue;
 				}
 
@@ -643,7 +644,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					int previousSpeedY = currentNode->parent->speedY;
 
 					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
-						penalty = 100;
+						penalty = 50;
 					}
 				}
 
