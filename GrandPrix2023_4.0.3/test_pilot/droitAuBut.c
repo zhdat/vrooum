@@ -702,10 +702,12 @@ int main()
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
 		start = createNode(myX, myY, NULL, speedX, speedY, 0);
-		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel);
-		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
-		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
-		fflush(stderr);
+		if (round == 1) {
+			findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel);
+			fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
+			fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
+			fflush(stderr);
+		}
 
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
