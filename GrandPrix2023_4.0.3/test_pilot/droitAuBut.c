@@ -574,6 +574,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newX = currentNode->x + newSpeedX;
 				newY = currentNode->y + newSpeedY;
 
+				if (newX == currentNode->x && newY == currentNode->y) {
+					continue; /* ignorer le noeud lui-même */
+				}
+
 				if (newX > width || newY > height || newX < 0 || newY < 0) {
 					continue;
 				}
@@ -587,15 +591,11 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas);
-
-				if (newX == currentNode->x && newY == currentNode->y) {
-					continue; /* ignorer le noeud lui-même */
-				}
-
 				if (isPathClear(map, width, height, currentPos, newPos) == 0) {
 					continue;
 				}
+
+				fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas);
 
 				if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
 					continue;
