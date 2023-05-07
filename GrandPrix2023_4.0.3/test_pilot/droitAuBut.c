@@ -7,7 +7,7 @@
 #include "droitAuBut.h"
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
-#define INFINITE INT_MAX
+#define INFINITE 1000000
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 
@@ -388,29 +388,16 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
 	return -gas;
 }
 
-/**
- * @brief Trouve les positions finales
- *
- * @param map
- * @param width
- * @param height
- * @param start
- * @param end
- * @param secondX
- * @param secondY
- * @param thirdX
- * @param thirdY
- * @param speedX
- * @param speedY
- */
 void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
-					  int speedY)
+					  int speedY, int gasLevel)
 {
 	int x, y;
 	int i;
 	EndPosition* endPositions;
 	int distance;
 	EndPosition endPosition;
+	int minCost = INFINITE;
+	Node* bestEndNode = NULL;
 
 	int endPositionCount = 0;
 	endPositions = (EndPosition*)malloc(sizeof(EndPosition) * width * height);
@@ -430,16 +417,26 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 		}
 	}
 
-	qsort(endPositions, endPositionCount, sizeof(EndPosition), compareEndPositions);
+	int maxGas = gasLevel; // Vous pouvez modifier cette valeur en fonction de la quantité maximale de carburant que vous souhaitez considérer
 
 	for (i = 0; i < endPositionCount; i++) {
 		int x = endPositions[i].x;
 		int y = endPositions[i].y;
 		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
-			*end = createNode(x, y, NULL, speedX, speedY, 0);
-			break;
+			Node* endNode = createNode(x, y, NULL, speedX, speedY, 0);
+			List* path = aStar(start, endNode, map, width, height, secondX, secondY, thirdX, thirdY, maxGas, speedX, speedY);
+			if (path != NULL) {
+				int pathCost = ((Node*)path->head->data)->f_cost;
+				if (pathCost < minCost) {
+					minCost = pathCost;
+					bestEndNode = endNode;
+				}
+				freePath(path);
+			}
 		}
 	}
+
+	*end = bestEndNode;
 }
 
 /**
@@ -704,8 +701,8 @@ int main()
 		fflush(stderr);
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
-		start = createNode(myX, myY, NULL, 0, 0, 0);
-		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
+		start = createNode(myX, myY, NULL, speedX, speedY, 0);
+		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel);
 		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 		fflush(stderr);
