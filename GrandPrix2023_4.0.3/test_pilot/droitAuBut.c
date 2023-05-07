@@ -789,7 +789,7 @@ void expandNode(Node* currentNode, PriorityQueue* openSet, HashSet* closedSet, N
 				int previousSpeedY = currentNode->parent->speedY;
 
 				if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
-					penalty = 100;
+					penalty = 1000;
 				}
 			}
 
