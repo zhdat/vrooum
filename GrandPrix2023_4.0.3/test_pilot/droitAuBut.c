@@ -617,8 +617,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas);
-
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 				neighbour->g_cost =
 					currentNode->g_cost + sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
