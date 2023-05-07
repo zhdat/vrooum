@@ -7,7 +7,7 @@
 #include "droitAuBut.h"
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
-#define INFINITE 1000000
+#define INFINITE INT_MAX
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 
@@ -388,16 +388,29 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
 	return -gas;
 }
 
+/**
+ * @brief Trouve les positions finales
+ *
+ * @param map
+ * @param width
+ * @param height
+ * @param start
+ * @param end
+ * @param secondX
+ * @param secondY
+ * @param thirdX
+ * @param thirdY
+ * @param speedX
+ * @param speedY
+ */
 void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
-					  int speedY, int gasLevel)
+					  int speedY)
 {
 	int x, y;
 	int i;
 	EndPosition* endPositions;
 	int distance;
 	EndPosition endPosition;
-	int minCost = INFINITE;
-	Node* bestEndNode = NULL;
 
 	int endPositionCount = 0;
 	endPositions = (EndPosition*)malloc(sizeof(EndPosition) * width * height);
@@ -417,27 +430,16 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 		}
 	}
 
-	int maxGas = gasLevel;
+	qsort(endPositions, endPositionCount, sizeof(EndPosition), compareEndPositions);
 
 	for (i = 0; i < endPositionCount; i++) {
 		int x = endPositions[i].x;
 		int y = endPositions[i].y;
 		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
-			Node* endNode = createNode(x, y, NULL, speedX, speedY, 0);
-			List* path = aStar(start, endNode, map, width, height, secondX, secondY, thirdX, thirdY, maxGas, speedX, speedY);
-			if (path != NULL) {
-				printPath(path);
-				int pathCost = ((Node*)path->head->data)->f_cost;
-				if (pathCost < minCost) {
-					minCost = pathCost;
-					bestEndNode = endNode;
-				}
-				freePath(path);
-			}
+			*end = createNode(x, y, NULL, speedX, speedY, 0);
+			break;
 		}
 	}
-
-	*end = bestEndNode;
 }
 
 /**
@@ -703,12 +705,10 @@ int main()
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
 		start = createNode(myX, myY, NULL, speedX, speedY, 0);
-		if (round == 1) {
-			findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel);
-			fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
-			fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
-			fflush(stderr);
-		}
+		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
+		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
+		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
+		fflush(stderr);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);

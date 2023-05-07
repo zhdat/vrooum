@@ -248,7 +248,7 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand);
  * @param speedY
  */
 void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
-					  int speedY, int gasLevel);
+					  int speedY);
 
 /**
  * @brief Détermine l'accélération à partir du chemin
