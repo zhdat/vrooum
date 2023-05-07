@@ -740,6 +740,116 @@ void removeElementFromList(List* list, ListElement* element)
 	free(element);
 }
 
+void expandNode(Node* currentNode, PriorityQueue* openSet, HashSet* closedSet, Node* target, char** map, int width, int height, int secondX,
+				int secondY, int thirdX, int thirdY, int maxGas)
+{
+	int accX;
+	int accY;
+	int newSpeedX;
+	int newSpeedY;
+	int newX;
+	int newY;
+	int gasCost;
+	int newGas;
+	double distance;
+	int penalty = 0;
+	Node* neighbour;
+	Pos2Dint currentPos;
+	Pos2Dint newPos;
+
+	/* Générer les voisins */
+	for (accX = -1; accX <= 1; accX++) {
+		for (accY = -1; accY <= 1; accY++) {
+			newSpeedX = currentNode->speedX + accX;
+			newSpeedY = currentNode->speedY + accY;
+
+			newX = currentNode->x + newSpeedX;
+			newY = currentNode->y + newSpeedY;
+
+			currentPos.x = currentNode->x;
+			currentPos.y = currentNode->y;
+			newPos.x = newX;
+			newPos.y = newY;
+
+			if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY, thirdX,
+									  thirdY, maxGas, accX, accY) == 0) {
+				continue;
+			}
+
+			gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
+			newGas = currentNode->gas + gasCost;
+
+			neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
+			distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
+
+			if (currentNode->parent != NULL) {
+				int previousSpeedX = currentNode->parent->speedX;
+				int previousSpeedY = currentNode->parent->speedY;
+
+				if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
+					penalty = 50;
+				}
+			}
+
+			neighbour->g_cost = currentNode->g_cost + distance + penalty;
+			neighbour->h_cost = heuristicCost(neighbour, target);
+			neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+
+			if (!hs_contains(closedSet, neighbour)) {
+				Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
+
+				if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
+					if (existingNodeInOpenSet != NULL) {
+						pq_remove(openSet, existingNodeInOpenSet);
+					}
+					pq_push(openSet, neighbour);
+				}
+			}
+		}
+	}
+}
+
+List* reconstructPath(Node* currentNode)
+{
+	List* path = initList();
+	Node* pathNode = currentNode;
+	while (pathNode != NULL) {
+		addNodeToList(pathNode, path);
+		pathNode = pathNode->parent;
+	}
+	return path;
+}
+
+List* mergePaths(List* pathStart, List* pathEnd)
+{
+	List* completePath = initList();
+	ListElement* currentElement = pathStart->head;
+
+	while (currentElement != NULL) {
+		addNodeToList(currentElement->data, completePath);
+		currentElement = currentElement->next;
+	}
+
+	// Reverse the pathEnd
+	List* reversedPathEnd = initList();
+	currentElement = pathEnd->head;
+	while (currentElement != NULL) {
+		addNodeToList(currentElement->data, reversedPathEnd);
+		currentElement = currentElement->next;
+	}
+	reverseList(reversedPathEnd);
+
+	// Add pathEnd to completePath
+	currentElement = reversedPathEnd->head;
+	while (currentElement != NULL) {
+		addNodeToList(currentElement->data, completePath);
+		currentElement = currentElement->next;
+	}
+
+	freePath(reversedPathEnd);
+	return completePath;
+}
+
 /**
  * @brief Calcule le chemin le plus court
  *
@@ -757,25 +867,13 @@ void removeElementFromList(List* list, ListElement* element)
  * @param maxGas
  * @return List* le chemin le plus court
  */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int maxGas,
-			int currentSpeedX, int currentSpeedY)
+List* bidirectionalAStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int maxGas,
+						 int currentSpeedX, int currentSpeedY)
 {
-	int accX;
-	int accY;
-	int newSpeedX;
-	int newSpeedY;
-	int newX;
-	int newY;
-	int gasCost;
-	int newGas;
-	double distance;
-	int penalty = 0;
-	Node* neighbour;
-	Pos2Dint currentPos;
-	Pos2Dint newPos;
-
-	PriorityQueue* openSet = pq_init();
-	HashSet* closedSet = hs_init();
+	PriorityQueue* openSetStart = pq_init();
+	PriorityQueue* openSetEnd = pq_init();
+	HashSet* closedSetStart = hs_init();
+	HashSet* closedSetEnd = hs_init();
 
 	start->g_cost = 0;
 	start->h_cost = heuristicCost(start, end);
@@ -784,86 +882,48 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	start->speedX = currentSpeedX;
 	start->speedY = currentSpeedY;
 
-	pq_push(openSet, start);
+	end->g_cost = 0;
+	end->h_cost = heuristicCost(end, start);
+	end->f_cost = end->g_cost + end->h_cost;
+	end->gas = maxGas;
+	end->speedX = currentSpeedX;
+	end->speedY = currentSpeedY;
 
-	while (!pq_is_empty(openSet)) {
-		Node* currentNode = pq_pop(openSet);
+	pq_push(openSetStart, start);
+	pq_push(openSetEnd, end);
 
-		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
-			List* path = initList();
-			Node* pathNode = currentNode;
-			while (pathNode != NULL) {
-				addNodeToList(pathNode, path);
-				pathNode = pathNode->parent;
-			}
-			return path;
+	while (!pq_is_empty(openSetStart) && !pq_is_empty(openSetEnd)) {
+		Node* currentNodeStart = pq_pop(openSetStart);
+		Node* currentNodeEnd = pq_pop(openSetEnd);
+
+		if (hs_contains(closedSetEnd, currentNodeStart)) {
+			// Path found
+			List* pathStart = reconstructPath(currentNodeStart);
+			List* pathEnd = reconstructPath(currentNodeEnd);
+			List* completePath = mergePaths(pathStart, pathEnd);
+			freePath(pathStart);
+			freePath(pathEnd);
+			return completePath;
 		}
 
-		hs_insert(closedSet, currentNode);
-
-		/* Générer les voisins */
-		for (accX = -1; accX <= 1; accX++) {
-			for (accY = -1; accY <= 1; accY++) {
-				newSpeedX = currentNode->speedX + accX;
-				newSpeedY = currentNode->speedY + accY;
-
-				newX = currentNode->x + newSpeedX;
-				newY = currentNode->y + newSpeedY;
-
-				currentPos.x = currentNode->x;
-				currentPos.y = currentNode->y;
-				newPos.x = newX;
-				newPos.y = newY;
-
-				if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
-										  thirdX, thirdY, maxGas, accX, accY) == 0) {
-					continue;
-				}
-
-				gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
-				newGas = currentNode->gas + gasCost;
-
-				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
-				distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
-
-				if (currentNode->parent != NULL) {
-					int previousSpeedX = currentNode->parent->speedX;
-					int previousSpeedY = currentNode->parent->speedY;
-
-					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
-						penalty = 50;
-					}
-				}
-
-				neighbour->g_cost = currentNode->g_cost + distance + penalty;
-
-				if (map[newY][newX] == '~') {
-					neighbour->g_cost = currentNode->g_cost + 4;
-				}
-				neighbour->h_cost = heuristicCost(neighbour, end);
-
-				if (neighbour->gas < neighbour->h_cost) {
-					free(neighbour);
-					continue;
-				}
-
-				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
-
-				if (!hs_contains(closedSet, neighbour)) {
-					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
-
-					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
-						if (existingNodeInOpenSet != NULL) {
-							pq_remove(openSet, existingNodeInOpenSet);
-						}
-						pq_push(openSet, neighbour);
-					}
-				}
-			}
+		if (hs_contains(closedSetStart, currentNodeEnd)) {
+			// Path found
+			List* pathStart = reconstructPath(currentNodeStart);
+			List* pathEnd = reconstructPath(currentNodeEnd);
+			List* completePath = mergePaths(pathStart, pathEnd);
+			freePath(pathStart);
+			freePath(pathEnd);
+			return completePath;
 		}
+
+		hs_insert(closedSetStart, currentNodeStart);
+		hs_insert(closedSetEnd, currentNodeEnd);
+
+		expandNode(currentNodeStart, openSetStart, closedSetStart, end, map, width, height, secondX, secondY, thirdX, thirdY, maxGas);
+		expandNode(currentNodeEnd, openSetEnd, closedSetEnd, start, map, width, height, secondX, secondY, thirdX, thirdY, maxGas);
 	}
 
-	/* Pas de chemin trouvé */
+	// No path found
 	return NULL;
 }
 
