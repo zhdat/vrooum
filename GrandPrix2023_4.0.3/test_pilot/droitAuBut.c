@@ -523,7 +523,8 @@ int SpeedNorme(int speedX, int speedY)
  * @param maxGas
  * @return List* le chemin le plus court
  */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int maxGas)
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int maxGas,
+			int currentSpeedX, int currentSpeedY)
 {
 	int accX;
 	int accY;
@@ -546,6 +547,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 	start->gas = maxGas;
+	start->speedX = currentSpeedX;
+	start->speedY = currentSpeedY;
 
 	addNodeToList(start, openSet);
 
@@ -577,8 +580,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							continue;
 						}
 
-						newX = currentNode->x + newSpeedX;
-						newY = currentNode->y + newSpeedY;
+						newX = currentNode->x + newSpeedX + currentSpeedX;
+						newY = currentNode->y + newSpeedY + currentSpeedY;
 
 						if (newX == currentNode->x && newY == currentNode->y) {
 							continue; /* ignorer le noeud lui-même */
@@ -587,8 +590,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						/* Calculer le coût en essence */
 						gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
 						newGas = currentNode->gas + gasCost;
-						fprintf(stderr, "Gas cost: %d\n", gasCost);
-						fprintf(stderr, "New gas: %d\n", newGas);
 
 						if (newGas < 0 || newGas > maxGas) {
 							continue;
@@ -710,7 +711,7 @@ int main()
 		fflush(stderr);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
-		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel);
+		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
 		fprintf(stderr, "    Path found: \n");
 		reverseList(path);
 		printPath(path);

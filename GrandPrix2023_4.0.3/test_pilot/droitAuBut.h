@@ -289,6 +289,7 @@ int SpeedNorme(int speedX, int speedY);
  * @param maxGas
  * @return List* le chemin le plus court
  */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int maxGas);
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int maxGas,
+			int currentSpeedX, int currentSpeedY);
 
 #endif /* DROITAUBUT_H */
