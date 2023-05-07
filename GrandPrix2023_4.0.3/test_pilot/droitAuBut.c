@@ -528,8 +528,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 {
 	int accX;
 	int accY;
-	int speedX;
-	int speedY;
 	int newSpeedX;
 	int newSpeedY;
 	int newX;
@@ -586,7 +584,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				}
 
 				/* Calculer le coût en essence */
-				gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
+				gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
 				newGas = currentNode->gas + gasCost;
 
 				if (newGas < 0 || newGas > maxGas) {
