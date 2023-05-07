@@ -560,6 +560,7 @@ double calculateGCost(Node* currentNode, int accX, int accY, int newSpeedX, int 
 {
 	double distance;
 	int penalty = 0;
+	currentNode->g_cost = 0;
 	distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
 
 	if (currentNode->parent != NULL) {
@@ -671,7 +672,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					}
 				}
 
-				neighbour->g_cost = currentNode->g_cost + distance + penalty;
+				neighbour->g_cost = calculateGCost(currentNode, accX, accY, newSpeedX, newSpeedY, newX, newY);
 				fprintf(stderr, "g_cost : %f\n", neighbour->g_cost);
 
 				if (map[newY][newX] == '~') {
