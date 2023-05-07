@@ -507,8 +507,7 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
  * @param maxGas
  * @return List* le chemin le plus court
  */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int startSpeedX,
-			int startSpeedY, int maxGas)
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int maxGas)
 {
 	int accX;
 	int accY;
@@ -521,6 +520,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int gasCost;
 	int newGas;
 	Node* neighbour;
+	Pos2Dint currentPos;
+	Pos2Dint newPos;
 
 	List* openSet = initList();
 	List* closedSet = initList();
@@ -575,11 +576,16 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							continue; /* ignorer les mouvements illégaux */
 						}
 
+						currentPos.x = currentNode->x;
+						currentPos.y = currentNode->y;
+						newPos.x = newX;
+						newPos.y = newY;
+
 						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
 						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
 							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
 							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
-							(isPathClear(map, width, height, (Pos2Dint){ currentNode->x, currentNode->y }, (Pos2Dint){ newX, newY }) == 1)) {
+							(isPathClear(map, width, height, currentPos, newPos) == 1)) {
 							/* Vérifier si la norme de la vitesse est supérieure à 1 sur le sable */
 							if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
 								continue;
@@ -682,7 +688,7 @@ int main()
 	fflush(stderr);
 
 	/* Executer l'algorithme A* pour trouver le chemin */
-	path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel);
+	path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel);
 	fprintf(stderr, "    Path found: \n");
 	reverseList(path);
 	printPath(path);
@@ -707,7 +713,7 @@ int main()
 			fflush(stderr);
 
 			/* Executer l'algorithme A* pour trouver le chemin */
-			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel);
+			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel);
 			fprintf(stderr, "    Path found: \n");
 			reverseList(path);
 			printPath(path);
