@@ -426,6 +426,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 			Node* endNode = createNode(x, y, NULL, speedX, speedY, 0);
 			List* path = aStar(start, endNode, map, width, height, secondX, secondY, thirdX, thirdY, maxGas, speedX, speedY);
 			if (path != NULL) {
+				printPath(path);
 				int pathCost = ((Node*)path->head->data)->f_cost;
 				if (pathCost < minCost) {
 					minCost = pathCost;
