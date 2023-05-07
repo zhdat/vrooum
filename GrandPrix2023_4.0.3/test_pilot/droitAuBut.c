@@ -566,7 +566,7 @@ double calculateG_cost(Node* currentNode, int newX, int newY, int newSpeedX, int
 		int previousSpeedX = currentNode->parent->speedX;
 		int previousSpeedY = currentNode->parent->speedY;
 
-		if ((previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) && (previousSpeedX > newSpeedX || previousSpeedY > newSpeedY)) {
+		if ((previousSpeedX != newSpeedX || previousSpeedY != newSpeedY)) {
 			penalty = 50;
 		}
 	}
