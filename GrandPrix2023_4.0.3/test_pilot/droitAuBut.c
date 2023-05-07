@@ -98,7 +98,7 @@ Node* findNodeInList(Node* node, List* list, ListElement** elementInList)
 	while (currentElement != NULL) {
 		Node* currentNode = (Node*)currentElement->data;
 
-		if (nodeEqualsWithoutSpeed(currentNode, node)) {
+		if (nodeEquals(currentNode, node)) {
 			if (elementInList != NULL) {
 				*elementInList = currentElement;
 			}
