@@ -560,7 +560,6 @@ double calculateGCost(Node* currentNode, int accX, int accY, int newSpeedX, int 
 {
 	double distance;
 	int penalty = 0;
-	currentNode->g_cost = 0;
 	distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
 
 	if (currentNode->parent != NULL) {
