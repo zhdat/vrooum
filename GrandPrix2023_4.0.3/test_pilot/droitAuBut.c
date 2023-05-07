@@ -610,6 +610,9 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
 							(isPathClear(map, width, height, currentPos, newPos) == 1)) {
 							/* Vérifier si la norme de la vitesse est supérieure à 1 sur le sable */
+
+							fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d\n", newX, newY, newSpeedX, newSpeedY);
+
 							if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
 								continue;
 							}
@@ -628,9 +631,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 								continue; /* Ignorer le voisin s'il n'a pas assez de gaz pour atteindre la fin */
 							}
 							neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
-
-							fprintf(stderr, "Neighbour: (%d, %d) - Speed: (%d, %d) - Gas: %d - G: %f - H: %f - F: %f\n", neighbour->x, neighbour->y,
-									neighbour->speedX, neighbour->speedY, neighbour->gas, neighbour->g_cost, neighbour->h_cost, neighbour->f_cost);
 
 							if (!nodeInList(neighbour, closedSet)) {
 								ListElement* existingElementInOpenSet;
