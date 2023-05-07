@@ -636,6 +636,9 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
+				gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
+				newGas = currentNode->gas + gasCost;
+
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 				distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
 
