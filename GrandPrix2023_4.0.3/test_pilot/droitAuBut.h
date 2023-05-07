@@ -20,9 +20,9 @@ typedef struct Node {
 	int speedX;
 	int speedY;
 	int gas;
-	int g_cost;
-	int h_cost;
-	int f_cost;
+	double g_cost;
+	double h_cost;
+	double f_cost;
 	struct Node* parent;
 } Node;
 
@@ -181,7 +181,7 @@ void freePath(List* path);
  * @param b
  * @return int le coût heuristique
  */
-int heuristicCost(Node* a, Node* b);
+double heuristicCost(Node* a, Node* b);
 
 /**
  * @brief Vérifie si une position est occupée
