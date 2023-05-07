@@ -556,19 +556,18 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 	return 1;
 }
 
-double calculatePenalty(Node* currentNode, int newSpeedX, int newSpeedY)
+void removeElementFromList(List* list, ListElement* element)
 {
-	int penalty = 0;
-	if (currentNode->parent != NULL) {
-		int previousSpeedX = currentNode->parent->speedX;
-		int previousSpeedY = currentNode->parent->speedY;
-
-		if ((previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) && (newSpeedX != 0 || newSpeedY != 0) &&
-			(previousSpeedX > newSpeedX || previousSpeedY > newSpeedY)) {
-			penalty = 50;
+	if (element == list->head) {
+		list->head = element->next;
+	} else {
+		ListElement* previous = list->head;
+		while (previous->next != element) {
+			previous = previous->next;
 		}
+		previous->next = element->next;
 	}
-	return penalty;
+	free(element);
 }
 
 /**
@@ -657,7 +656,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 				distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
 
-				neighbour->g_cost = currentNode->g_cost + distance + calculatePenalty(currentNode, newSpeedX, newSpeedY);
+				neighbour->g_cost = currentNode->g_cost + distance + penalty;
 
 				if (map[newY][newX] == '~') {
 					neighbour->g_cost = currentNode->g_cost + 4;
@@ -673,20 +672,11 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 				if (!nodeInList(neighbour, closedSet)) {
 					ListElement* existingElementInOpenSet;
-					/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
 					Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
+
 					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 						if (existingNodeInOpenSet != NULL) {
-							if (existingElementInOpenSet == openSet->head) {
-								openSet->head = existingElementInOpenSet->next;
-							} else {
-								ListElement* previous = openSet->head;
-								while (previous->next != existingElementInOpenSet) {
-									previous = previous->next;
-								}
-								previous->next = existingElementInOpenSet->next;
-							}
-							free(existingElementInOpenSet);
+							removeElementFromList(openSet, existingElementInOpenSet);
 						}
 						addNodeToList(neighbour, openSet);
 					}
