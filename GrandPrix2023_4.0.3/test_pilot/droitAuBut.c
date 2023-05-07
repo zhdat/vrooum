@@ -742,75 +742,6 @@ void removeElementFromList(List* list, ListElement* element)
 	free(element);
 }
 
-void expandNode(Node* currentNode, PriorityQueue* openSet, HashSet* closedSet, Node* target, char** map, int width, int height, int secondX,
-				int secondY, int thirdX, int thirdY, int maxGas)
-{
-	int accX;
-	int accY;
-	int newSpeedX;
-	int newSpeedY;
-	int newX;
-	int newY;
-	int gasCost;
-	int newGas;
-	double distance;
-	int penalty = 0;
-	Node* neighbour;
-	Pos2Dint currentPos;
-	Pos2Dint newPos;
-
-	/* Générer les voisins */
-	for (accX = -1; accX <= 1; accX++) {
-		for (accY = -1; accY <= 1; accY++) {
-			newSpeedX = currentNode->speedX + accX;
-			newSpeedY = currentNode->speedY + accY;
-
-			newX = currentNode->x + newSpeedX;
-			newY = currentNode->y + newSpeedY;
-
-			currentPos.x = currentNode->x;
-			currentPos.y = currentNode->y;
-			newPos.x = newX;
-			newPos.y = newY;
-
-			if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY, thirdX,
-									  thirdY, maxGas, accX, accY) == 0) {
-				continue;
-			}
-
-			gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
-			newGas = currentNode->gas + gasCost;
-
-			neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
-			distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
-
-			if (currentNode->parent != NULL) {
-				int previousSpeedX = currentNode->parent->speedX;
-				int previousSpeedY = currentNode->parent->speedY;
-
-				if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
-					penalty = 1000;
-				}
-			}
-
-			neighbour->g_cost = currentNode->g_cost + distance + penalty;
-			neighbour->h_cost = heuristicCost(neighbour, target);
-			neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
-
-			if (!hs_contains(closedSet, neighbour)) {
-				Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
-
-				if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
-					if (existingNodeInOpenSet != NULL) {
-						pq_remove(openSet, existingNodeInOpenSet);
-					}
-					pq_push(openSet, neighbour);
-				}
-			}
-		}
-	}
-}
-
 /**
  * @brief Calcule le chemin le plus court
  *
@@ -902,7 +833,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					int previousSpeedY = currentNode->parent->speedY;
 
 					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
-						penalty = 50;
+						penalty = 1000;
 					}
 				}
 
