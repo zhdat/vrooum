@@ -511,7 +511,7 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
  */
 int SpeedNorme(int speedX, int speedY)
 {
-	return (int)(sqrt(speedX * speedX + speedY * speedY));
+	return (int)(speedX * speedX + speedY * speedY);
 }
 
 /**
@@ -577,13 +577,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		Node* currentNode = removeNodeWithLowestFCost(openSet);
 
 		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
-			List* path = initList();
-			Node* pathNode = currentNode;
-			while (pathNode != NULL) {
-				addNodeToList(pathNode, path);
-				pathNode = pathNode->parent;
-			}
-			return path;
+			return PathConstruction(currentNode);
 		}
 
 		addNodeToList(currentNode, closedSet);
@@ -597,7 +591,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						newSpeedY = currentNode->speedY + accY;
 
 						/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
-						if (SpeedNorme(newSpeedX, newSpeedY) > 5) {
+						if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
 							continue;
 						}
 
