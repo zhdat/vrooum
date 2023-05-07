@@ -535,6 +535,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int gasCost;
 	int newGas;
 	double distance;
+	int penalty = 0;
 	Node* neighbour;
 	Pos2Dint currentPos;
 	Pos2Dint newPos;
@@ -620,6 +621,16 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 				distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
+
+				if (currentNode->parent != NULL) {
+					int previousSpeedX = currentNode->parent->speedX;
+					int previousSpeedY = currentNode->parent->speedY;
+
+					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
+						penalty += 2;
+					}
+				}
+
 				neighbour->g_cost = currentNode->g_cost + distance;
 
 				if (map[newY][newX] == '~') {
