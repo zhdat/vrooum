@@ -560,7 +560,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		Node* currentNode = removeNodeWithLowestFCost(openSet);
 
 		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
-			fprintf(stderr, "Path found\n");
 			List* path = initList();
 			Node* pathNode = currentNode;
 			while (pathNode != NULL) {
@@ -579,8 +578,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					for (accY = -1; accY <= 1; accY++) {
 						newSpeedX = currentNode->speedX + accX;
 						newSpeedY = currentNode->speedY + accY;
-
-						fprintf(stderr, "Speed: (%d, %d)\n", newSpeedX, newSpeedY);
 
 						/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
 						if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
@@ -631,6 +628,9 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 								continue; /* Ignorer le voisin s'il n'a pas assez de gaz pour atteindre la fin */
 							}
 							neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+
+							fprintf(stderr, "Neighbour: (%d, %d) - Speed: (%d, %d) - Gas: %d - G: %f - H: %f - F: %f\n", neighbour->x, neighbour->y,
+									neighbour->speedX, neighbour->speedY, neighbour->gas, neighbour->g_cost, neighbour->h_cost, neighbour->f_cost);
 
 							if (!nodeInList(neighbour, closedSet)) {
 								ListElement* existingElementInOpenSet;
