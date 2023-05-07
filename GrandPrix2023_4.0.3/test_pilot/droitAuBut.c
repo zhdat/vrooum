@@ -75,7 +75,7 @@ int nodeInList(Node* node, List* list)
 	ListElement* current = list->head;
 	while (current != NULL) {
 		Node* current_node = (Node*)current->data;
-		if (current_node->x == node->x && current_node->y == node->y) {
+		if (nodeEquals(current_node, node) == 1) {
 			return 1;
 		}
 		current = current->next;
@@ -584,7 +584,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue; /* ignorer le noeud lui-même */
 				}
 
-				if (newX > width || newY > height || newX < 0 || newY < 0) {
+				if (newX >= width || newY >= height || newX < 0 || newY < 0) {
 					continue;
 				}
 
