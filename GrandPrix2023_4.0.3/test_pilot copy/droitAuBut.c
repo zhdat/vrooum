@@ -9,176 +9,6 @@
 #define BOOSTS_AT_START 5
 #define INFINITE INT_MAX
 
-/* TESTS */
-
-#define HASH_SET_SIZE 1024
-
-typedef struct HashSetElement {
-	Node* node;
-	struct HashSetElement* next;
-} HashSetElement;
-
-typedef struct HashSet {
-	HashSetElement* buckets[HASH_SET_SIZE];
-} HashSet;
-
-static unsigned int hash_function(Node* node)
-{
-	return (node->x * 31 + node->y) % HASH_SET_SIZE;
-}
-
-HashSet* hs_init()
-{
-	HashSet* hs = (HashSet*)malloc(sizeof(HashSet));
-	for (int i = 0; i < HASH_SET_SIZE; i++) {
-		hs->buckets[i] = NULL;
-	}
-	return hs;
-}
-
-void hs_insert(HashSet* hs, Node* node)
-{
-	unsigned int hash = hash_function(node);
-	HashSetElement* newElement = (HashSetElement*)malloc(sizeof(HashSetElement));
-	newElement->node = node;
-	newElement->next = hs->buckets[hash];
-	hs->buckets[hash] = newElement;
-}
-
-int hs_contains(HashSet* hs, Node* node)
-{
-	unsigned int hash = hash_function(node);
-	HashSetElement* current = hs->buckets[hash];
-
-	while (current != NULL) {
-		if (nodeEqualsWithoutSpeed(current->node, node)) {
-			return 1;
-		}
-		current = current->next;
-	}
-	return 0;
-}
-
-void hs_free(HashSet* hs)
-{
-	HashSetElement* current;
-	HashSetElement* next;
-
-	for (int i = 0; i < HASH_SET_SIZE; i++) {
-		current = hs->buckets[i];
-
-		while (current != NULL) {
-			next = current->next;
-			free(current);
-			current = next;
-		}
-	}
-
-	free(hs);
-}
-
-typedef struct PriorityQueueElement {
-	Node* node;
-	struct PriorityQueueElement* next;
-} PriorityQueueElement;
-
-typedef struct PriorityQueue {
-	PriorityQueueElement* head;
-} PriorityQueue;
-
-PriorityQueue* pq_init()
-{
-	PriorityQueue* pq = (PriorityQueue*)malloc(sizeof(PriorityQueue));
-	pq->head = NULL;
-	return pq;
-}
-
-void pq_push(PriorityQueue* pq, Node* node)
-{
-	PriorityQueueElement* newElement = (PriorityQueueElement*)malloc(sizeof(PriorityQueueElement));
-	newElement->node = node;
-	newElement->next = NULL;
-
-	if (pq->head == NULL || pq->head->node->f_cost > node->f_cost) {
-		newElement->next = pq->head;
-		pq->head = newElement;
-		return;
-	}
-
-	PriorityQueueElement* current = pq->head;
-	while (current->next != NULL && current->next->node->f_cost < node->f_cost) {
-		current = current->next;
-	}
-	newElement->next = current->next;
-	current->next = newElement;
-}
-
-Node* pq_pop(PriorityQueue* pq)
-{
-	if (pq->head == NULL) {
-		return NULL;
-	}
-	PriorityQueueElement* elementToRemove = pq->head;
-	Node* node = elementToRemove->node;
-	pq->head = elementToRemove->next;
-	free(elementToRemove);
-	return node;
-}
-
-int pq_is_empty(PriorityQueue* pq)
-{
-	return pq->head == NULL;
-}
-
-void pq_free(PriorityQueue* pq)
-{
-	PriorityQueueElement* current = pq->head;
-	PriorityQueueElement* next;
-
-	while (current != NULL) {
-		next = current->next;
-		free(current);
-		current = next;
-	}
-
-	free(pq);
-}
-
-Node* pq_find(PriorityQueue* pq, Node* node)
-{
-	PriorityQueueElement* current = pq->head;
-	while (current != NULL) {
-		if (nodeEqualsWithoutSpeed(current->node, node)) {
-			return current->node;
-		}
-		current = current->next;
-	}
-	return NULL;
-}
-
-void pq_remove(PriorityQueue* pq, Node* node)
-{
-	if (pq->head == NULL) {
-		return;
-	}
-	if (nodeEqualsWithoutSpeed(pq->head->node, node)) {
-		PriorityQueueElement* elementToRemove = pq->head;
-		pq->head = pq->head->next;
-		free(elementToRemove);
-		return;
-	}
-	PriorityQueueElement* current = pq->head;
-	while (current->next != NULL) {
-		if (nodeEqualsWithoutSpeed(current->next->node, node)) {
-			PriorityQueueElement* elementToRemove = current->next;
-			current->next = current->next->next;
-			free(elementToRemove);
-			return;
-		}
-		current = current->next;
-	}
-}
-
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 /* Fonctions Noeuds */
@@ -774,8 +604,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	Pos2Dint currentPos;
 	Pos2Dint newPos;
 
-	PriorityQueue* openSet = pq_init();
-	HashSet* closedSet = hs_init();
+	List* openSet = initList();
+	List* closedSet = initList();
 
 	start->g_cost = 0;
 	start->h_cost = heuristicCost(start, end);
@@ -784,10 +614,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	start->speedX = currentSpeedX;
 	start->speedY = currentSpeedY;
 
-	pq_push(openSet, start);
+	addNodeToList(start, openSet);
 
-	while (!pq_is_empty(openSet)) {
-		Node* currentNode = pq_pop(openSet);
+	while (!isListEmpty(openSet)) {
+		Node* currentNode = removeNodeWithLowestFCost(openSet);
 
 		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
 			List* path = initList();
@@ -799,7 +629,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 			return path;
 		}
 
-		hs_insert(closedSet, currentNode);
+		addNodeToList(currentNode, closedSet);
 
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
@@ -849,14 +679,15 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
-				if (!hs_contains(closedSet, neighbour)) {
-					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
+				if (!nodeInList(neighbour, closedSet)) {
+					ListElement* existingElementInOpenSet;
+					Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
 
 					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 						if (existingNodeInOpenSet != NULL) {
-							pq_remove(openSet, existingNodeInOpenSet);
+							removeElementFromList(openSet, existingElementInOpenSet);
 						}
-						pq_push(openSet, neighbour);
+						addNodeToList(neighbour, openSet);
 					}
 				}
 			}
