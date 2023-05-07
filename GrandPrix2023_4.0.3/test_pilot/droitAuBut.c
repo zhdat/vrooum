@@ -577,7 +577,13 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		Node* currentNode = removeNodeWithLowestFCost(openSet);
 
 		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
-			return PathConstruction(currentNode);
+			List* path = initList();
+			Node* pathNode = currentNode;
+			while (pathNode != NULL) {
+				addNodeToList(pathNode, path);
+				pathNode = pathNode->parent;
+			}
+			return path;
 		}
 
 		addNodeToList(currentNode, closedSet);
