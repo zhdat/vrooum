@@ -591,8 +591,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							continue; /* ignorer le noeud lui-même */
 						}
 
-						fprintf(stderr, "New position: (%d, %d)\n", newX, newY);
-
 						/* Calculer le coût en essence */
 						gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
 						newGas = currentNode->gas + gasCost;
@@ -600,6 +598,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						if (newGas < 0 || newGas > maxGas) {
 							continue;
 						}
+
+						fprintf(stderr, "New position: (%d, %d)\n", newX, newY);
 
 						currentPos.x = currentNode->x;
 						currentPos.y = currentNode->y;
