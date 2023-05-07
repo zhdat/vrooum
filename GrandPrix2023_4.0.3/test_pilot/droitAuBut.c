@@ -719,6 +719,9 @@ int main()
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 		fflush(stderr);
 
+		fprintf(stderr, "    Gas level: %d\n", gasLevel);
+		fflush(stderr);
+
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel);
 		fprintf(stderr, "    Path found: \n");
