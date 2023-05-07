@@ -556,6 +556,25 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 	return 1;
 }
 
+double calculateGCost(Node* currentNode, int accX, int accY, int newSpeedX, int newSpeedY, int newX, int newY)
+{
+	double distance;
+	int penalty = 0;
+	distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
+
+	if (currentNode->parent != NULL) {
+		int previousSpeedX = currentNode->parent->speedX;
+		int previousSpeedY = currentNode->parent->speedY;
+
+		if ((previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) && (newSpeedX != 0 || newSpeedY != 0) &&
+			(previousSpeedX > newSpeedX || previousSpeedY > newSpeedY)) {
+			penalty = 50;
+		}
+	}
+
+	return currentNode->g_cost + distance + penalty;
+}
+
 /**
  * @brief Calcule le chemin le plus court
  *
@@ -652,7 +671,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					}
 				}
 
-				neighbour->g_cost = currentNode->g_cost + distance + penalty;
+				neighbour->g_cost = calculateGCost(currentNode, accX, accY, newSpeedX, newSpeedY, newX, newY);
 
 				if (map[newY][newX] == '~') {
 					neighbour->g_cost = currentNode->g_cost + 4;
