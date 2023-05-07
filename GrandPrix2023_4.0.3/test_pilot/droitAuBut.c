@@ -568,82 +568,78 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		addNodeToList(currentNode, closedSet);
 
 		/* Générer les voisins */
-		for (speedX = -1; speedX <= 1; speedX++) {
-			for (speedY = -1; speedY <= 1; speedY++) {
-				for (accX = -1; accX <= 1; accX++) {
-					for (accY = -1; accY <= 1; accY++) {
-						newSpeedX = currentNode->speedX + accX;
-						newSpeedY = currentNode->speedY + accY;
+		for (accX = -1; accX <= 1; accX++) {
+			for (accY = -1; accY <= 1; accY++) {
+				newSpeedX = currentNode->speedX + accX;
+				newSpeedY = currentNode->speedY + accY;
 
-						/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
-						if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
-							continue;
-						}
+				/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
+				if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
+					continue;
+				}
 
-						newX = currentNode->x + accX;
-						newY = currentNode->y + accY;
+				newX = currentNode->x + newSpeedX;
+				newY = currentNode->y + newSpeedY;
 
-						if (newX == currentNode->x && newY == currentNode->y) {
-							continue; /* ignorer le noeud lui-même */
-						}
+				if (newX == currentNode->x && newY == currentNode->y) {
+					continue; /* ignorer le noeud lui-même */
+				}
 
-						/* Calculer le coût en essence */
-						gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
-						newGas = currentNode->gas + gasCost;
+				/* Calculer le coût en essence */
+				gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
+				newGas = currentNode->gas + gasCost;
 
-						if (newGas < 0 || newGas > maxGas) {
-							continue;
-						}
+				if (newGas < 0 || newGas > maxGas) {
+					continue;
+				}
 
-						currentPos.x = currentNode->x;
-						currentPos.y = currentNode->y;
-						newPos.x = newX;
-						newPos.y = newY;
+				currentPos.x = currentNode->x;
+				currentPos.y = currentNode->y;
+				newPos.x = newX;
+				newPos.y = newY;
 
-						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
-						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
-							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
-							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
-							(isPathClear(map, width, height, currentPos, newPos) == 1)) {
-							/* Vérifier si la norme de la vitesse est supérieure à 1 sur le sable */
-							if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
-								continue;
-							}
-							neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
-							neighbour->g_cost = currentNode->g_cost + sqrt((newX - currentNode->x) * (newX - currentNode->x) +
-																		   (newY - currentNode->y) * (newY - currentNode->y));
+				/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
+				if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
+					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
+					(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
+					(isPathClear(map, width, height, currentPos, newPos) == 1)) {
+					/* Vérifier si la norme de la vitesse est supérieure à 1 sur le sable */
+					if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
+						continue;
+					}
+					neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
+					neighbour->g_cost = currentNode->g_cost +
+										sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
 
-							if (map[newY][newX] == '~') {
-								neighbour->g_cost = currentNode->g_cost + 4;
-							}
-							neighbour->h_cost = heuristicCost(neighbour, end);
+					if (map[newY][newX] == '~') {
+						neighbour->g_cost = currentNode->g_cost + 4;
+					}
+					neighbour->h_cost = heuristicCost(neighbour, end);
 
-							if (neighbour->gas < neighbour->h_cost) {
-								free(neighbour);
-								continue;
-							}
-							neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+					if (neighbour->gas < neighbour->h_cost) {
+						free(neighbour);
+						continue;
+					}
+					neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
-							if (!nodeInList(neighbour, closedSet)) {
-								ListElement* existingElementInOpenSet;
-								/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
-								Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
-								if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
-									if (existingNodeInOpenSet != NULL) {
-										if (existingElementInOpenSet == openSet->head) {
-											openSet->head = existingElementInOpenSet->next;
-										} else {
-											ListElement* previous = openSet->head;
-											while (previous->next != existingElementInOpenSet) {
-												previous = previous->next;
-											}
-											previous->next = existingElementInOpenSet->next;
-										}
-										free(existingElementInOpenSet);
+					if (!nodeInList(neighbour, closedSet)) {
+						ListElement* existingElementInOpenSet;
+						/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
+						Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
+						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
+							if (existingNodeInOpenSet != NULL) {
+								if (existingElementInOpenSet == openSet->head) {
+									openSet->head = existingElementInOpenSet->next;
+								} else {
+									ListElement* previous = openSet->head;
+									while (previous->next != existingElementInOpenSet) {
+										previous = previous->next;
 									}
-									addNodeToList(neighbour, openSet);
+									previous->next = existingElementInOpenSet->next;
 								}
+								free(existingElementInOpenSet);
 							}
+							addNodeToList(neighbour, openSet);
 						}
 					}
 				}
