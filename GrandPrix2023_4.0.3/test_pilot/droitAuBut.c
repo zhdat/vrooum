@@ -559,7 +559,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	while (!isListEmpty(openSet)) {
 		Node* currentNode = removeNodeWithLowestFCost(openSet);
 
-		if (currentNode->x == end->x && currentNode->y == end->y) {
+		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
 			List* path = initList();
 			Node* pathNode = currentNode;
 			while (pathNode != NULL) {
@@ -578,6 +578,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					for (accY = -1; accY <= 1; accY++) {
 						newSpeedX = currentNode->speedX + accX;
 						newSpeedY = currentNode->speedY + accY;
+
+						fprintf(stderr, "Speed: (%d, %d)\n", newSpeedX, newSpeedY);
 
 						/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
 						if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
