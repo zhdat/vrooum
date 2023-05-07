@@ -627,7 +627,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					int previousSpeedY = currentNode->parent->speedY;
 
 					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
-						penalty += 5;
+						penalty += 10;
 					}
 				}
 
