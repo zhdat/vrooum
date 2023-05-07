@@ -560,6 +560,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		Node* currentNode = removeNodeWithLowestFCost(openSet);
 
 		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
+			fprintf(stderr, "Path found\n");
 			List* path = initList();
 			Node* pathNode = currentNode;
 			while (pathNode != NULL) {
