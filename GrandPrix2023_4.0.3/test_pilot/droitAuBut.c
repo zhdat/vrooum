@@ -530,6 +530,40 @@ int SpeedNorme(int speedX, int speedY)
  * @param maxGas
  * @return List* le chemin le plus court
  */
+
+int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, int newX, int newY, int newSpeedX, int newSpeedY, Pos2Dint currentPos,
+						  Pos2Dint newPos, int secondX, int secondY, int thirdX, int thirdY)
+{
+	if (newX == currentNode->x && newY == currentNode->y) {
+		return 0; /* ignorer le noeud lui-même */
+	}
+
+	if (newX >= width || newY >= height || newX < 0 || newY < 0) {
+		return 0;
+	}
+
+	if (map[newY][newX] == '.') {
+		return 0;
+	}
+
+	if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
+		return 0;
+	}
+
+	if (isPathClear(map, width, height, currentPos, newPos) == 0) {
+		return 0;
+	}
+
+	if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
+		return 0;
+	}
+
+	if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
+		return 0;
+	}
+	return 1;
+}
+
 List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int maxGas,
 			int currentSpeedX, int currentSpeedY)
 {
@@ -588,33 +622,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newPos.x = newX;
 				newPos.y = newY;
 
-				if (newX == currentNode->x && newY == currentNode->y) {
-					continue; /* ignorer le noeud lui-même */
-				}
-
-				if (newX >= width || newY >= height || newX < 0 || newY < 0) {
-					continue;
-				}
-
-				if (map[newY][newX] == '.') {
-					continue;
-				}
-
-				/* Vérifier si la norme de la vitesse est supérieure à 1 sur le sable */
-				if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
-					continue;
-				}
-
-				if (isPathClear(map, width, height, currentPos, newPos) == 0) {
-					continue;
-				}
-
-				if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
-					continue;
-				}
-
-				/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
-				if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
+				if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
+										  thirdX, thirdY) == 0) {
 					continue;
 				}
 
