@@ -566,7 +566,7 @@ double calculateG_cost(Node* currentNode, int newX, int newY, int newSpeedX, int
 		int previousSpeedX = currentNode->parent->speedX;
 		int previousSpeedY = currentNode->parent->speedY;
 
-		if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY && (previousSpeedX > newSpeedX || previousSpeedY > newSpeedY)) {
+		if ((previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) && (previousSpeedX > newSpeedX || previousSpeedY > newSpeedY)) {
 			penalty = 50;
 		}
 	}
@@ -601,8 +601,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int newY;
 	int gasCost;
 	int newGas;
-	double distance;
-	int penalty = 0;
 	Node* neighbour;
 	Pos2Dint currentPos;
 	Pos2Dint newPos;
