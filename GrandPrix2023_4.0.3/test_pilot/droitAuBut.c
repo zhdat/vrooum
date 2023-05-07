@@ -698,11 +698,6 @@ int main()
 	fflush(stderr);
 	fprintf(stderr, "\n=== Race start ===\n");
 
-	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read positions of pilots */
-	sscanf(line_buffer, "%d %d %d %d %d %d", &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
-	fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
-	fflush(stderr);
-
 	while (!feof(stdin)) {
 		round++;
 		fprintf(stderr, "=== ROUND %d\n", round);
