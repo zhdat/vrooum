@@ -37,154 +37,6 @@ typedef struct {
 	int distance;
 } EndPosition;
 
-typedef struct PriorityQueue {
-	size_t size;
-	size_t capacity;
-	Node** nodes;
-} PriorityQueue;
-
-/* Fonction pour initialiser la file de priorité */
-PriorityQueue* initPriorityQueue(size_t capacity)
-{
-	PriorityQueue* queue = (PriorityQueue*)malloc(sizeof(PriorityQueue));
-	queue->size = 0;
-	queue->capacity = capacity;
-	queue->nodes = (Node**)malloc(capacity * sizeof(Node*));
-	return queue;
-}
-
-int pq_find_index(PriorityQueue* pq, Node* node)
-{
-	size_t i;
-	for (i = 0; i < pq->size; ++i) {
-		if (pq->nodes[i] == node) {
-			return i;
-		}
-	}
-	return -1;
-}
-
-void pq_remove(PriorityQueue* pq, Node* node)
-{
-	size_t i;
-	if (pq == NULL || node == NULL) {
-		return;
-	}
-
-	int index = pq_find_index(pq, node);
-	if (index == -1) {
-		return; /* Le noeud n'est pas trouvé dans la file de priorité */
-	}
-
-	/* Supprimer le noeud en décalant les éléments suivants vers la gauche */
-	for (i = index; i < pq->size - 1; ++i) {
-		pq->nodes[i] = pq->nodes[i + 1];
-	}
-
-	pq->size--;
-
-	/* Réduire la capacité de la file de priorité si nécessaire */
-	if (pq->size < pq->capacity / 4) {
-		pq->capacity /= 2;
-		pq->nodes = (Node**)realloc(pq->nodes, sizeof(Node*) * pq->capacity);
-	}
-}
-
-/* Fonction pour comparer deux noeuds */
-int compareNodes(const void* a, const void* b)
-{
-	Node* nodeA = (Node*)a;
-	Node* nodeB = (Node*)b;
-
-	if (nodeA->f_cost < nodeB->f_cost) {
-		return -1;
-	} else if (nodeA->f_cost > nodeB->f_cost) {
-		return 1;
-	}
-	return 0;
-}
-
-/* Fonction pour redimensionner la file de priorité */
-void resizePriorityQueue(PriorityQueue* queue)
-{
-	queue->capacity *= 2;
-	queue->nodes = (Node**)realloc(queue->nodes, queue->capacity * sizeof(Node*));
-}
-
-/* Fonction pour permuter deux noeuds dans la file de priorité */
-void swapNodes(PriorityQueue* queue, size_t a, size_t b)
-{
-	Node* temp = queue->nodes[a];
-	queue->nodes[a] = queue->nodes[b];
-	queue->nodes[b] = temp;
-}
-
-/* Fonction pour ajuster la file de priorité vers le haut */
-void upHeap(PriorityQueue* queue, size_t index)
-{
-	while (index > 0) {
-		size_t parent = (index - 1) / 2;
-		if (compareNodes(queue->nodes[index], queue->nodes[parent]) >= 0)
-			break;
-		swapNodes(queue, index, parent);
-		index = parent;
-	}
-}
-
-/* Fonction pour ajuster la file de priorité vers le bas */
-void downHeap(PriorityQueue* queue, size_t index)
-{
-	while (1) {
-		size_t left = index * 2 + 1;
-		size_t right = index * 2 + 2;
-		size_t smallest = index;
-
-		if (left < queue->size && compareNodes(queue->nodes[left], queue->nodes[smallest]) < 0) {
-			smallest = left;
-		}
-
-		if (right < queue->size && compareNodes(queue->nodes[right], queue->nodes[smallest]) < 0) {
-			smallest = right;
-		}
-
-		if (smallest == index)
-			break;
-
-		swapNodes(queue, index, smallest);
-		index = smallest;
-	}
-}
-
-/* Fonction pour ajouter un noeud à la file de priorité */
-void pushPriorityQueue(Node* node, PriorityQueue* queue)
-{
-	if (queue->size == queue->capacity) {
-		resizePriorityQueue(queue);
-	}
-
-	queue->nodes[queue->size++] = node;
-	upHeap(queue, queue->size - 1);
-}
-
-/* Fonction pour supprimer le noeud avec le coût F le plus bas de la file de priorité */
-Node* popPriorityQueue(PriorityQueue* queue)
-{
-	if (queue->size == 0) {
-		return NULL;
-	}
-
-	Node* result = queue->nodes[0];
-	queue->nodes[0] = queue->nodes[--queue->size];
-	downHeap(queue, 0);
-	return result;
-}
-
-/* Fonction pour vérifier si la file de priorité est vide */
-int isPriorityQueueEmpty(PriorityQueue* queue)
-{
-	return queue->size == 0;
-}
-
 /* Fonctions utiles pour la gestion des noeuds, listes, coûts... */
 Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas)
 {
@@ -418,17 +270,17 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int gasCost;
 	int newGas;
 
-	PriorityQueue* openSet = initPriorityQueue(10);
+	List* openSet = initList();
 	List* closedSet = initList();
 
 	start->g_cost = 0;
 	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 
-	pushPriorityQueue(start, openSet);
+	addNodeToList(start, openSet);
 
-	while (!isPriorityQueueEmpty(openSet)) {
-		Node* currentNode = (Node*)popPriorityQueue(openSet);
+	while (!isListEmpty(openSet)) {
+		Node* currentNode = removeNodeWithLowestFCost(openSet);
 
 		if (currentNode->x == end->x && currentNode->y == end->y) {
 			/* Chemin trouvé, reconstruire le chemin et le retourner */
@@ -499,12 +351,21 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							if (!nodeInList(neighbour, closedSet)) {
 								ListElement* existingElementInOpenSet;
 								/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
-								Node* existingNodeInOpenSet = findNodeInList(neighbour, (List*)openSet->nodes, &existingElementInOpenSet);
+								Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
 								if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 									if (existingNodeInOpenSet != NULL) {
-										pq_remove(openSet, existingNodeInOpenSet);
+										if (existingElementInOpenSet == openSet->head) {
+											openSet->head = existingElementInOpenSet->next;
+										} else {
+											ListElement* previous = openSet->head;
+											while (previous->next != existingElementInOpenSet) {
+												previous = previous->next;
+											}
+											previous->next = existingElementInOpenSet->next;
+										}
+										free(existingElementInOpenSet);
 									}
-									pushPriorityQueue(neighbour, openSet);
+									addNodeToList(neighbour, openSet);
 								}
 							}
 						}
