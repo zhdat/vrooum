@@ -591,10 +591,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				if (isPathClear(map, width, height, currentPos, newPos) == 0) {
+				/* if (isPathClear(map, width, height, currentPos, newPos) == 0) {
 					continue;
 				}
-
+ */
 				fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas);
 
 				if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
