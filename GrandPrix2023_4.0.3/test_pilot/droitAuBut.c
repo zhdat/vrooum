@@ -612,6 +612,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
+				fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas);
+
 				currentPos.x = currentNode->x;
 				currentPos.y = currentNode->y;
 				newPos.x = newX;
