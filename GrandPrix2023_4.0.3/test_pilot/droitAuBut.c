@@ -577,7 +577,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				if (newX > width || newY > height || newX < 0 || newY < 0) {
 					continue;
 				}
-				fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas);
 
 				if (map[newY][newX] == '.') {
 					continue;
@@ -587,6 +586,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
 					continue;
 				}
+
+				fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas);
 
 				if (newX == currentNode->x && newY == currentNode->y) {
 					continue; /* ignorer le noeud lui-même */
