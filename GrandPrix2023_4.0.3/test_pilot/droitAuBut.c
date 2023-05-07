@@ -468,10 +468,6 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
 	nextX = first->x;
 	nextY = first->y;
 
-	fprintf(stderr, "Next node in path: (%d, %d)\n", nextX, nextY);
-	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
-	fprintf(stderr, "Current speed: (%d, %d)\n", speedX, speedY);
-
 	/* Vérifier si la vitesse actuelle est suffisante pour atteindre la case suivante */
 	if (myX + speedX == nextX && myY + speedY == nextY) {
 		*accelerationX = 0;
@@ -496,10 +492,6 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
 	if (*accelerationY < -1) {
 		*accelerationY = -1;
 	}
-
-	fprintf(stderr, "First node in path: (%d, %d)\n", first->x, first->y);
-	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
-	fprintf(stderr, "Acceleration: (%d, %d)\n", *accelerationX, *accelerationY);
 }
 
 /**
@@ -602,15 +594,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							continue;
 						}
 
-						fprintf(stderr, "New position: (%d, %d)\n", newX, newY);
-
 						currentPos.x = currentNode->x;
 						currentPos.y = currentNode->y;
 						newPos.x = newX;
 						newPos.y = newY;
-
-						fprintf(stderr, "Current position: (%d, %d)\n", currentPos.x, currentPos.y);
-						fprintf(stderr, "New position: (%d, %d)\n", newPos.x, newPos.y);
 
 						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
 						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
