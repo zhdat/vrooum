@@ -595,9 +595,9 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
 						newGas = currentNode->gas + gasCost;
 
-						/* if (newGas < 0 || newGas > maxGas) {
+						if (newGas < 0 || newGas > maxGas) {
 							continue;
-						} */
+						}
 
 						currentPos.x = currentNode->x;
 						currentPos.y = currentNode->y;
@@ -606,9 +606,9 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
 						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
-							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
+							(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~')/*  &&
 							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
-							(isPathClear(map, width, height, currentPos, newPos) == 1)) {
+							(isPathClear(map, width, height, currentPos, newPos) == 1) */) {
 							/* Vérifier si la norme de la vitesse est supérieure à 1 sur le sable */
 							if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
 								continue;
