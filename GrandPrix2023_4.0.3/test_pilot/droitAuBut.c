@@ -789,7 +789,7 @@ void expandNode(Node* currentNode, PriorityQueue* openSet, HashSet* closedSet, N
 				int previousSpeedY = currentNode->parent->speedY;
 
 				if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
-					penalty = 50;
+					penalty = 100;
 				}
 			}
 
@@ -809,47 +809,6 @@ void expandNode(Node* currentNode, PriorityQueue* openSet, HashSet* closedSet, N
 			}
 		}
 	}
-}
-
-List* reconstructPath(Node* currentNode)
-{
-	List* path = initList();
-	Node* pathNode = currentNode;
-	while (pathNode != NULL) {
-		addNodeToList(pathNode, path);
-		pathNode = pathNode->parent;
-	}
-	return path;
-}
-
-List* mergePaths(List* pathStart, List* pathEnd)
-{
-	List* completePath = initList();
-	ListElement* currentElement = pathStart->head;
-
-	while (currentElement != NULL) {
-		addNodeToList(currentElement->data, completePath);
-		currentElement = currentElement->next;
-	}
-
-	/* Reverse the pathEnd */
-	List* reversedPathEnd = initList();
-	currentElement = pathEnd->head;
-	while (currentElement != NULL) {
-		addNodeToList(currentElement->data, reversedPathEnd);
-		currentElement = currentElement->next;
-	}
-	reverseList(reversedPathEnd);
-
-	/* Add pathEnd to completePath */
-	currentElement = reversedPathEnd->head;
-	while (currentElement != NULL) {
-		addNodeToList(currentElement->data, completePath);
-		currentElement = currentElement->next;
-	}
-
-	freePath(reversedPathEnd);
-	return completePath;
 }
 
 /**
