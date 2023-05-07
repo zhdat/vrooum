@@ -572,7 +572,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		addNodeToList(currentNode, closedSet);
 
 		/* Générer les voisins */
-		for (speedX = -1; speedX <= 1; speedX++) {
+		for (speedX = -4; speedX <= 4; speedX++) {
 			for (speedY = -1; speedY <= 1; speedY++) {
 				for (accX = -1; accX <= 1; accX++) {
 					for (accY = -1; accY <= 1; accY++) {
@@ -610,9 +610,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
 							(isPathClear(map, width, height, currentPos, newPos) == 1)) {
 							/* Vérifier si la norme de la vitesse est supérieure à 1 sur le sable */
-
-							fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d\n", newX, newY, newSpeedX, newSpeedY);
-
 							if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
 								continue;
 							}
