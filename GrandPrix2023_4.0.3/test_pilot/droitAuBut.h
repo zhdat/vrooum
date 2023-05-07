@@ -66,7 +66,7 @@ typedef struct {
  * @param speedX
  * @param speedY
  * @param gas
- * @return Node*
+ * @return Node* le noeud créé
  */
 Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas);
 
@@ -107,7 +107,7 @@ Node* findNodeInList(Node* node, List* list, ListElement** elementInList);
 void addNodeToList(Node* node, List* list);
 
 /**
- * @brief Supprime un noeud d'une liste
+ * @brief Supprime un noeud d'une liste avec le plus petit coût f
  *
  * @param list
  * @return Node* le noeud supprimé
@@ -209,36 +209,19 @@ int compareEndPositions(const void* a, const void* b);
 int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end);
 
 /**
- * @brief Calcule la consommation d'essence
+ * @brief Compute the gas consumption of a requested acceleration
  *
- * @param accX
- * @param accY
- * @param speedX
- * @param speedY
- * @param inSand
- * @return int la consommation d'essence
+ * CAUTION: Even an illegal move will result in gas consumption. Producing
+ * illegal moves should be prevented as much as possible!
+ *
+ * @param accX Acceleration x component
+ * @param accY Acceleration y component
+ * @param speedX Speed x component
+ * @param speedY Speed y component
+ * @param inSand (boolean)
+ * @return Number of gas units consumed
  */
 int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand);
-
-/**
- * @brief Calcule le chemin le plus court
- *
- * @param start
- * @param end
- * @param map
- * @param width
- * @param height
- * @param secondX
- * @param secondY
- * @param thirdX
- * @param thirdY
- * @param startSpeedX
- * @param startSpeedY
- * @param maxGas
- * @return List* le chemin le plus court
- */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int startSpeedX,
-			int startSpeedY, int maxGas);
 
 /**
  * @brief Trouve les positions finales
@@ -270,5 +253,25 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
  * @param speedY
  */
 void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY);
+
+/**
+ * @brief Calcule le chemin le plus court
+ *
+ * @param start
+ * @param end
+ * @param map
+ * @param width
+ * @param height
+ * @param secondX
+ * @param secondY
+ * @param thirdX
+ * @param thirdY
+ * @param startSpeedX
+ * @param startSpeedY
+ * @param maxGas
+ * @return List* le chemin le plus court
+ */
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int startSpeedX,
+			int startSpeedY, int maxGas);
 
 #endif /* DROITAUBUT_H */

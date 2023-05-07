@@ -7,9 +7,23 @@
 #include "droitAuBut.h"
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
-#define INFINITE 9999999
+#define INFINITE INT_MAX
 
-/* Fonctions utiles pour la gestion des noeuds, listes, coûts... */
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+/* Fonctions Noeuds */
+
+/**
+ * @brief Create a Node object
+ *
+ * @param x
+ * @param y
+ * @param parent
+ * @param speedX
+ * @param speedY
+ * @param gas
+ * @return Node* le noeud créé
+ */
 Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas)
 {
 	Node* newNode = (Node*)malloc(sizeof(Node));
@@ -25,16 +39,25 @@ Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas)
 	return newNode;
 }
 
-int heuristicCost(Node* a, Node* b)
-{
-	return abs(a->x - b->x) + abs(a->y - b->y);
-}
-
+/**
+ * @brief Vérifie l'égalité entre deux noeuds
+ *
+ * @param node1
+ * @param node2
+ * @return int 1 si les noeuds sont égaux, 0 sinon
+ */
 int nodeEquals(Node* node1, Node* node2)
 {
 	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY;
 }
 
+/**
+ * @brief Vérifie si un noeud est dans une liste
+ *
+ * @param node
+ * @param list
+ * @return int 1 si le noeud est dans la liste, 0 sinon
+ */
 int nodeInList(Node* node, List* list)
 {
 	ListElement* current = list->head;
@@ -48,6 +71,14 @@ int nodeInList(Node* node, List* list)
 	return 0;
 }
 
+/**
+ * @brief Vérifie si un noeud est dans une liste et retourne l'élément de la liste
+ *
+ * @param node
+ * @param list
+ * @param elementInList
+ * @return Node* le noeud si il est dans la liste, NULL sinon
+ */
 Node* findNodeInList(Node* node, List* list, ListElement** elementInList)
 {
 	ListElement* currentElement = list->head;
@@ -68,6 +99,12 @@ Node* findNodeInList(Node* node, List* list, ListElement** elementInList)
 	return NULL;
 }
 
+/**
+ * @brief Ajoute un noeud dans une liste
+ *
+ * @param node
+ * @param list
+ */
 void addNodeToList(Node* node, List* list)
 {
 	ListElement* newElement = (ListElement*)malloc(sizeof(ListElement));
@@ -84,6 +121,13 @@ void addNodeToList(Node* node, List* list)
 		current->next = newElement;
 	}
 }
+
+/**
+ * @brief Supprime un noeud d'une liste
+ *
+ * @param list
+ * @return Node* le noeud supprimé
+ */
 Node* removeNodeWithLowestFCost(List* list)
 {
 	Node* result;
@@ -116,6 +160,27 @@ Node* removeNodeWithLowestFCost(List* list)
 	return result;
 }
 
+/**
+ * @brief Libère la mémoire d'un noeud
+ *
+ * @param node
+ */
+void freeNode(Node* node)
+{
+	if (node != NULL) {
+		free(node);
+	}
+}
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+/* Fonctions List */
+
+/**
+ * @brief Initialise une liste
+ *
+ * @return List* la liste initialisée
+ */
 List* initList()
 {
 	List* newList = (List*)malloc(sizeof(List));
@@ -123,11 +188,22 @@ List* initList()
 	return newList;
 }
 
+/**
+ * @brief Vériie si une liste est vide
+ *
+ * @param list
+ * @return int 1 si la liste est vide, 0 sinon
+ */
 int isListEmpty(List* list)
 {
 	return list->head == NULL;
 }
 
+/**
+ * @brief Affiche le chemim
+ *
+ * @param path
+ */
 void printPath(List* path)
 {
 	ListElement* currentElement;
@@ -146,6 +222,11 @@ void printPath(List* path)
 	}
 }
 
+/**
+ * @brief Inverse une liste
+ *
+ * @param list
+ */
 void reverseList(List* list)
 {
 	if (list == NULL) {
@@ -171,11 +252,62 @@ void reverseList(List* list)
 	list->head = prevElement;
 }
 
+/**
+ * @brief Libère la mémoire d'une liste
+ *
+ * @param path
+ */
+void freePath(List* path)
+{
+	ListElement* current = path->head;
+	ListElement* tmp;
+	while (current != NULL) {
+		tmp = current;
+		current = current->next;
+		free(tmp);
+	}
+	free(path);
+}
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+/* Fonctions algorithme */
+
+/**
+ * @brief Calcule le coût heuristique
+ *
+ * @param a
+ * @param b
+ * @return int le coût heuristique
+ */
+int heuristicCost(Node* a, Node* b)
+{
+	return abs(a->x - b->x) + abs(a->y - b->y);
+}
+
+/**
+ * @brief Vérifie si une position est occupée
+ *
+ * @param x
+ * @param y
+ * @param secondX
+ * @param secondY
+ * @param thirdX
+ * @param thirdY
+ * @return int 1 si la position est occupée, 0 sinon
+ */
 int isPositionOccupied(int x, int y, int secondX, int secondY, int thirdX, int thirdY)
 {
 	return (x == secondX && y == secondY) || (x == thirdX && y == thirdY);
 }
 
+/**
+ * @brief Compare les positions finales
+ *
+ * @param a
+ * @param b
+ * @return int la différence entre les positions
+ */
 int compareEndPositions(const void* a, const void* b)
 {
 	const EndPosition* positionA = (const EndPosition*)a;
@@ -184,6 +316,16 @@ int compareEndPositions(const void* a, const void* b)
 	return positionA->distance - positionB->distance;
 }
 
+/**
+ * @brief Vérifie si le chemin ne contient pas de mur
+ *
+ * @param map
+ * @param width
+ * @param height
+ * @param start
+ * @param end
+ * @return int 1 si le chemin est libre, 0 sinon
+ */
 int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 {
 	InfoLine line;
@@ -231,7 +373,137 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
 	return -gas;
 }
 
-/* A star */
+/**
+ * @brief Trouve les positions finales
+ *
+ * @param map
+ * @param width
+ * @param height
+ * @param start
+ * @param end
+ * @param secondX
+ * @param secondY
+ * @param thirdX
+ * @param thirdY
+ * @param speedX
+ * @param speedY
+ */
+void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
+					  int speedY)
+{
+	int x, y;
+	int i;
+	EndPosition* endPositions;
+	int distance;
+	EndPosition endPosition;
+
+	int endPositionCount = 0;
+	endPositions = (EndPosition*)malloc(sizeof(EndPosition) * width * height);
+
+	for (y = 0; y < height; y++) {
+		for (x = 0; x < width; x++) {
+			if (map[y][x] == '=') {
+				Node node;
+				node.x = x;
+				node.y = y;
+				distance = heuristicCost(start, &node);
+				endPosition.x = x;
+				endPosition.y = y;
+				endPosition.distance = distance;
+				endPositions[endPositionCount++] = endPosition;
+			}
+		}
+	}
+
+	qsort(endPositions, endPositionCount, sizeof(EndPosition), compareEndPositions);
+
+	for (i = 0; i < endPositionCount; i++) {
+		int x = endPositions[i].x;
+		int y = endPositions[i].y;
+		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
+			*end = createNode(x, y, NULL, speedX, speedY, 0);
+			break;
+		}
+	}
+}
+
+/**
+ * @brief Détermine l'accélération à partir du chemin
+ *
+ * @param path
+ * @param myX
+ * @param myY
+ * @param accelerationX
+ * @param accelerationY
+ * @param speedX
+ * @param speedY
+ */
+void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY)
+{
+	int nextX, nextY;
+	Node* first;
+	if (path == NULL || path->head == NULL || path->head->data == NULL) {
+		fprintf(stderr, "Path is NULL\n");
+		*accelerationX = 0;
+		*accelerationY = 0;
+		return;
+	}
+
+	first = path->head->next->data;
+	nextX = first->x;
+	nextY = first->y;
+
+	fprintf(stderr, "Next node in path: (%d, %d)\n", nextX, nextY);
+	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
+	fprintf(stderr, "Current speed: (%d, %d)\n", speedX, speedY);
+
+	/* Vérifier si la vitesse actuelle est suffisante pour atteindre la case suivante */
+	if (myX + speedX == nextX && myY + speedY == nextY) {
+		*accelerationX = 0;
+		*accelerationY = 0;
+	} else {
+		int desiredSpeedX = nextX - myX;
+		int desiredSpeedY = nextY - myY;
+
+		*accelerationX = desiredSpeedX - speedX;
+		*accelerationY = desiredSpeedY - speedY;
+	}
+
+	if (*accelerationX > 1) {
+		*accelerationX = 1;
+	}
+	if (*accelerationX < -1) {
+		*accelerationX = -1;
+	}
+	if (*accelerationY > 1) {
+		*accelerationY = 1;
+	}
+	if (*accelerationY < -1) {
+		*accelerationY = -1;
+	}
+
+	fprintf(stderr, "First node in path: (%d, %d)\n", first->x, first->y);
+	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
+	fprintf(stderr, "Acceleration: (%d, %d)\n", *accelerationX, *accelerationY);
+}
+
+/**
+ * @brief Calcule le chemin le plus court
+ *
+ * @param start
+ * @param end
+ * @param map
+ * @param width
+ * @param height
+ * @param secondX
+ * @param secondY
+ * @param thirdX
+ * @param thirdY
+ * @param startSpeedX
+ * @param startSpeedY
+ * @param maxGas
+ * @return List* le chemin le plus court
+ */
 List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int startSpeedX,
 			int startSpeedY, int maxGas)
 {
@@ -350,115 +622,9 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	return NULL;
 }
 
-/* Trouver les positions de départ et d'arrivée sur la carte */
-void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
-					  int speedY)
-{
-	int x, y;
-	int i;
-	EndPosition* endPositions;
-	int distance;
-	EndPosition endPosition;
+/* ------------------------------------------------------------------------------------------------------------------ */
 
-	int endPositionCount = 0;
-	endPositions = (EndPosition*)malloc(sizeof(EndPosition) * width * height);
-
-	for (y = 0; y < height; y++) {
-		for (x = 0; x < width; x++) {
-			if (map[y][x] == '=') {
-				Node node;
-				node.x = x;
-				node.y = y;
-				distance = heuristicCost(start, &node);
-				endPosition.x = x;
-				endPosition.y = y;
-				endPosition.distance = distance;
-				endPositions[endPositionCount++] = endPosition;
-			}
-		}
-	}
-
-	qsort(endPositions, endPositionCount, sizeof(EndPosition), compareEndPositions);
-
-	for (i = 0; i < endPositionCount; i++) {
-		int x = endPositions[i].x;
-		int y = endPositions[i].y;
-		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
-			*end = createNode(x, y, NULL, speedX, speedY, 0);
-			break;
-		}
-	}
-}
-
-/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
-void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY)
-{
-	int nextX, nextY;
-	Node* first;
-	if (path == NULL || path->head == NULL || path->head->data == NULL) {
-		fprintf(stderr, "Path is NULL\n");
-		*accelerationX = 0;
-		*accelerationY = 0;
-		return;
-	}
-
-	first = path->head->next->data;
-	nextX = first->x;
-	nextY = first->y;
-
-	fprintf(stderr, "Next node in path: (%d, %d)\n", nextX, nextY);
-	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
-	fprintf(stderr, "Current speed: (%d, %d)\n", speedX, speedY);
-
-	/* Vérifier si la vitesse actuelle est suffisante pour atteindre la case suivante */
-	if (myX + speedX == nextX && myY + speedY == nextY) {
-		*accelerationX = 0;
-		*accelerationY = 0;
-	} else {
-		int desiredSpeedX = nextX - myX;
-		int desiredSpeedY = nextY - myY;
-
-		*accelerationX = desiredSpeedX - speedX;
-		*accelerationY = desiredSpeedY - speedY;
-	}
-
-	if (*accelerationX > 1) {
-		*accelerationX = 1;
-	}
-	if (*accelerationX < -1) {
-		*accelerationX = -1;
-	}
-	if (*accelerationY > 1) {
-		*accelerationY = 1;
-	}
-	if (*accelerationY < -1) {
-		*accelerationY = -1;
-	}
-
-	fprintf(stderr, "First node in path: (%d, %d)\n", first->x, first->y);
-	fprintf(stderr, "Current position: (%d, %d)\n", myX, myY);
-	fprintf(stderr, "Acceleration: (%d, %d)\n", *accelerationX, *accelerationY);
-}
-
-/* Libérer la mémoire utilisée par la liste */
-void freePath(List* path)
-{
-	ListElement* current = path->head;
-	ListElement* tmp;
-	while (current != NULL) {
-		tmp = current;
-		current = current->next;
-		free(tmp);
-	}
-	free(path);
-}
-
-void freeNode(Node* node)
-{
-	if (node != NULL) {
-		free(node);
-	}
-}
+/* Fonction Main() */
 
 int main()
 {
