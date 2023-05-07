@@ -229,13 +229,16 @@ void printPath(List* path)
  */
 void reverseList(List* list)
 {
+	ListElement* prevElement;
+	ListElement* currentElement;
+	ListElement* nextElement;
 	if (list == NULL) {
 		fprintf(stderr, "List is NULL\n");
 		return;
 	}
-	ListElement* prevElement = NULL;
-	ListElement* currentElement = list->head;
-	ListElement* nextElement = NULL;
+	prevElement = NULL;
+	currentElement = list->head;
+	nextElement = NULL;
 
 	if (list == NULL || list->head == NULL) {
 		fprintf(stderr, "List is empty\n");
@@ -511,8 +514,13 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int accY;
 	int speedX;
 	int speedY;
+	int newSpeedX;
+	int newSpeedY;
+	int newX;
+	int newY;
 	int gasCost;
 	int newGas;
+	Node* neighbour;
 
 	List* openSet = initList();
 	List* closedSet = initList();
@@ -544,24 +552,24 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 			for (speedY = -1; speedY <= 1; speedY++) {
 				for (accX = -1; accX <= 1; accX++) {
 					for (accY = -1; accY <= 1; accY++) {
-						int newSpeedX = currentNode->speedX + accX;
-						int newSpeedY = currentNode->speedY + accY;
+						newSpeedX = currentNode->speedX + accX;
+						newSpeedY = currentNode->speedY + accY;
 
 						/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
 						if ((newSpeedX) * (newSpeedX) + (newSpeedY) * (newSpeedY) > 25) {
 							continue;
 						}
 
-						int newX = currentNode->x + newSpeedX;
-						int newY = currentNode->y + newSpeedY;
+						newX = currentNode->x + newSpeedX;
+						newY = currentNode->y + newSpeedY;
 
 						if (newX == currentNode->x && newY == currentNode->y) {
 							continue; /* ignorer le noeud lui-même */
 						}
 
 						/* Calculer le coût en essence */
-						int gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
-						int newGas = currentNode->gas + gasCost;
+						gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
+						newGas = currentNode->gas + gasCost;
 
 						if (newGas < 0 || newGas > maxGas) {
 							continue; /* ignorer les mouvements illégaux */
@@ -576,7 +584,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
 								continue;
 							}
-							Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
+							neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 							neighbour->g_cost = currentNode->g_cost + sqrt((newX - currentNode->x) * (newX - currentNode->x) +
 																		   (newY - currentNode->y) * (newY - currentNode->y));
 
