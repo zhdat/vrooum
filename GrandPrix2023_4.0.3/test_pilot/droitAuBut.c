@@ -29,8 +29,9 @@ static unsigned int hash_function(Node* node)
 
 HashSet* hs_init()
 {
+	int i;
 	HashSet* hs = (HashSet*)malloc(sizeof(HashSet));
-	for (int i = 0; i < HASH_SET_SIZE; i++) {
+	for (i = 0; i < HASH_SET_SIZE; i++) {
 		hs->buckets[i] = NULL;
 	}
 	return hs;
@@ -63,8 +64,9 @@ void hs_free(HashSet* hs)
 {
 	HashSetElement* current;
 	HashSetElement* next;
+	int i;
 
-	for (int i = 0; i < HASH_SET_SIZE; i++) {
+	for (i = 0; i < HASH_SET_SIZE; i++) {
 		current = hs->buckets[i];
 
 		while (current != NULL) {
@@ -830,7 +832,7 @@ List* mergePaths(List* pathStart, List* pathEnd)
 		currentElement = currentElement->next;
 	}
 
-	// Reverse the pathEnd
+	/* Reverse the pathEnd */
 	List* reversedPathEnd = initList();
 	currentElement = pathEnd->head;
 	while (currentElement != NULL) {
@@ -839,7 +841,7 @@ List* mergePaths(List* pathStart, List* pathEnd)
 	}
 	reverseList(reversedPathEnd);
 
-	// Add pathEnd to completePath
+	/* Add pathEnd to completePath */
 	currentElement = reversedPathEnd->head;
 	while (currentElement != NULL) {
 		addNodeToList(currentElement->data, completePath);
@@ -897,7 +899,7 @@ List* bidirectionalAStar(Node* start, Node* end, char** map, int width, int heig
 		Node* currentNodeEnd = pq_pop(openSetEnd);
 
 		if (hs_contains(closedSetEnd, currentNodeStart)) {
-			// Path found
+			/* Path found */
 			List* pathStart = reconstructPath(currentNodeStart);
 			List* pathEnd = reconstructPath(currentNodeEnd);
 			List* completePath = mergePaths(pathStart, pathEnd);
@@ -907,7 +909,7 @@ List* bidirectionalAStar(Node* start, Node* end, char** map, int width, int heig
 		}
 
 		if (hs_contains(closedSetStart, currentNodeEnd)) {
-			// Path found
+			/* Path found */
 			List* pathStart = reconstructPath(currentNodeStart);
 			List* pathEnd = reconstructPath(currentNodeEnd);
 			List* completePath = mergePaths(pathStart, pathEnd);
@@ -923,7 +925,7 @@ List* bidirectionalAStar(Node* start, Node* end, char** map, int width, int heig
 		expandNode(currentNodeEnd, openSetEnd, closedSetEnd, start, map, width, height, secondX, secondY, thirdX, thirdY, maxGas);
 	}
 
-	// No path found
+	/* No path found */
 	return NULL;
 }
 
