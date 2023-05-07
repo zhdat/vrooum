@@ -587,6 +587,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						newX = currentNode->x + newSpeedX;
 						newY = currentNode->y + newSpeedY;
 
+						fprintf(stderr, "New position: (%d, %d)\n", newX, newY);
+
 						if (newX == currentNode->x && newY == currentNode->y) {
 							continue; /* ignorer le noeud lui-même */
 						}
