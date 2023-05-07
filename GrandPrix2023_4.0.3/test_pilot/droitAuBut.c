@@ -633,15 +633,12 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				fprintf(stderr, "currentX: %d, currentY: %d, currentSpeedX: %d, currentSpeedY: %d, currentGas: %d\n", currentNode->x, currentNode->y,
-						currentNode->speedX, currentNode->speedY, currentNode->gas);
-				/* fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas); */
-
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
 				if (!nodeInList(neighbour, closedSet)) {
 					ListElement* existingElementInOpenSet;
 					/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
+					fprintf(stderr, "neighbour->x: %d, neighbour->y: %d\n", neighbour->x, neighbour->y);
 					Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
 					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 						if (existingNodeInOpenSet != NULL) {
