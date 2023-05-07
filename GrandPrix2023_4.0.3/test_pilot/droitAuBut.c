@@ -75,7 +75,7 @@ int nodeInList(Node* node, List* list)
 	ListElement* current = list->head;
 	while (current != NULL) {
 		Node* current_node = (Node*)current->data;
-		if (nodeEqualsWithoutSpeed(current_node, node)) {
+		if (nodeEquals(current_node, node)) {
 			return 1;
 		}
 		current = current->next;
