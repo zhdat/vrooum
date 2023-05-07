@@ -580,8 +580,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							continue;
 						}
 
-						newX = currentNode->x + newSpeedX;
-						newY = currentNode->y + newSpeedY;
+						newX = currentNode->x + accX;
+						newY = currentNode->y + accY;
 
 						if (newX == currentNode->x && newY == currentNode->y) {
 							continue; /* ignorer le noeud lui-même */
