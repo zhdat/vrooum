@@ -552,7 +552,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 	while (!isListEmpty(openSet)) {
 		Node* currentNode = removeNodeWithLowestFCost(openSet);
-		fprintf(stderr, "Current node: %d %d\n", currentNode->x, currentNode->y);
+		/* fprintf(stderr, "Current node: %d %d\n", currentNode->x, currentNode->y); */
 
 		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
 			List* path = initList();
