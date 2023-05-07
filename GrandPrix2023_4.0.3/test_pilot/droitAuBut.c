@@ -417,7 +417,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 		}
 	}
 
-	int maxGas = gasLevel; // Vous pouvez modifier cette valeur en fonction de la quantité maximale de carburant que vous souhaitez considérer
+	int maxGas = gasLevel;
 
 	for (i = 0; i < endPositionCount; i++) {
 		int x = endPositions[i].x;
