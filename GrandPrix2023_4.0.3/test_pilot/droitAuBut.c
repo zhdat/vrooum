@@ -631,7 +631,9 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas);
+				fprintf(stderr, "currentX: %d, currentY: %d, currentSpeedX: %d, currentSpeedY: %d, currentGas: %d\n", currentNode->x, currentNode->y,
+						currentNode->speedX, currentNode->speedY, currentNode->gas);
+				/* fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas); */
 
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
