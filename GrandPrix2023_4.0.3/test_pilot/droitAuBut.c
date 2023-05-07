@@ -75,7 +75,7 @@ int nodeInList(Node* node, List* list)
 	ListElement* current = list->head;
 	while (current != NULL) {
 		Node* current_node = (Node*)current->data;
-		if (nodeEquals(current_node, node) == 1) {
+		if (current_node->x == node->x && current_node->y == node->y) {
 			return 1;
 		}
 		current = current->next;
@@ -98,7 +98,7 @@ Node* findNodeInList(Node* node, List* list, ListElement** elementInList)
 	while (currentElement != NULL) {
 		Node* currentNode = (Node*)currentElement->data;
 
-		if (currentNode->x == node->x && currentNode->y == node->y) {
+		if (nodeEquals(currentNode, node)) {
 			if (elementInList != NULL) {
 				*elementInList = currentElement;
 			}
@@ -552,7 +552,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 	while (!isListEmpty(openSet)) {
 		Node* currentNode = removeNodeWithLowestFCost(openSet);
-		/* fprintf(stderr, "Current node: %d %d\n", currentNode->x, currentNode->y); */
 
 		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
 			List* path = initList();
