@@ -574,6 +574,11 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newX = currentNode->x + newSpeedX;
 				newY = currentNode->y + newSpeedY;
 
+				currentPos.x = currentNode->x;
+				currentPos.y = currentNode->y;
+				newPos.x = newX;
+				newPos.y = newY;
+
 				if (newX == currentNode->x && newY == currentNode->y) {
 					continue; /* ignorer le noeud lui-même */
 				}
@@ -591,10 +596,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				/* if (isPathClear(map, width, height, currentPos, newPos) == 0) {
+				if (isPathClear(map, width, height, currentPos, newPos) == 0) {
 					continue;
 				}
- */
+
 				fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas);
 
 				if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
@@ -613,13 +618,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				if (newGas < 0 || newGas > maxGas) {
 					continue;
 				}
-
-				fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas);
-
-				currentPos.x = currentNode->x;
-				currentPos.y = currentNode->y;
-				newPos.x = newX;
-				newPos.y = newY;
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 				neighbour->g_cost =
