@@ -672,6 +672,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				}
 
 				neighbour->g_cost = calculateGCost(currentNode, accX, accY, newSpeedX, newSpeedY, newX, newY);
+				fprintf(stderr, "g_cost : %f\n", neighbour->g_cost);
 
 				if (map[newY][newX] == '~') {
 					neighbour->g_cost = currentNode->g_cost + 4;
