@@ -4,38 +4,10 @@
 #include <string.h>
 #include <search.h>
 #include "follow_line.h"
+#include "droitAuBut.h"
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
 #define INFINITE 9999999
-
-/* Structures utiles au projet */
-
-typedef struct Node {
-	int x;
-	int y;
-	int speedX;
-	int speedY;
-	int gas;
-	int g_cost;
-	int h_cost;
-	int f_cost;
-	struct Node* parent;
-} Node;
-
-typedef struct ListElement {
-	void* data;
-	struct ListElement* next;
-} ListElement;
-
-typedef struct List {
-	ListElement* head;
-} List;
-
-typedef struct {
-	int x;
-	int y;
-	int distance;
-} EndPosition;
 
 /* Fonctions utiles pour la gestion des noeuds, listes, coûts... */
 Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas)
@@ -303,7 +275,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						int newSpeedX = currentNode->speedX + accX;
 						int newSpeedY = currentNode->speedY + accY;
 
-						/* Vérifiez que la norme de la vitesse ne dépasse pas 4 */
+						/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
 						if ((newSpeedX) * (newSpeedX) + (newSpeedY) * (newSpeedY) > 25) {
 							continue;
 						}
