@@ -595,9 +595,9 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
 						newGas = currentNode->gas + gasCost;
 
-						if (newGas < 0 || newGas > maxGas) {
-							continue; /* ignorer les mouvements illégaux */
-						}
+						/* if (newGas < 0 || newGas > maxGas) {
+							continue;
+						} */
 
 						currentPos.x = currentNode->x;
 						currentPos.y = currentNode->y;
