@@ -571,11 +571,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newSpeedX = currentNode->speedX + accX;
 				newSpeedY = currentNode->speedY + accY;
 
-				/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
-				if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
-					continue;
-				}
-
 				newX = currentNode->x + newSpeedX;
 				newY = currentNode->y + newSpeedY;
 
@@ -588,6 +583,11 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newGas = currentNode->gas + gasCost;
 
 				if (newGas < 0 || newGas > maxGas) {
+					continue;
+				}
+
+				/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
+				if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
 					continue;
 				}
 
