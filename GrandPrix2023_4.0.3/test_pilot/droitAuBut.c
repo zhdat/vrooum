@@ -574,8 +574,34 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newX = currentNode->x + newSpeedX;
 				newY = currentNode->y + newSpeedY;
 
+				if (newX > width || newY > height || newX < 0 || newY < 0) {
+					continue;
+				}
+
+				if (map[newY][newX] == '.') {
+					continue;
+				}
+
+				/* Vérifier si la norme de la vitesse est supérieure à 1 sur le sable */
+				if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
+					continue;
+				}
+
 				if (newX == currentNode->x && newY == currentNode->y) {
 					continue; /* ignorer le noeud lui-même */
+				}
+
+				if (isPathClear(map, width, height, currentPos, newPos) == 0) {
+					continue;
+				}
+
+				if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
+					continue;
+				}
+
+				/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
+				if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
+					continue;
 				}
 
 				/* Calculer le coût en essence */
@@ -586,64 +612,50 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
-				if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
-					continue;
-				}
-
 				currentPos.x = currentNode->x;
 				currentPos.y = currentNode->y;
 				newPos.x = newX;
 				newPos.y = newY;
 
-				/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
-				if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
-					(map[newY][newX] == '#' || map[newY][newX] == '=' || map[newY][newX] == '~') &&
-					(isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 0) &&
-					(isPathClear(map, width, height, currentPos, newPos) == 1)) {
-					/* Vérifier si la norme de la vitesse est supérieure à 1 sur le sable */
-					if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
-						continue;
-					}
-					neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
-					neighbour->g_cost = currentNode->g_cost +
-										sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
+				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
+				neighbour->g_cost =
+					currentNode->g_cost + sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
 
-					if (map[newY][newX] == '~') {
-						neighbour->g_cost = currentNode->g_cost + 4;
-					}
-					neighbour->h_cost = heuristicCost(neighbour, end);
+				if (map[newY][newX] == '~') {
+					neighbour->g_cost = currentNode->g_cost + 4;
+				}
+				neighbour->h_cost = heuristicCost(neighbour, end);
 
-					if (neighbour->gas < neighbour->h_cost) {
-						free(neighbour);
-						continue;
-					}
-					neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+				if (neighbour->gas < neighbour->h_cost) {
+					free(neighbour);
+					continue;
+				}
+				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
-					if (!nodeInList(neighbour, closedSet)) {
-						ListElement* existingElementInOpenSet;
-						/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
-						Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
-						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
-							if (existingNodeInOpenSet != NULL) {
-								if (existingElementInOpenSet == openSet->head) {
-									openSet->head = existingElementInOpenSet->next;
-								} else {
-									ListElement* previous = openSet->head;
-									while (previous->next != existingElementInOpenSet) {
-										previous = previous->next;
-									}
-									previous->next = existingElementInOpenSet->next;
+				if (!nodeInList(neighbour, closedSet)) {
+					ListElement* existingElementInOpenSet;
+					/* Vérifie si le voisin est déjà dans l'ensemble ouvert et s'il y'a un meilleur chemin */
+					Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
+					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
+						if (existingNodeInOpenSet != NULL) {
+							if (existingElementInOpenSet == openSet->head) {
+								openSet->head = existingElementInOpenSet->next;
+							} else {
+								ListElement* previous = openSet->head;
+								while (previous->next != existingElementInOpenSet) {
+									previous = previous->next;
 								}
-								free(existingElementInOpenSet);
+								previous->next = existingElementInOpenSet->next;
 							}
-							addNodeToList(neighbour, openSet);
+							free(existingElementInOpenSet);
 						}
+						addNodeToList(neighbour, openSet);
 					}
 				}
 			}
 		}
 	}
+
 	/* Pas de chemin trouvé */
 	return NULL;
 }
