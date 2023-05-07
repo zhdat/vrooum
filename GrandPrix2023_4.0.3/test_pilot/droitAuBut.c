@@ -572,7 +572,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		addNodeToList(currentNode, closedSet);
 
 		/* Générer les voisins */
-		for (speedX = -4; speedX <= 4; speedX++) {
+		for (speedX = -1; speedX <= 1; speedX++) {
 			for (speedY = -1; speedY <= 1; speedY++) {
 				for (accX = -1; accX <= 1; accX++) {
 					for (accY = -1; accY <= 1; accY++) {
@@ -603,6 +603,9 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						currentPos.y = currentNode->y;
 						newPos.x = newX;
 						newPos.y = newY;
+
+						fprintf(stderr, "Current position: (%d, %d)\n", currentPos.x, currentPos.y);
+						fprintf(stderr, "New position: (%d, %d)\n", newPos.x, newPos.y);
 
 						/* Vérifier si les coordonnées sont valides et si le terrain est praticable */
 						if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
