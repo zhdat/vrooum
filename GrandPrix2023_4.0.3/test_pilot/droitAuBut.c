@@ -52,6 +52,18 @@ int nodeEquals(Node* node1, Node* node2)
 }
 
 /**
+ * @brief Vérifie l'égalité entre deux noeuds sans la vitesse
+ *
+ * @param node1
+ * @param node2
+ * @return int 1 si les noeuds sont égaux, 0 sinon
+ */
+int nodeEqualsWithoutSpeed(Node* node1, Node* node2)
+{
+	return node1->x == node2->x && node1->y == node2->y;
+}
+
+/**
  * @brief Vérifie si un noeud est dans une liste
  *
  * @param node
@@ -491,6 +503,35 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
 }
 
 /**
+ * @brief Calcule la norme de la vitesse
+ *
+ * @param speedX
+ * @param speedY
+ * @return int la norme de la vitesse
+ */
+int SpeedNorme(int speedX, int speedY)
+{
+	return (int)(sqrt(speedX * speedX + speedY * speedY));
+}
+
+/**
+ * @brief Reconstruire le chemin et le retourner
+ *
+ * @param node
+ * @return List* le chemin
+ */
+List* PathConstruction(Node* node)
+{
+	List* path = initList();
+	Node* pathNode = node;
+	while (pathNode != NULL) {
+		addNodeToList(pathNode, path);
+		pathNode = pathNode->parent;
+	}
+	return path;
+}
+
+/**
  * @brief Calcule le chemin le plus court
  *
  * @param start
@@ -535,15 +576,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	while (!isListEmpty(openSet)) {
 		Node* currentNode = removeNodeWithLowestFCost(openSet);
 
-		if (currentNode->x == end->x && currentNode->y == end->y) {
-			/* Chemin trouvé, reconstruire le chemin et le retourner */
-			List* path = initList();
-			Node* pathNode = currentNode;
-			while (pathNode != NULL) {
-				addNodeToList(pathNode, path);
-				pathNode = pathNode->parent;
-			}
-			return path;
+		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
+			return PathConstruction(currentNode);
 		}
 
 		addNodeToList(currentNode, closedSet);
@@ -557,7 +591,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						newSpeedY = currentNode->speedY + accY;
 
 						/* Vérifiez que la norme de la vitesse ne dépasse pas 5 */
-						if ((newSpeedX) * (newSpeedX) + (newSpeedY) * (newSpeedY) > 25) {
+						if (SpeedNorme(newSpeedX, newSpeedY) > 5) {
 							continue;
 						}
 

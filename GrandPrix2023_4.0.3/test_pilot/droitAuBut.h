@@ -80,6 +80,15 @@ Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas);
 int nodeEquals(Node* node1, Node* node2);
 
 /**
+ * @brief Vérifie l'égalité entre deux noeuds sans la vitesse
+ *
+ * @param node1
+ * @param node2
+ * @return int 1 si les noeuds sont égaux, 0 sinon
+ */
+int nodeEqualsWithoutSpeed(Node* node1, Node* node2);
+
+/**
  * @brief Vérifie si un noeud est dans une liste
  *
  * @param node
@@ -253,6 +262,15 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
  * @param speedY
  */
 void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY);
+
+/**
+ * @brief Calcule la norme de la vitesse
+ *
+ * @param speedX
+ * @param speedY
+ * @return int la norme de la vitesse
+ */
+int SpeedNorme(int speedX, int speedY);
 
 /**
  * @brief Calcule le chemin le plus court
