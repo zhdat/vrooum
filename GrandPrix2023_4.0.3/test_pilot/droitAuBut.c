@@ -609,8 +609,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas);
-
 				/* Calculer le coût en essence */
 				gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
 				newGas = currentNode->gas + gasCost;
@@ -618,6 +616,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				if (newGas < 0 || newGas > maxGas) {
 					continue;
 				}
+
+				fprintf(stderr, "newX: %d, newY: %d, newSpeedX: %d, newSpeedY: %d, newGas: %d\n", newX, newY, newSpeedX, newSpeedY, newGas);
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 				neighbour->g_cost =
