@@ -271,7 +271,6 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
  * @param maxGas
  * @return List* le chemin le plus court
  */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int startSpeedX,
-			int startSpeedY, int maxGas);
+List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int maxGas);
 
 #endif /* DROITAUBUT_H */
