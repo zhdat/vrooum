@@ -466,9 +466,16 @@ int min(int a, int b)
  * @param b
  * @return int le coût heuristique
  */
-double heuristicCost(Node* current, Node* end)
+double heuristicCost(Node* a, Node* b)
 {
-	return sqrt(pow(current->x - end->x, 2) + pow(current->y - end->y, 2));
+	double dx = abs(a->x - b->x);
+	double dy = abs(a->y - b->y);
+	double d_min = fmin(dx, dy);
+	double d_max = fmax(dx, dy);
+	double diagonal_cost = sqrt(2);
+	double orthogonal_cost = 1;
+
+	return diagonal_cost * d_min + orthogonal_cost * (d_max - d_min);
 }
 
 /**
