@@ -786,7 +786,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
-				/* penalty = 0; */
 				newSpeedX = currentNode->speedX + accX;
 				newSpeedY = currentNode->speedY + accY;
 
@@ -815,6 +814,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
 						penalty = 10;
+						currentNode->g_cost += penalty;
 					}
 				}
 
