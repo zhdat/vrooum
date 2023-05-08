@@ -715,11 +715,11 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
-	gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
+	/* gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
 	newGas = currentNode->gas + gasCost;
 	if (newGas < 0 || newGas > maxGas) {
 		return 0;
-	}
+	} */
 
 	return 1;
 }
