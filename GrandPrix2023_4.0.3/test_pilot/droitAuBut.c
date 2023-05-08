@@ -696,7 +696,6 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 	if (map[newY][newX] == '.') {
 		return 0;
 	}
-	/*
 
 	if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
 		return 0;
@@ -718,7 +717,7 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 	newGas = currentNode->gas + gasCost;
 	if (newGas < 0 || newGas > maxGas) {
 		return 0;
-	} */
+	}
 
 	return 1;
 }
