@@ -841,12 +841,12 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							free(existingNodeInOpenSet);
 						}
 						pq_push(openSet, neighbour);
-					} else {
+					} /* else {
 						free(neighbour);
-					}
-				} /* else {
-					free(neighbour);
-				} */
+					} */
+				}	  /* else {
+						free(neighbour);
+					} */
 			}
 		}
 	}
