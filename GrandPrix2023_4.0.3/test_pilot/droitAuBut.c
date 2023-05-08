@@ -699,7 +699,7 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
-	if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 2)) {
+	if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
 		return 0;
 	}
 
@@ -733,7 +733,7 @@ int smoothDirectionCost(int previousSpeedX, int previousSpeedY, int newSpeedX, i
 	double angleCosine = (double)dotProduct / (magnitudePrev * magnitudeNew);
 	double angle = acos(angleCosine);
 
-	int smoothingFactor = 100;
+	int smoothingFactor = 1000;
 	return smoothingFactor * angle;
 }
 
