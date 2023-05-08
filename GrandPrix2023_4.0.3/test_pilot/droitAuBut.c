@@ -733,7 +733,7 @@ int smoothDirectionCost(int previousSpeedX, int previousSpeedY, int newSpeedX, i
 	double angleCosine = (double)dotProduct / (magnitudePrev * magnitudeNew);
 	double angle = acos(angleCosine);
 
-	int smoothingFactor = 1000;
+	int smoothingFactor = 50;
 	return smoothingFactor * angle;
 }
 
