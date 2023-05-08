@@ -828,13 +828,13 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					additionalCost = 4;
 				}
 
-				/* if (currentNode->parent != NULL) {
+				if (currentNode->parent != NULL) {
 					int previousSpeedX = currentNode->parent->speedX;
 					int previousSpeedY = currentNode->parent->speedY;
 
 					int smoothCost = smoothDirectionCost(previousSpeedX, previousSpeedY, newSpeedX, newSpeedY);
 					additionalCost += smoothCost;
-				} */
+				}
 
 				if (currentNode->parent != NULL) {
 					int previousSpeedX = currentNode->parent->speedX;
