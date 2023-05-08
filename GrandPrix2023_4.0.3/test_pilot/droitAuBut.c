@@ -720,19 +720,6 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 	return 1;
 }
 
-int smoothDirectionCost(int previousSpeedX, int previousSpeedY, int newSpeedX, int newSpeedY)
-{
-	int dotProduct = previousSpeedX * newSpeedX + previousSpeedY * newSpeedY;
-	int magnitudePrev = sqrt(previousSpeedX * previousSpeedX + previousSpeedY * previousSpeedY);
-	int magnitudeNew = sqrt(newSpeedX * newSpeedX + newSpeedY * newSpeedY);
-
-	double angleCosine = (double)dotProduct / (magnitudePrev * magnitudeNew);
-	double angle = acos(angleCosine);
-
-	int smoothingFactor = 5;
-	return smoothingFactor * angle;
-}
-
 /**
  * @brief Calcule le chemin le plus court
  *
@@ -822,14 +809,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				int additionalCost = 0;
 				if (map[newY][newX] == '~') {
 					additionalCost = 4;
-				}
-
-				if (currentNode->parent != NULL) {
-					int previousSpeedX = currentNode->parent->speedX;
-					int previousSpeedY = currentNode->parent->speedY;
-
-					int smoothCost = smoothDirectionCost(previousSpeedX, previousSpeedY, newSpeedX, newSpeedY);
-					additionalCost += smoothCost;
 				}
 
 				neighbour->g_cost += distance + additionalCost;
