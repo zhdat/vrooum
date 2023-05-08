@@ -831,12 +831,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				}
 				neighbour->h_cost = heuristicCost(neighbour, end);
 
-				/* if (neighbour->gas < neighbour->h_cost) {
-					free(neighbour);
-					continue;
-				} */
-
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+
+				fprintf(stderr, "neighbour: (%d, %d) g_cost: %f h_cost: %f f_cost: %f\n", neighbour->x, neighbour->y, neighbour->g_cost,
+						neighbour->h_cost, neighbour->f_cost);
 
 				if (!hs_contains(closedSet, neighbour)) {
 					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
