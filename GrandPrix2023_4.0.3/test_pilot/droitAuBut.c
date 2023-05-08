@@ -836,7 +836,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					additionalCost += smoothCost;
 				} */
 
-				neighbour->g_cost += distance + additionalCost;
+				neighbour->g_cost += distance;
 
 				neighbour->h_cost = heuristicCost(neighbour, end);
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
