@@ -463,7 +463,14 @@ void freePath(List* path)
  */
 double heuristicCost(Node* a, Node* b)
 {
-	return abs(a->x - b->x) + abs(a->y - b->y);
+	double dx = abs(a->x - b->x);
+	double dy = abs(a->y - b->y);
+	double d_min = fmin(dx, dy);
+	double d_max = fmax(dx, dy);
+	double diagonal_cost = sqrt(2);
+	double orthogonal_cost = 1;
+
+	return diagonal_cost * d_min + orthogonal_cost * (d_max - d_min);
 }
 
 /**
@@ -715,6 +722,19 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 	return 1;
 }
 
+int smoothDirectionCost(int previousSpeedX, int previousSpeedY, int newSpeedX, int newSpeedY)
+{
+	int dotProduct = previousSpeedX * newSpeedX + previousSpeedY * newSpeedY;
+	int magnitudePrev = sqrt(previousSpeedX * previousSpeedX + previousSpeedY * previousSpeedY);
+	int magnitudeNew = sqrt(newSpeedX * newSpeedX + newSpeedY * newSpeedY);
+
+	double angleCosine = (double)dotProduct / (magnitudePrev * magnitudeNew);
+	double angle = acos(angleCosine);
+
+	int smoothingFactor = 5; // Ajustez cette valeur pour modifier l'importance du lissage
+	return smoothingFactor * angle;
+}
+
 /**
  * @brief Calcule le chemin le plus court
  *
@@ -744,7 +764,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int gasCost;
 	int newGas;
 	double distance;
-	int penalty = 0;
 	Node* neighbour;
 	Pos2Dint currentPos;
 	Pos2Dint newPos;
@@ -805,12 +824,11 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					int previousSpeedX = currentNode->parent->speedX;
 					int previousSpeedY = currentNode->parent->speedY;
 
-					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
-						penalty = 100;
-					}
+					int smoothCost = smoothDirectionCost(previousSpeedX, previousSpeedY, newSpeedX, newSpeedY);
+					neighbour->g_cost += smoothCost;
 				}
 
-				neighbour->g_cost = currentNode->g_cost + distance + penalty;
+				neighbour->g_cost = currentNode->g_cost + distance;
 
 				if (map[newY][newX] == '~') {
 					neighbour->g_cost = currentNode->g_cost + 4;
