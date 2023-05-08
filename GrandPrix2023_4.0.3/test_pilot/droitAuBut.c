@@ -810,6 +810,11 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
+				fprintf(stderr, "newX = %d, newY = %d, newSpeedX = %d, newSpeedY = %d\n", newX, newY, newSpeedX, newSpeedY);
+				fprintf(stderr, "currentX = %d, currentY = %d, currentSpeedX = %d, currentSpeedY = %d\n", currentNode->x, currentNode->y,
+						currentNode->speedX, currentNode->speedY);
+				fprintf(stderr, 'map[newY][newX] = %c\n', map[newY][newX]);
+
 				gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
 				newGas = currentNode->gas + gasCost;
 
