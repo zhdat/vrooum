@@ -820,6 +820,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newGas = currentNode->gas + gasCost;
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
+				neighbour->g_cost = currentNode->g_cost;
+				neighbour->gas = newGas;
 				distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
 
 				if (currentNode->parent != NULL) {
@@ -830,7 +832,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					neighbour->g_cost += smoothCost;
 				}
 
-				neighbour->g_cost = currentNode->g_cost + distance;
+				neighbour->g_cost += distance;
 
 				if (map[newY][newX] == '~') {
 					neighbour->g_cost += 4;
