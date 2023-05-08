@@ -844,9 +844,9 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					} else {
 						free(neighbour);
 					}
-				} else {
+				} /* else {
 					free(neighbour);
-				}
+				} */
 			}
 		}
 	}
