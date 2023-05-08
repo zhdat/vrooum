@@ -786,6 +786,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
+				penalty = 0;
 				newSpeedX = currentNode->speedX + accX;
 				newSpeedY = currentNode->speedY + accY;
 
@@ -824,10 +825,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				}
 				neighbour->h_cost = heuristicCost(neighbour, end);
 
-				/* if (neighbour->gas < neighbour->h_cost) {
+				if (neighbour->gas < neighbour->h_cost) {
 					free(neighbour);
 					continue;
-				} */
+				}
 
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
@@ -837,11 +838,14 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 						if (existingNodeInOpenSet != NULL) {
 							pq_remove(openSet, existingNodeInOpenSet);
+							free(existingNodeInOpenSet);
 						}
 						pq_push(openSet, neighbour);
-						fprintf(stderr, "Pushing node: (%d, %d) speed: (%d, %d) gas: %d\n", neighbour->x, neighbour->y, neighbour->speedX,
-								neighbour->speedY, neighbour->gas);
+					} else {
+						free(neighbour);
 					}
+				} else {
+					free(neighbour);
 				}
 			}
 		}
