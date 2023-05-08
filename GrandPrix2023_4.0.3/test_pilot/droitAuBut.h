@@ -8,6 +8,8 @@
 #include <search.h>
 #include "follow_line.h"
 
+#define HASH_SET_SIZE 1024
+
 /* Structures utiles au projet */
 
 /**
@@ -43,6 +45,24 @@ typedef struct List {
 	ListElement* head;
 } List;
 
+typedef struct HashSetElement {
+	Node* node;
+	struct HashSetElement* next;
+} HashSetElement;
+
+typedef struct HashSet {
+	HashSetElement* buckets[HASH_SET_SIZE];
+} HashSet;
+
+typedef struct PriorityQueueElement {
+	Node* node;
+	struct PriorityQueueElement* next;
+} PriorityQueueElement;
+
+typedef struct PriorityQueue {
+	PriorityQueueElement* head;
+} PriorityQueue;
+
 /**
  * @brief Structure représentant une position finale
  *
@@ -52,6 +72,36 @@ typedef struct {
 	int y;
 	int distance;
 } EndPosition;
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+/* Fonctions Hash */
+
+HashSet* hs_init();
+
+void hs_insert(HashSet* hs, Node* node);
+
+int hs_contains(HashSet* hs, Node* node);
+
+void hs_free(HashSet* hs);
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+/* Fonctions PriorityQueue */
+
+PriorityQueue* pq_init();
+
+void pq_push(PriorityQueue* pq, Node* node);
+
+Node* pq_pop(PriorityQueue* pq);
+
+int pq_is_empty(PriorityQueue* pq);
+
+void pq_free(PriorityQueue* pq);
+
+Node* pq_find(PriorityQueue* pq, Node* node);
+
+void pq_remove(PriorityQueue* pq, Node* node);
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 
@@ -78,6 +128,15 @@ Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas);
  * @return int 1 si les noeuds sont égaux, 0 sinon
  */
 int nodeEquals(Node* node1, Node* node2);
+
+/**
+ * @brief Vérifie l'égalité entre deux noeuds sans la vitesse
+ *
+ * @param node1
+ * @param node2
+ * @return int 1 si les noeuds sont égaux, 0 sinon
+ */
+int nodeEqualsWithoutSpeed(Node* node1, Node* node2);
 
 /**
  * @brief Vérifie l'égalité entre deux noeuds sans la vitesse
@@ -116,7 +175,7 @@ Node* findNodeInList(Node* node, List* list, ListElement** elementInList);
 void addNodeToList(Node* node, List* list);
 
 /**
- * @brief Supprime un noeud d'une liste avec le plus petit coût f
+ * @brief Supprime un noeud d'une liste
  *
  * @param list
  * @return Node* le noeud supprimé
@@ -132,7 +191,7 @@ void freeNode(Node* node);
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 
-/* Fonctions List */
+/* Fonctions list */
 
 /**
  * @brief Initialise une liste
@@ -162,6 +221,8 @@ void printPath(List* path);
  * @param list
  */
 void reverseList(List* list);
+
+void removeElementFromList(List* list, ListElement* element);
 
 /**
  * @brief Libère la mémoire d'une liste
@@ -271,6 +332,9 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
  * @return int la norme de la vitesse
  */
 int SpeedNorme(int speedX, int speedY);
+
+int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, int newX, int newY, int newSpeedX, int newSpeedY, Pos2Dint currentPos,
+						  Pos2Dint newPos, int secondX, int secondY, int thirdX, int thirdY, int maxGas, int accX, int accY);
 
 /**
  * @brief Calcule le chemin le plus court

@@ -11,17 +11,6 @@
 
 /* TESTS */
 
-#define HASH_SET_SIZE 1024
-
-typedef struct HashSetElement {
-	Node* node;
-	struct HashSetElement* next;
-} HashSetElement;
-
-typedef struct HashSet {
-	HashSetElement* buckets[HASH_SET_SIZE];
-} HashSet;
-
 static unsigned int hash_function(Node* node)
 {
 	return (node->x * 31 + node->y) % HASH_SET_SIZE;
@@ -78,15 +67,6 @@ void hs_free(HashSet* hs)
 
 	free(hs);
 }
-
-typedef struct PriorityQueueElement {
-	Node* node;
-	struct PriorityQueueElement* next;
-} PriorityQueueElement;
-
-typedef struct PriorityQueue {
-	PriorityQueueElement* head;
-} PriorityQueue;
 
 PriorityQueue* pq_init()
 {
@@ -439,6 +419,20 @@ void reverseList(List* list)
 	list->head = prevElement;
 }
 
+void removeElementFromList(List* list, ListElement* element)
+{
+	if (element == list->head) {
+		list->head = element->next;
+	} else {
+		ListElement* previous = list->head;
+		while (previous->next != element) {
+			previous = previous->next;
+		}
+		previous->next = element->next;
+	}
+	free(element);
+}
+
 /**
  * @brief Libère la mémoire d'une liste
  *
@@ -726,20 +720,6 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 	}
 
 	return 1;
-}
-
-void removeElementFromList(List* list, ListElement* element)
-{
-	if (element == list->head) {
-		list->head = element->next;
-	} else {
-		ListElement* previous = list->head;
-		while (previous->next != element) {
-			previous = previous->next;
-		}
-		previous->next = element->next;
-	}
-	free(element);
 }
 
 /**
