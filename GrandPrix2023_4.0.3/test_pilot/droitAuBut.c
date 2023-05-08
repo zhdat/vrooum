@@ -99,11 +99,12 @@ void pq_push(PriorityQueue* pq, Node* node)
 Node* pq_pop(PriorityQueue* pq)
 {
 	PriorityQueueElement* elementToRemove;
+	Node* node;
 	if (pq->head == NULL) {
 		return NULL;
 	}
 	elementToRemove = pq->head;
-	Node* node = elementToRemove->node;
+	node = elementToRemove->node;
 	pq->head = elementToRemove->next;
 	free(elementToRemove);
 	return node;
