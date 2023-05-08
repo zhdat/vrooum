@@ -838,15 +838,15 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 						if (existingNodeInOpenSet != NULL) {
 							pq_remove(openSet, existingNodeInOpenSet);
-							/* free(existingNodeInOpenSet); */
+							free(existingNodeInOpenSet);
 						}
 						pq_push(openSet, neighbour);
-					} /* else {
+					} else {
 						free(neighbour);
-					} */
-				}	  /* else {
-						free(neighbour);
-					} */
+					}
+				} else {
+					free(neighbour);
+				}
 			}
 		}
 	}
