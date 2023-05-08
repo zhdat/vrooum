@@ -77,6 +77,7 @@ PriorityQueue* pq_init()
 
 void pq_push(PriorityQueue* pq, Node* node)
 {
+	PriorityQueueElement* current;
 	PriorityQueueElement* newElement = (PriorityQueueElement*)malloc(sizeof(PriorityQueueElement));
 	newElement->node = node;
 	newElement->next = NULL;
@@ -87,7 +88,7 @@ void pq_push(PriorityQueue* pq, Node* node)
 		return;
 	}
 
-	PriorityQueueElement* current = pq->head;
+	current = pq->head;
 	while (current->next != NULL && current->next->node->f_cost < node->f_cost) {
 		current = current->next;
 	}
@@ -97,10 +98,11 @@ void pq_push(PriorityQueue* pq, Node* node)
 
 Node* pq_pop(PriorityQueue* pq)
 {
+	PriorityQueueElement* elementToRemove;
 	if (pq->head == NULL) {
 		return NULL;
 	}
-	PriorityQueueElement* elementToRemove = pq->head;
+	elementToRemove = pq->head;
 	Node* node = elementToRemove->node;
 	pq->head = elementToRemove->next;
 	free(elementToRemove);
@@ -140,6 +142,7 @@ Node* pq_find(PriorityQueue* pq, Node* node)
 
 void pq_remove(PriorityQueue* pq, Node* node)
 {
+	PriorityQueueElement* current;
 	if (pq->head == NULL) {
 		return;
 	}
@@ -149,7 +152,7 @@ void pq_remove(PriorityQueue* pq, Node* node)
 		free(elementToRemove);
 		return;
 	}
-	PriorityQueueElement* current = pq->head;
+	current = pq->head;
 	while (current->next != NULL) {
 		if (nodeEqualsWithoutSpeed(current->next->node, node)) {
 			PriorityQueueElement* elementToRemove = current->next;
@@ -756,7 +759,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int newY;
 	int gasCost;
 	int newGas;
-	double distance;
 	int penalty = 0;
 	Node* neighbour;
 	Pos2Dint currentPos;
@@ -809,10 +811,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 										  thirdX, thirdY, maxGas, accX, accY) == 0) {
 					continue;
 				}
-
-				fprintf(stderr, "newX = %d, newY = %d, newSpeedX = %d, newSpeedY = %d\n", newX, newY, newSpeedX, newSpeedY);
-				fprintf(stderr, "currentX = %d, currentY = %d, currentSpeedX = %d, currentSpeedY = %d\n", currentNode->x, currentNode->y,
-						currentNode->speedX, currentNode->speedY);
 
 				gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
 				newGas = currentNode->gas + gasCost;
