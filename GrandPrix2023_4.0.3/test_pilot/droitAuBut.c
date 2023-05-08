@@ -731,7 +731,7 @@ int smoothDirectionCost(int previousSpeedX, int previousSpeedY, int newSpeedX, i
 	double angleCosine = (double)dotProduct / (magnitudePrev * magnitudeNew);
 	double angle = acos(angleCosine);
 
-	int smoothingFactor = 5; // Ajustez cette valeur pour modifier l'importance du lissage
+	int smoothingFactor = 5;
 	return smoothingFactor * angle;
 }
 
