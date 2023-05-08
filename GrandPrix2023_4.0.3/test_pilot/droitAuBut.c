@@ -200,6 +200,9 @@ Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas)
  */
 int nodeEquals(Node* node1, Node* node2)
 {
+	if (node1 == NULL || node2 == NULL) {
+		return 0;
+	}
 	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY;
 }
 
@@ -212,6 +215,9 @@ int nodeEquals(Node* node1, Node* node2)
  */
 int nodeEqualsWithoutSpeed(Node* node1, Node* node2)
 {
+	if (node1 == NULL || node2 == NULL) {
+		return 0;
+	}
 	return node1->x == node2->x && node1->y == node2->y;
 }
 
@@ -771,7 +777,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	while (!pq_is_empty(openSet)) {
 		Node* currentNode = pq_pop(openSet);
 
-		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
+		if (nodeEquals(currentNode, end) == 1) {
 			List* path = initList();
 			Node* pathNode = currentNode;
 			while (pathNode != NULL) {
@@ -786,6 +792,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
+				penalty = 0;
 				newSpeedX = currentNode->speedX + accX;
 				newSpeedY = currentNode->speedY + accY;
 
@@ -806,7 +813,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newGas = currentNode->gas + gasCost;
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
-				distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
+				distance = abs(newX - currentNode->x) + abs(newY - currentNode->y);
 
 				if (currentNode->parent != NULL) {
 					int previousSpeedX = currentNode->parent->speedX;
@@ -814,11 +821,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
 						penalty = 10;
-						currentNode->g_cost += penalty;
 					}
 				}
 
-				neighbour->g_cost = currentNode->g_cost + distance;
+				neighbour->g_cost = currentNode->g_cost + distance + penalty;
 
 				if (map[newY][newX] == '~') {
 					neighbour->g_cost = currentNode->g_cost + 4;
