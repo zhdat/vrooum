@@ -726,15 +726,13 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 
 int smoothDirectionCost(int previousSpeedX, int previousSpeedY, int newSpeedX, int newSpeedY)
 {
-	int dotProduct = previousSpeedX * newSpeedX + previousSpeedY * newSpeedY;
-	int magnitudePrev = sqrt(previousSpeedX * previousSpeedX + previousSpeedY * previousSpeedY);
-	int magnitudeNew = sqrt(newSpeedX * newSpeedX + newSpeedY * newSpeedY);
-
-	double angleCosine = (double)dotProduct / (magnitudePrev * magnitudeNew);
-	double angle = acos(angleCosine);
-
-	int smoothingFactor = 50;
-	return smoothingFactor * angle;
+	int smoothingFactor;
+	if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
+		smoothingFactor = 100;
+	} else {
+		smoothingFactor = 0;
+	}
+	return smoothingFactor;
 }
 
 /**
