@@ -809,14 +809,14 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 				distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
 
-				if (currentNode->parent != NULL) {
+				/* if (currentNode->parent != NULL) {
 					int previousSpeedX = currentNode->parent->speedX;
 					int previousSpeedY = currentNode->parent->speedY;
 
 					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
 						penalty = 50;
 					}
-				}
+				} */
 
 				neighbour->g_cost = currentNode->g_cost + distance + penalty;
 
