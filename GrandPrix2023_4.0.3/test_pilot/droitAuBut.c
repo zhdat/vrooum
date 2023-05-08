@@ -461,7 +461,7 @@ double min(double a, double b)
 
 double max(double a, double b)
 {
-	return (a <= b) ? b : a;
+	return (a < b) ? b : a;
 }
 
 /**
