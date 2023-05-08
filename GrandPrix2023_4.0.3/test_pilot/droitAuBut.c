@@ -841,6 +841,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							pq_remove(openSet, existingNodeInOpenSet);
 						}
 						pq_push(openSet, neighbour);
+						fprintf(stderr, "Pushing node: (%d, %d) speed: (%d, %d) gas: %d\n", neighbour->x, neighbour->y, neighbour->speedX,
+								neighbour->speedY, neighbour->gas);
 					}
 				}
 			}
