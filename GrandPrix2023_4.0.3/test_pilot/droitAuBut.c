@@ -823,26 +823,22 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				neighbour->g_cost = currentNode->g_cost;
 				distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
 
+				int additionalCost = 0;
+				if (map[newY][newX] == '~') {
+					additionalCost = 4;
+				}
+
 				if (currentNode->parent != NULL) {
 					int previousSpeedX = currentNode->parent->speedX;
 					int previousSpeedY = currentNode->parent->speedY;
 
 					int smoothCost = smoothDirectionCost(previousSpeedX, previousSpeedY, newSpeedX, newSpeedY);
-					neighbour->g_cost += smoothCost;
+					additionalCost += smoothCost;
 				}
 
-				neighbour->g_cost += distance;
+				neighbour->g_cost += distance + additionalCost;
 
-				if (map[newY][newX] == '~') {
-					neighbour->g_cost += 4;
-				}
 				neighbour->h_cost = heuristicCost(neighbour, end);
-
-				/* if (neighbour->gas < neighbour->h_cost) {
-					free(neighbour);
-					continue;
-				} */
-
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
 				if (!hs_contains(closedSet, neighbour)) {
