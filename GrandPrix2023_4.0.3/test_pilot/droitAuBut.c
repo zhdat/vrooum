@@ -699,7 +699,7 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
-	if ((map[currentNode->x][currentNode->y] == '~') && (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 1) && (accX != 0 && accY != 0)) {
+	if ((map[newX][newY] == '~') && (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 1) && (accX != 0 && accY != 0)) {
 		return 0;
 	}
 
