@@ -454,6 +454,11 @@ void freePath(List* path)
 
 /* Fonctions algorithme */
 
+int min(int a, int b)
+{
+	return (a < b) ? a : b;
+}
+
 /**
  * @brief Calcule le coût heuristique
  *
@@ -461,9 +466,13 @@ void freePath(List* path)
  * @param b
  * @return int le coût heuristique
  */
-double heuristicCost(Node* a, Node* b)
+double heuristicCost(Node* current, Node* end)
 {
-	return abs(a->x - b->x) + abs(a->y - b->y);
+	int dx = abs(current->x - end->x);
+	int dy = abs(current->y - end->y);
+	double diagonalFactor = sqrt(2);
+
+	return (dx + dy) + (diagonalFactor - 2) * min(dx, dy);
 }
 
 /**
