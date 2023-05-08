@@ -728,7 +728,7 @@ int smoothDirectionCost(int previousSpeedX, int previousSpeedY, int newSpeedX, i
 {
 	int smoothingFactor;
 	if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
-		smoothingFactor = 100;
+		smoothingFactor = 5;
 	} else {
 		smoothingFactor = 0;
 	}
