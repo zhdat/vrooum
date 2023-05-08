@@ -813,7 +813,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newGas = currentNode->gas + gasCost;
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
-				/* distance = abs(newX - currentNode->x) + abs(newY - currentNode->y); */
 
 				if (currentNode->parent != NULL) {
 					int previousSpeedX = currentNode->parent->speedX;
@@ -827,7 +826,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				neighbour->g_cost = currentNode->g_cost + penalty;
 
 				if (map[newY][newX] == '~') {
-					neighbour->g_cost = currentNode->g_cost + 4;
+					neighbour->g_cost += 4;
 				}
 				neighbour->h_cost = heuristicCost(neighbour, end);
 
