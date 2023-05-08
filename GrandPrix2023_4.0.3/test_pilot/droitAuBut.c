@@ -472,7 +472,7 @@ double heuristicCost(Node* current, Node* end)
 	int dy = abs(current->y - end->y);
 	double diagonalFactor = sqrt(2);
 
-	return (dx + dy) * min(dx, dy);
+	return (dx + dy) + (diagonalFactor - 2) * min(dx, dy);
 }
 
 /**
