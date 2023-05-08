@@ -828,15 +828,15 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					additionalCost = 4;
 				}
 
-				/* if (currentNode->parent != NULL) {
+				if (currentNode->parent != NULL) {
 					int previousSpeedX = currentNode->parent->speedX;
 					int previousSpeedY = currentNode->parent->speedY;
 
 					int smoothCost = smoothDirectionCost(previousSpeedX, previousSpeedY, newSpeedX, newSpeedY);
 					additionalCost += smoothCost;
-				} */
+				}
 
-				neighbour->g_cost += distance;
+				neighbour->g_cost += distance + additionalCost;
 
 				neighbour->h_cost = heuristicCost(neighbour, end);
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
