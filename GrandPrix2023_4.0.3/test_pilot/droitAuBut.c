@@ -454,16 +454,6 @@ void freePath(List* path)
 
 /* Fonctions algorithme */
 
-double min(double a, double b)
-{
-	return (a < b) ? a : b;
-}
-
-double max(double a, double b)
-{
-	return (a <= b) ? b : a;
-}
-
 /**
  * @brief Calcule le coût heuristique euclidienne
  *
@@ -475,8 +465,8 @@ double heuristicCost(Node* a, Node* b)
 {
 	double dx = abs(a->x - b->x);
 	double dy = abs(a->y - b->y);
-	double d_min = min(dx, dy);
-	double d_max = max(dx, dy);
+	double d_min = fmin(dx, dy);
+	double d_max = fmax(dx, dy);
 	double diagonal_cost = sqrt(2);
 	double orthogonal_cost = 1;
 
