@@ -470,7 +470,7 @@ double heuristicCost(Node* current, Node* end)
 {
 	int dx = abs(current->x - end->x);
 	int dy = abs(current->y - end->y);
-	/* double diagonalFactor = sqrt(2); */
+	double diagonalFactor = sqrt(2);
 
 	return (dx + dy) * min(dx, dy);
 }
@@ -828,13 +828,13 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					additionalCost = 4;
 				}
 
-				if (currentNode->parent != NULL) {
+				/* if (currentNode->parent != NULL) {
 					int previousSpeedX = currentNode->parent->speedX;
 					int previousSpeedY = currentNode->parent->speedY;
 
 					int smoothCost = smoothDirectionCost(previousSpeedX, previousSpeedY, newSpeedX, newSpeedY);
 					additionalCost += smoothCost;
-				}
+				} */
 
 				neighbour->g_cost += distance + additionalCost;
 
