@@ -689,9 +689,9 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0; /* ignorer le noeud lui-même */
 	}
 
-	/* if (newX >= width || newY >= height || newX < 0 || newY < 0) {
+	if (newX > width || newY > height || newX < 0 || newY < 0) {
 		return 0;
-	} */
+	}
 
 	if (map[newY][newX] == '.') {
 		return 0;
