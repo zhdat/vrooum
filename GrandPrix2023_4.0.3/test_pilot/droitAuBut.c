@@ -761,6 +761,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int gasCost;
 	int newGas;
 	double distance;
+	int penalty = 0;
 	Node* neighbour;
 	Pos2Dint currentPos;
 	Pos2Dint newPos;
@@ -772,6 +773,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 	start->gas = maxGas;
+	start->speedX = currentSpeedX;
+	start->speedY = currentSpeedY;
 
 	pq_push(openSet, start);
 
@@ -815,14 +818,27 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 				distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
 
-				int additionalCost = 0;
-				if (map[newY][newX] == '~') {
-					additionalCost = 4;
+				if (currentNode->parent != NULL) {
+					int previousSpeedX = currentNode->parent->speedX;
+					int previousSpeedY = currentNode->parent->speedY;
+
+					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
+						penalty = 50;
+					}
 				}
 
-				neighbour->g_cost = currentNode->g_cost + distance + additionalCost;
+				neighbour->g_cost = currentNode->g_cost + distance + penalty;
 
+				if (map[newY][newX] == '~') {
+					neighbour->g_cost = currentNode->g_cost + 4;
+				}
 				neighbour->h_cost = heuristicCost(neighbour, end);
+
+				if (neighbour->gas < neighbour->h_cost) {
+					free(neighbour);
+					continue;
+				}
+
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
 				if (!hs_contains(closedSet, neighbour)) {
