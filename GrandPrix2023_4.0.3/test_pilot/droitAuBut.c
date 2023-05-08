@@ -460,7 +460,7 @@ int min(int a, int b)
 }
 
 /**
- * @brief Calcule le coût heuristique
+ * @brief Calcule le coût heuristique euclidienne
  *
  * @param a
  * @param b
@@ -468,11 +468,7 @@ int min(int a, int b)
  */
 double heuristicCost(Node* current, Node* end)
 {
-	int dx = abs(current->x - end->x);
-	int dy = abs(current->y - end->y);
-	double diagonalFactor = sqrt(2);
-
-	return (dx + dy) + (diagonalFactor - 2) * min(dx, dy);
+	return sqrt(pow(current->x - end->x, 2) + pow(current->y - end->y, 2));
 }
 
 /**
@@ -715,11 +711,11 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
-	/* gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
+	gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
 	newGas = currentNode->gas + gasCost;
 	if (newGas < 0 || newGas > maxGas) {
 		return 0;
-	} */
+	}
 
 	return 1;
 }
