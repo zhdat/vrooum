@@ -818,7 +818,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					}
 				}
 
-				neighbour->g_cost = currentNode->g_cost + distance + penalty;
+				neighbour->g_cost = currentNode->g_cost + distance;
 
 				if (map[newY][newX] == '~') {
 					neighbour->g_cost = currentNode->g_cost + 4;
