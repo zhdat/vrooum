@@ -760,8 +760,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 	start->gas = maxGas;
-	start->speedX = currentSpeedX;
-	start->speedY = currentSpeedY;
+	/* start->speedX = currentSpeedX;
+	start->speedY = currentSpeedY; */
 
 	pq_push(openSet, start);
 
