@@ -472,25 +472,16 @@ void freePath(List* path)
  * @param b
  * @return int le coût heuristique
  */
-double heuristicCost(Node* a, Node* b, int accX, int accY)
+double heuristicCost(Node* a, Node* b)
 {
-	/* Calculer la distance horizontale et verticale restante jusqu'à la ligne d'arrivée */
-	int dx = abs(b->x - a->x);
-	int dy = abs(b->y - a->y);
-	/* Calculer la distance diagonale restante jusqu'à la ligne d'arrivée */
-	int diagonal_distance = dx < dy ? dx : dy;
-	int straight_distance = abs(dx - dy);
-	int remaining_distance = diagonal_distance * 14 / 10 + straight_distance;
-	/* Estimer le temps de parcours restant en fonction de la vitesse et de l'accélération actuelles */
-	int remaining_time = sqrt(2 * remaining_distance / (abs(a->speedX + accX) + abs(a->speedY + accY)));
-	/* Ajouter une marge de sécurité pour tenir compte des virages serrés et des obstacles */
-	int safety_margin = 10;
-	/* Retourner la somme des temps de parcours restants et de la marge de sécurité */
-	double heuristic1 = remaining_time + safety_margin;
+	double dx = abs(a->x - b->x);
+	double dy = abs(a->y - b->y);
+	double d_min = fmin(dx, dy);
+	double d_max = fmax(dx, dy);
+	double diagonal_cost = sqrt(2);
+	double orthogonal_cost = 1;
 
-	/* euclidienne */
-	double heuristic2 = sqrt(pow(b->x - a->x, 2) + pow(b->y - a->y, 2));
-	return heuristic2;
+	return diagonal_cost * d_min + orthogonal_cost * (d_max - d_min);
 }
 
 /**
@@ -775,6 +766,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int newY;
 	int gasCost;
 	int newGas;
+	int distance;
 	Node* neighbour;
 	Pos2Dint currentPos;
 	Pos2Dint newPos;
@@ -783,7 +775,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	HashSet* closedSet = hs_init();
 
 	start->g_cost = 0;
-	start->h_cost = heuristicCost(start, end, accX, accY);
+	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 	start->gas = maxGas;
 	start->speedX = currentSpeedX;
@@ -820,21 +812,32 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newPos.x = newX;
 				newPos.y = newY;
 
-				currentNode->gas = maxGas;
-
 				if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
 										  thirdX, thirdY, maxGas, accX, accY) == 0) {
 					continue;
 				}
 
+				gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
+				newGas = currentNode->gas + gasCost;
+
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
+				distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
+
+				if (currentNode->parent != NULL) {
+					int previousSpeedX = currentNode->parent->speedX;
+					int previousSpeedY = currentNode->parent->speedY;
+
+					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
+						penalty = 50;
+					}
+				}
 
 				if (map[newY][newX] == '~') {
 					currentNode->g_cost += 4;
 				}
 
 				neighbour->g_cost = currentNode->g_cost;
-				neighbour->h_cost = heuristicCost(neighbour, end, accX, accY);
+				neighbour->h_cost = heuristicCost(neighbour, end);
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
 				if (!hs_contains(closedSet, neighbour)) {
