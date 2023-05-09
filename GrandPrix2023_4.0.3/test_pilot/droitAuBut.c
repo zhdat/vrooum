@@ -772,7 +772,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	while (!pq_is_empty(openSet)) {
 		Node* currentNode = pq_pop(openSet);
 
-		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
+		if (nodeEquals(currentNode, end) == 1) {
 			List* path = initList();
 			Node* pathNode = currentNode;
 			while (pathNode != NULL) {
