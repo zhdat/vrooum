@@ -819,35 +819,30 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
-					continue;
-				}
-
 				gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
 				newGas = currentNode->gas + gasCost;
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 
-				if (currentNode->parent != NULL) {
+				/* if (currentNode->parent != NULL) {
 					int previousSpeedX = currentNode->parent->speedX;
 					int previousSpeedY = currentNode->parent->speedY;
 
 					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
 						penalty = 10;
 					}
-				}
-
-				neighbour->g_cost = currentNode->g_cost + penalty;
+				} */
 
 				if (map[newY][newX] == '~') {
-					neighbour->g_cost += 4;
+					currentNode->g_cost += 4;
+					fprintf(stderr, "g_cost : %f", currentNode->g_cost);
 				}
+
+				fprintf(stderr, "g_cost : %f", currentNode->g_cost);
+
+				neighbour->g_cost = currentNode->g_cost + penalty;
 				neighbour->h_cost = heuristicCost(neighbour, end);
-
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
-
-				fprintf(stderr, "neighbour: (%d, %d) g_cost: %f h_cost: %f f_cost: %f\n", neighbour->x, neighbour->y, neighbour->g_cost,
-						neighbour->h_cost, neighbour->f_cost);
 
 				if (!hs_contains(closedSet, neighbour)) {
 					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
