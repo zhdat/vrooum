@@ -474,8 +474,10 @@ void freePath(List* path)
  */
 double heuristicCost(Node* a, Node* b)
 {
-	/* euclidienne */
-	return sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2));
+	/* Octile */
+	int dx = abs(a->x - b->x);
+	int dy = abs(a->y - b->y);
+	return (dx + dy) + (sqrt(2) - 2) * fmin(dx, dy);
 }
 
 /**
