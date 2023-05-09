@@ -529,11 +529,18 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 {
 	InfoLine line;
 	Pos2Dint point;
+	int direction;
+
+	if (start.x < end.x) {
+		direction = -1;
+	} else {
+		direction = +1;
+	}
 
 	initLine(start.x, start.y, end.x, end.y, &line);
 
 	/* Parcourir les points de la ligne */
-	while (nextPoint(&line, &point, +1) > 0) {
+	while (nextPoint(&line, &point, direction) > 0) {
 		if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height) {
 			/* Point en dehors des limites de la carte */
 			return 0;
