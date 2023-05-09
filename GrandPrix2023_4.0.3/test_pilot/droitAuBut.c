@@ -767,6 +767,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int gasCost;
 	int newGas;
 	int distance;
+	int penalty;
 	Node* neighbour;
 	Pos2Dint currentPos;
 	Pos2Dint newPos;
@@ -780,6 +781,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	start->gas = maxGas;
 	start->speedX = currentSpeedX;
 	start->speedY = currentSpeedY;
+
+	penalty = 0;
 
 	pq_push(openSet, start);
 
@@ -832,8 +835,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					}
 				}
 
+				neighbour->g_cost = currentNode->g_cost + distance + penalty;
+
 				if (map[newY][newX] == '~') {
-					currentNode->g_cost += 4;
+					neighbour->g_cost = currentNode->g_cost + 4;
 				}
 
 				neighbour->g_cost = currentNode->g_cost;

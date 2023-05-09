@@ -668,7 +668,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				neighbour->g_cost = currentNode->g_cost + distance + penalty;
 
 				if (map[newY][newX] == '~') {
-					neighbour->g_cost = currentNode->g_cost + 4;
+					neighbour->g_cost += 4;
 				}
 				neighbour->h_cost = heuristicCost(neighbour, end);
 
