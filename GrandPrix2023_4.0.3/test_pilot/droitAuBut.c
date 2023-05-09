@@ -704,9 +704,9 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
-	/* if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 1)) {
+	if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 1)) {
 		return 0;
-	} */
+	}
 
 	/* if (isPathClear(map, width, height, currentPos, newPos) == 0) {
 		return 0;
