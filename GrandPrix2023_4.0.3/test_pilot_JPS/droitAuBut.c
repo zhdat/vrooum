@@ -125,6 +125,8 @@ void identifySuccessors(Node* currentNode, PriorityQueue* openSet, Node* endNode
 	List* neighbors = getNeighbors(currentNode, map, width, height);
 	ListElement* neighborElement = neighbors->head;
 
+	fprintf(stderr, "Identifying successors for node (%d, %d)\n", currentNode->x, currentNode->y);
+
 	while (neighborElement != NULL) {
 		Node* neighbor = (Node*)neighborElement->data;
 		Node* jumpNode = jump(currentNode, neighbor, endNode, map, width, height);
