@@ -482,7 +482,7 @@ double heuristicCost(Node* a, Node* b, int accX, int accY)
     int straight_distance = abs(dx - dy);
     int remaining_distance = diagonal_distance * 14 / 10 + straight_distance;
     /* Estimer le temps de parcours restant en fonction de la vitesse et de l'accélération actuelles */
-    int remaining_time = sqrt(2 * remaining_distance / (abs(a->speedX + a->accX) + abs(a->speedY + a->accY)));
+    int remaining_time = sqrt(2 * remaining_distance / (abs(a->speedX + accX) + abs(a->speedY + accY)));
     /* Ajouter une marge de sécurité pour tenir compte des virages serrés et des obstacles */
     int safety_margin = 10;
     /* Retourner la somme des temps de parcours restants et de la marge de sécurité */
