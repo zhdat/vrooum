@@ -527,29 +527,25 @@ int compareEndPositions(const void* a, const void* b)
  */
 int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 {
-	int x = start.x;
-	int y = start.y;
-	int dx = end.x - start.x;
-	int dy = end.y - start.y;
-	int n = abs(dx) + abs(dy);
-	int x_inc = (dx > 0) ? 1 : -1;
-	int y_inc = (dy > 0) ? 1 : -1;
-	int error = dx - dy;
-	dx *= 2;
-	dy *= 2;
+	InfoLine line;
+	Pos2Dint point;
 
-	for (; n > 0; --n) {
-		if (map[y][x] == '.') {
+	initLine(start.x, start.y, end.x, end.y, &line);
+
+	/* Parcourir les points de la ligne */
+	while (nextPoint(&line, &point, +1) > 0) {
+		if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height) {
+			/* Point en dehors des limites de la carte */
 			return 0;
 		}
-		if (error > 0) {
-			x += x_inc;
-			error -= dy;
-		} else {
-			y += y_inc;
-			error += dx;
+
+		if (map[point.y][point.x] == '.') {
+			/* Mur détecté */
+			return 0;
 		}
 	}
+
+	/* Aucun mur détecté, le chemin est dégagé */
 	return 1;
 }
 
@@ -668,18 +664,18 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
 		*accelerationY = desiredSpeedY - speedY;
 	}
 
-	/* 	if (*accelerationX > 1) {
-			*accelerationX = 1;
-		}
-		if (*accelerationX < -1) {
-			*accelerationX = -1;
-		}
-		if (*accelerationY > 1) {
-			*accelerationY = 1;
-		}
-		if (*accelerationY < -1) {
-			*accelerationY = -1;
-		} */
+	if (*accelerationX > 1) {
+		*accelerationX = 1;
+	}
+	if (*accelerationX < -1) {
+		*accelerationX = -1;
+	}
+	if (*accelerationY > 1) {
+		*accelerationY = 1;
+	}
+	if (*accelerationY < -1) {
+		*accelerationY = -1;
+	}
 }
 
 /**
