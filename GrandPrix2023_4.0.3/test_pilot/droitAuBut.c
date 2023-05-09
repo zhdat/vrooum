@@ -802,23 +802,23 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				} */
 
 				if (newX == currentNode->x && newY == currentNode->y) {
-					return 0; /* ignorer le noeud lui-même */
+					continue; /* ignorer le noeud lui-même */
 				}
 
 				if (newX >= width || newY >= height || newX < 0 || newY < 0) {
-					return 0;
+					continue;
 				}
 
 				if (map[newY][newX] == '.') {
-					return 0;
+					continue;
 				}
 
 				if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
-					return 0;
+					continue;
 				}
 
 				if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 1)) {
-					return 0;
+					continue;
 				}
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
