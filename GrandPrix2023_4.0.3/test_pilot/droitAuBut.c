@@ -711,7 +711,7 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
-	if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 1)) {
+	if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
 		return 0;
 	}
 
@@ -761,7 +761,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int gasCost;
 	int newGas;
 	int distance;
-	int penalty;
+	int penalty = 0;
 	Node* neighbour;
 	Pos2Dint currentPos;
 	Pos2Dint newPos;
@@ -775,8 +775,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	start->gas = maxGas;
 	start->speedX = currentSpeedX;
 	start->speedY = currentSpeedY;
-
-	penalty = 0;
 
 	pq_push(openSet, start);
 
@@ -852,11 +850,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							free(existingNodeInOpenSet);
 						}
 						pq_push(openSet, neighbour);
-					} else {
-						free(neighbour);
 					}
-				} else {
-					free(neighbour);
 				}
 			}
 		}
