@@ -817,7 +817,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				if (map[newY][newX] == '~' && SpeedNorme(newSpeedX, newSpeedY) > 1) {
+				if (map[newY][newX] == '~' && SpeedNorme(currentSpeedX, currentSpeedY) > 1) {
 					continue;
 				}
 
