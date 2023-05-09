@@ -41,7 +41,7 @@ int hs_contains(HashSet* hs, Node* node)
 	HashSetElement* current = hs->buckets[hash];
 
 	while (current != NULL) {
-		if (nodeEqualsWithoutSpeed(current->node, node)) {
+		if (nodeEquals(current->node, node)) {
 			return 1;
 		}
 		current = current->next;
@@ -133,7 +133,7 @@ Node* pq_find(PriorityQueue* pq, Node* node)
 {
 	PriorityQueueElement* current = pq->head;
 	while (current != NULL) {
-		if (nodeEqualsWithoutSpeed(current->node, node)) {
+		if (nodeEquals(current->node, node)) {
 			return current->node;
 		}
 		current = current->next;
@@ -147,7 +147,7 @@ void pq_remove(PriorityQueue* pq, Node* node)
 	if (pq->head == NULL) {
 		return;
 	}
-	if (nodeEqualsWithoutSpeed(pq->head->node, node)) {
+	if (nodeEquals(pq->head->node, node)) {
 		PriorityQueueElement* elementToRemove = pq->head;
 		pq->head = pq->head->next;
 		free(elementToRemove);
@@ -155,7 +155,7 @@ void pq_remove(PriorityQueue* pq, Node* node)
 	}
 	current = pq->head;
 	while (current->next != NULL) {
-		if (nodeEqualsWithoutSpeed(current->next->node, node)) {
+		if (nodeEquals(current->next->node, node)) {
 			PriorityQueueElement* elementToRemove = current->next;
 			current->next = current->next->next;
 			free(elementToRemove);
