@@ -764,6 +764,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 	start->gas = maxGas;
+	start->speedX = currentSpeedX;
+	start->speedY = currentSpeedY;
 
 	pq_push(openSet, start);
 
@@ -817,7 +819,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				if (map[newY][newX] == '~' && SpeedNorme(currentSpeedX, currentSpeedY) > 1) {
+				if (map[newY][newX] == '~' && SpeedNorme(newSpeedX, newSpeedY) > 1) {
 					continue;
 				}
 
@@ -834,7 +836,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				if (!hs_contains(closedSet, neighbour)) {
 					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
 
-					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
+					if (existingNodeInOpenSet == NULL || neighbour->f_cost < existingNodeInOpenSet->f_cost) {
 						if (existingNodeInOpenSet != NULL) {
 							pq_remove(openSet, existingNodeInOpenSet);
 							free(existingNodeInOpenSet);
