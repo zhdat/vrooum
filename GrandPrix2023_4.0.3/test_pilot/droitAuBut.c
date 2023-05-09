@@ -466,7 +466,7 @@ void freePath(List* path)
 /* Fonctions algorithme */
 
 /**
- * @brief Calcule le coût heuristique euclidienne
+ * @brief Calcule le coût heuristique
  *
  * @param a
  * @param b
@@ -474,11 +474,8 @@ void freePath(List* path)
  */
 double heuristicCost(Node* a, Node* b)
 {
-	double eucliedienne = sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2));
-	double manhatan = abs(a->x - b->x) + abs(a->y - b->y);
-	double octile = fmax(abs(a->x - b->x), abs(a->y - b->y)) + (sqrt(2) - 1) * fmin(abs(a->x - b->x), abs(a->y - b->y));
-	double tmp = fmax(eucliedienne, manhatan);
-	return fmax(tmp, octile);
+	/* chebyshev distance */
+	return fmax(abs(a->x - b->x), abs(a->y - b->y));
 }
 
 /**
