@@ -785,6 +785,15 @@ int main()
 		fprintf(stderr, "    Action: %s   Gas remaining: %d\n", action, gasLevel);
 		fflush(stderr);
 
+		/* Passer au noeud suivant dans le path */
+		if (path != NULL) {
+			if (path->head != NULL) {
+				ListElement* nextElement = path->head->next;
+				free(path->head);
+				path->head = nextElement;
+			}
+		}
+
 		if (0 && round > 4) { /* (DISABLED) Force a segfault for testing purpose */
 			int* p = NULL;
 			fprintf(stderr, "Good Bye!\n");
