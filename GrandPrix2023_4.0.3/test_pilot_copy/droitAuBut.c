@@ -761,11 +761,13 @@ int main()
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 		fflush(stderr);
 
-		/* Executer l'algorithme A* pour trouver le chemin */
-		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
-		fprintf(stderr, "    Path found: \n");
-		reverseList(path);
-		printPath(path);
+		if (round == 1) {
+			/* Executer l'algorithme A* pour trouver le chemin */
+			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
+			fprintf(stderr, "    Path found: \n");
+			reverseList(path);
+			printPath(path);
+		}
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY);
@@ -782,6 +784,12 @@ int main()
 		fflush(stdout); /* CAUTION : This is necessary  */
 		fprintf(stderr, "    Action: %s   Gas remaining: %d\n", action, gasLevel);
 		fflush(stderr);
+
+		/* Passer au noeud suivant */
+		if (path != NULL) {
+			path = path->head->next->data;
+		}
+
 		if (0 && round > 4) { /* (DISABLED) Force a segfault for testing purpose */
 			int* p = NULL;
 			fprintf(stderr, "Good Bye!\n");
