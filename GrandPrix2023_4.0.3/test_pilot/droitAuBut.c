@@ -830,6 +830,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 
+				fprintf(stderr, "neighbour: %d %d\n", neighbour->x, neighbour->y);
+
 				if (map[newY][newX] == '~') {
 					currentNode->g_cost += 4;
 				}

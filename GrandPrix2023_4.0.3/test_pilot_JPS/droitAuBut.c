@@ -1075,7 +1075,6 @@ int main()
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = jps(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
 		fprintf(stderr, "    Path found: \n");
-		/* reverseList(path); */
 		printPath(path);
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
