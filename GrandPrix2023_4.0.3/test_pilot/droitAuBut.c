@@ -723,9 +723,9 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
-    /*if (isPathClear(map, width, height, currentPos, newPos) == 0) {
+    if (isPathClear(map, width, height, currentPos, newPos) == 0) {
 		return 0;
-	}*/
+	}
 
     /*if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
 		return 0;
