@@ -796,9 +796,29 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newPos.x = newX;
 				newPos.y = newY;
 
-				if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
+				/* if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
 										  thirdX, thirdY, maxGas, accX, accY) == 0) {
 					continue;
+				} */
+
+				if (newX == currentNode->x && newY == currentNode->y) {
+					return 0; /* ignorer le noeud lui-même */
+				}
+
+				if (newX >= width || newY >= height || newX < 0 || newY < 0) {
+					return 0;
+				}
+
+				if (map[newY][newX] == '.') {
+					return 0;
+				}
+
+				if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
+					return 0;
+				}
+
+				if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 1)) {
+					return 0;
 				}
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
