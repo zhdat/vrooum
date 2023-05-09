@@ -131,6 +131,9 @@ void identifySuccessors(Node* currentNode, PriorityQueue* openSet, Node* endNode
 
 	while (neighborElement != NULL) {
 		Node* neighbor = (Node*)neighborElement->data;
+
+		fprintf(stderr, "Neighbor: (%d, %d)\n", neighbor->x, neighbor->y);
+
 		Node* jumpNode = jump(currentNode, neighbor, endNode, map, width, height);
 
 		fprintf(stderr, "Neighbor: (%d, %d)\n", neighbor->x, neighbor->y);
