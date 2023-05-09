@@ -772,8 +772,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 	start->gas = maxGas;
-	/* start->speedX = currentSpeedX;
-	start->speedY = currentSpeedY; */
 
 	pq_push(openSet, start);
 
@@ -808,8 +806,16 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newPos.x = newX;
 				newPos.y = newY;
 
-				if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
+				/* if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
 										  thirdX, thirdY, maxGas, accX, accY) == 0) {
+					continue;
+				} */
+
+				if (newX == currentNode->x && newY == currentNode->y) {
+					continue; /* ignorer le noeud lui-même */
+				}
+
+				if (newX >= width || newY >= height || newX < 0 || newY < 0) {
 					continue;
 				}
 
