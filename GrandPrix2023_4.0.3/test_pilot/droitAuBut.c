@@ -819,6 +819,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
+				if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
+					continue;
+				}
+
 				gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
 				newGas = currentNode->gas + gasCost;
 
