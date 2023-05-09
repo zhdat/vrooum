@@ -474,10 +474,20 @@ void freePath(List* path)
  */
 double heuristicCost(Node* a, Node* b)
 {
-	/* Octile */
-	int dx = abs(a->x - b->x);
-	int dy = abs(a->y - b->y);
-	return (dx + dy) + (sqrt(2) - 2) * fmin(dx, dy);
+    // Calculer la distance horizontale et verticale restante jusqu'à la ligne d'arrivée
+    int dx = abs(b->x - a->x);
+    int dy = abs(b->y - a->y);
+    // Calculer la distance diagonale restante jusqu'à la ligne d'arrivée
+    int diagonal_distance = dx < dy ? dx : dy;
+    int straight_distance = abs(dx - dy);
+    int remaining_distance = diagonal_distance * 14 / 10 + straight_distance;
+    // Estimer le temps de parcours restant en fonction de la vitesse et de l'accélération actuelles
+    int remaining_time = sqrt(2 * remaining_distance / (abs(a->speedX + a->accX) + abs(a->speedY + a->accY)))
+    // Ajouter une marge de sécurité pour tenir compte des virages serrés et des obstacles
+    int safety_margin = 10; // ajuster selon les besoins
+    // Retourner la somme des temps de parcours restants et de la marge de sécurité
+    return remaining_time + safety_margin;
+
 }
 
 /**
