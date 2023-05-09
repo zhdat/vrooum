@@ -151,6 +151,8 @@ List* jps(Node* startNode, Node* endNode, char** map, int width, int height, int
 	PriorityQueue* openSet = pq_init();
 	pq_push(openSet, startNode);
 
+	fprintf(stderr, "JPS: %d %d %d %d %d %d %d %d\n", startNode->x, startNode->y, endNode->x, endNode->y, secondX, secondY, thirdX, thirdY);
+
 	while (!pq_is_empty(openSet)) {
 		Node* currentNode = pq_pop(openSet);
 
