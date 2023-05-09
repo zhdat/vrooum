@@ -472,7 +472,7 @@ void freePath(List* path)
  * @param b
  * @return int le coût heuristique
  */
-double heuristicCost(Node* a, Node* b)
+double heuristicCost(Node* a, Node* b, int accX, int accY)
 {
     /* Calculer la distance horizontale et verticale restante jusqu'à la ligne d'arrivée */
     int dx = abs(b->x - a->x);
@@ -484,7 +484,7 @@ double heuristicCost(Node* a, Node* b)
     /* Estimer le temps de parcours restant en fonction de la vitesse et de l'accélération actuelles */
     int remaining_time = sqrt(2 * remaining_distance / (abs(a->speedX + a->accX) + abs(a->speedY + a->accY)))
     /* Ajouter une marge de sécurité pour tenir compte des virages serrés et des obstacles */
-    int safety_margin = 10; // ajuster selon les besoins
+    int safety_margin = 10;
     /* Retourner la somme des temps de parcours restants et de la marge de sécurité */
     return remaining_time + safety_margin;
 
@@ -611,7 +611,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 				Node node;
 				node.x = x;
 				node.y = y;
-				distance = heuristicCost(start, &node);
+				distance = heuristicCost(start, &node, 0, 0);
 				endPosition.x = x;
 				endPosition.y = y;
 				endPosition.distance = distance;
@@ -775,7 +775,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	HashSet* closedSet = hs_init();
 
 	start->g_cost = 0;
-	start->h_cost = heuristicCost(start, end);
+	start->h_cost = heuristicCost(start, end, accX, accY);
 	start->f_cost = start->g_cost + start->h_cost;
 	start->gas = maxGas;
 	start->speedX = currentSpeedX;
@@ -846,7 +846,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				}
 
 				neighbour->g_cost = currentNode->g_cost;
-				neighbour->h_cost = heuristicCost(neighbour, end);
+				neighbour->h_cost = heuristicCost(neighbour, end, accX, accY);
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
 				if (!hs_contains(closedSet, neighbour)) {
