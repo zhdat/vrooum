@@ -74,6 +74,10 @@ Node* jump(Node* currentNode, Node* neighbor, Node* endNode, char** map, int wid
 		return NULL;
 	}
 
+	if (neighbor->x < 0 || neighbor->x >= width || neighbor->y < 0 || neighbor->y >= height || map[neighbor->y][neighbor->x] == '.') {
+		return NULL;
+	}
+
 	if (nodeEquals(neighbor, endNode)) {
 		return neighbor;
 	}
