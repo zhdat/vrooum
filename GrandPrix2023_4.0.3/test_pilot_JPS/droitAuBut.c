@@ -35,11 +35,12 @@ int isJumpPoint(Node* currentNode, Node* neighbor, int dx, int dy, char** map, i
 /* Fonction pour obtenir les voisins */
 List* getNeighbors(Node* node, char** map, int width, int height)
 {
+	int dx, dy;
 	List* neighbors = initList();
 
 	/* On considère tous les points dans un rayon de 1 autour du noeud courant comme des voisins potentiels */
-	for (int dx = -1; dx <= 1; dx++) {
-		for (int dy = -1; dy <= 1; dy++) {
+	for (dx = -1; dx <= 1; dx++) {
+		for (dy = -1; dy <= 1; dy++) {
 			if (dx == 0 && dy == 0) {
 				continue;
 			}
