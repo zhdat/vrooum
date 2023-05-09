@@ -824,21 +824,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 
-				/* if (currentNode->parent != NULL) {
-					int previousSpeedX = currentNode->parent->speedX;
-					int previousSpeedY = currentNode->parent->speedY;
-
-					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
-						penalty = 10;
-					}
-				} */
-
 				if (map[newY][newX] == '~') {
 					currentNode->g_cost += 4;
 					fprintf(stderr, "g_cost : %f", currentNode->g_cost);
 				}
-
-				fprintf(stderr, "g_cost : %f", currentNode->g_cost);
 
 				neighbour->g_cost = currentNode->g_cost + penalty;
 				neighbour->h_cost = heuristicCost(neighbour, end);
