@@ -333,8 +333,7 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
  */
 int SpeedNorme(int speedX, int speedY);
 
-int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, int newX, int newY, int newSpeedX, int newSpeedY, Pos2Dint currentPos,
-						  Pos2Dint newPos, int secondX, int secondY, int thirdX, int thirdY, int maxGas, int accX, int accY);
+int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, int newX, int newY, int newSpeedX, int newSpeedY);
 
 /**
  * @brief Calcule le chemin le plus court

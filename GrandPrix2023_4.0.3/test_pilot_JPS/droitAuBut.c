@@ -9,6 +9,162 @@
 #define BOOSTS_AT_START 5
 #define INFINITE INT_MAX
 
+/* JPS algorithme */
+
+/* Fonction pour vérifier si un point est un "jump point" */
+int isJumpPoint(Node* currentNode, Node* neighbor, int dx, int dy, char** map, int width, int height)
+{
+	int speedX = neighbor->x - currentNode->x;
+	int speedY = neighbor->y - currentNode->y;
+	Pos2Dint currentPos = { .x = currentNode->x, .y = currentNode->y };
+	Pos2Dint newPos = { .x = neighbor->x, .y = neighbor->y };
+	int accX = dx - speedX;
+	int accY = dy - speedY;
+
+	/* On vérifie si le voisin doit être exploré */
+	if (shouldExploreNeighbor(currentNode, map, width, height, neighbor->x, neighbor->y, speedX, speedY)) {
+		/* On vérifie si le voisin a un voisin forcé */
+		int forcedX = neighbor->x + dx;
+		int forcedY = neighbor->y + dy;
+		return shouldExploreNeighbor(currentNode, map, width, height, forcedX, forcedY, speedX, speedY);
+	}
+
+	return 0;
+}
+
+/* Fonction pour obtenir les voisins */
+List* getNeighbors(Node* node, char** map, int width, int height)
+{
+	List* neighbors = initList();
+
+	/* On considère tous les points dans un rayon de 1 autour du noeud courant comme des voisins potentiels */
+	for (int dx = -1; dx <= 1; dx++) {
+		for (int dy = -1; dy <= 1; dy++) {
+			if (dx == 0 && dy == 0) {
+				continue;
+			}
+
+			int neighborX = node->x + dx;
+			int neighborY = node->y + dy;
+
+			if (neighborX >= 0 && neighborX < width && neighborY >= 0 && neighborY < height && map[neighborY][neighborX] != '.') {
+				Node* neighbor = createNode(neighborX, neighborY, node, 0, 0, 0);
+				addNodeToList(neighbor, neighbors);
+			}
+		}
+	}
+
+	return neighbors;
+}
+
+/* Fonction pour calculer l'heuristique */
+double heuristicJPS(Node* node1, Node* node2)
+{
+	/* Chebyshev distance */
+	int dx = abs(node1->x - node2->x);
+	int dy = abs(node1->y - node2->y);
+	return fmax(dx, dy);
+}
+
+/* Fonction pour effectuer un saut */
+Node* jump(Node* currentNode, Node* neighbor, Node* endNode, char** map, int width, int height)
+{
+	if (neighbor == NULL) {
+		return NULL;
+	}
+
+	if (nodeEquals(neighbor, endNode)) {
+		return neighbor;
+	}
+
+	int dx = (neighbor->x - currentNode->x) / fmax(abs(neighbor->x - currentNode->x), 1);
+	int dy = (neighbor->y - currentNode->y) / fmax(abs(neighbor->y - currentNode->y), 1);
+
+	/* Check for forced neighbors */
+	if (isJumpPoint(currentNode, neighbor, dx, dy, map, width, height)) {
+		return neighbor;
+	}
+
+	/* Diagonal case */
+	if (dx != 0 && dy != 0) {
+		if (jump(neighbor, createNode(neighbor->x + dx, neighbor->y, neighbor, 0, 0, 0), endNode, map, width, height) != NULL ||
+			jump(neighbor, createNode(neighbor->x, neighbor->y + dy, neighbor, 0, 0, 0), endNode, map, width, height) != NULL) {
+			return neighbor;
+		}
+	}
+
+	/* Horizontal/vertical case */
+	if (dx != 0 || dy != 0) {
+		if (jump(neighbor, createNode(neighbor->x + dx, neighbor->y, neighbor, 0, 0, 0), endNode, map, width, height) != NULL) {
+			return neighbor;
+		}
+	}
+
+	return NULL;
+}
+
+/* Fonction pour reconstruire le chemin */
+List* reconstructPath(Node* endNode)
+{
+	List* path = initList();
+	Node* currentNode = endNode;
+
+	while (currentNode != NULL) {
+		addNodeToList(currentNode, path);
+		currentNode = currentNode->parent;
+	}
+
+	reverseList(path);
+	return path;
+}
+
+/* Fonction pour identifier les successeurs */
+void identifySuccessors(Node* currentNode, PriorityQueue* openSet, Node* endNode, char** map, int width, int height)
+{
+	List* neighbors = getNeighbors(currentNode, map, width, height);
+	ListElement* neighborElement = neighbors->head;
+
+	while (neighborElement != NULL) {
+		Node* neighbor = (Node*)neighborElement->data;
+		Node* jumpNode = jump(currentNode, neighbor, endNode, map, width, height);
+
+		if (jumpNode != NULL) {
+			if (!pq_find(openSet, jumpNode)) {
+				jumpNode->g_cost = currentNode->g_cost + heuristicJPS(currentNode, jumpNode);
+				jumpNode->h_cost = heuristicJPS(jumpNode, endNode);
+				jumpNode->f_cost = jumpNode->g_cost + jumpNode->h_cost;
+				jumpNode->parent = currentNode;
+				pq_push(openSet, jumpNode);
+			}
+		}
+		neighborElement = neighborElement->next;
+	}
+
+	freePath(neighbors);
+}
+
+/* L'algorithme JPS lui-même */
+List* jps(Node* startNode, Node* endNode, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int maxGas,
+		  int currentSpeedX, int currentSpeedY)
+{
+	PriorityQueue* openSet = pq_init();
+	pq_push(openSet, startNode);
+
+	while (!pq_is_empty(openSet)) {
+		Node* currentNode = pq_pop(openSet);
+
+		if (nodeEquals(currentNode, endNode)) {
+			pq_free(openSet);
+			return reconstructPath(currentNode);
+		}
+
+		identifySuccessors(currentNode, openSet, endNode, map, width, height);
+	}
+
+	pq_free(openSet);
+	return NULL; /* Return NULL if no path is found */
+}
+
 /* TESTS */
 
 static unsigned int hash_function(Node* node)
@@ -683,8 +839,7 @@ int SpeedNorme(int speedX, int speedY)
 	return (int)(speedX * speedX + speedY * speedY);
 }
 
-int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, int newX, int newY, int newSpeedX, int newSpeedY, Pos2Dint currentPos,
-						  Pos2Dint newPos, int secondX, int secondY, int thirdX, int thirdY, int maxGas, int accX, int accY)
+int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, int newX, int newY, int newSpeedX, int newSpeedY)
 {
 	int newGas;
 	int gasCost;
@@ -708,20 +863,6 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 	if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 1)) {
 		return 0;
 	}
-
-	/* if (isPathClear(map, width, height, currentPos, newPos) == 0) {
-		return 0;
-	} */
-
-	/* if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
-		return 0;
-	} */
-
-	/* gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
-	newGas = currentNode->gas + gasCost;
-	if (newGas < 0 || newGas > maxGas) {
-		return 0;
-	} */
 
 	return 1;
 }
@@ -799,9 +940,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newPos.x = newX;
 				newPos.y = newY;
 
-				/* if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
-										  thirdX, thirdY, maxGas, accX, accY) == 0) {
-					continue;
+				/* if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX,
+				secondY, thirdX, thirdY, maxGas, accX, accY) == 0) { continue;
 				} */
 
 				if (newX == currentNode->x && newY == currentNode->y) {
