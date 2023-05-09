@@ -161,6 +161,8 @@ List* jps(Node* startNode, Node* endNode, char** map, int width, int height, int
 			return reconstructPath(currentNode);
 		}
 
+		fprintf(stderr, "JPS: %d %d\n", currentNode->x, currentNode->y);
+
 		identifySuccessors(currentNode, openSet, endNode, map, width, height);
 	}
 
