@@ -86,6 +86,7 @@ Node* jump(Node* currentNode, Node* neighbor, Node* endNode, char** map, int wid
 
 	/* Check for forced neighbors */
 	if (isJumpPoint(currentNode, neighbor, dx, dy, map, width, height)) {
+		fprintf(stderr, "Forced neighbor: (%d, %d)\n", neighbor->x, neighbor->y);
 		return neighbor;
 	}
 
