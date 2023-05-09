@@ -131,6 +131,8 @@ void identifySuccessors(Node* currentNode, PriorityQueue* openSet, Node* endNode
 		Node* neighbor = (Node*)neighborElement->data;
 		Node* jumpNode = jump(currentNode, neighbor, endNode, map, width, height);
 
+		fprintf(stderr, "Neighbor: (%d, %d)\n", neighbor->x, neighbor->y);
+
 		if (jumpNode != NULL) {
 			if (!pq_find(openSet, jumpNode)) {
 				jumpNode->g_cost = currentNode->g_cost + heuristicJPS(currentNode, jumpNode);
