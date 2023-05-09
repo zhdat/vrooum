@@ -82,6 +82,7 @@ Node* jump(Node* currentNode, Node* neighbor, Node* endNode, char** map, int wid
 	int dy = (neighbor->y - currentNode->y) / fmax(abs(neighbor->y - currentNode->y), 1);
 
 	fprintf(stderr, "Jumping from (%d, %d) to (%d, %d)\n", currentNode->x, currentNode->y, neighbor->x, neighbor->y);
+	fprintf(stderr, "dx: %d, dy: %d\n", dx, dy);
 
 	/* Check for forced neighbors */
 	if (isJumpPoint(currentNode, neighbor, dx, dy, map, width, height)) {
