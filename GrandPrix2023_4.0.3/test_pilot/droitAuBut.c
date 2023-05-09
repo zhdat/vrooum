@@ -474,24 +474,23 @@ void freePath(List* path)
  */
 double heuristicCost(Node* a, Node* b, int accX, int accY)
 {
-    /* Calculer la distance horizontale et verticale restante jusqu'à la ligne d'arrivée */
-    int dx = abs(b->x - a->x);
-    int dy = abs(b->y - a->y);
-    /* Calculer la distance diagonale restante jusqu'à la ligne d'arrivée */
-    int diagonal_distance = dx < dy ? dx : dy;
-    int straight_distance = abs(dx - dy);
-    int remaining_distance = diagonal_distance * 14 / 10 + straight_distance;
-    /* Estimer le temps de parcours restant en fonction de la vitesse et de l'accélération actuelles */
-    int remaining_time = sqrt(2 * remaining_distance / (abs(a->speedX + accX) + abs(a->speedY + accY)));
-    /* Ajouter une marge de sécurité pour tenir compte des virages serrés et des obstacles */
-    int safety_margin = 10;
-    /* Retourner la somme des temps de parcours restants et de la marge de sécurité */
-    double heuristic1 = remaining_time + safety_margin;
+	/* Calculer la distance horizontale et verticale restante jusqu'à la ligne d'arrivée */
+	int dx = abs(b->x - a->x);
+	int dy = abs(b->y - a->y);
+	/* Calculer la distance diagonale restante jusqu'à la ligne d'arrivée */
+	int diagonal_distance = dx < dy ? dx : dy;
+	int straight_distance = abs(dx - dy);
+	int remaining_distance = diagonal_distance * 14 / 10 + straight_distance;
+	/* Estimer le temps de parcours restant en fonction de la vitesse et de l'accélération actuelles */
+	int remaining_time = sqrt(2 * remaining_distance / (abs(a->speedX + accX) + abs(a->speedY + accY)));
+	/* Ajouter une marge de sécurité pour tenir compte des virages serrés et des obstacles */
+	int safety_margin = 10;
+	/* Retourner la somme des temps de parcours restants et de la marge de sécurité */
+	double heuristic1 = remaining_time + safety_margin;
 
-    /* euclidienne */
-    double heuristic2 = sqrt(pow(b->x - a->x, 2) + pow(b->y - a->y, 2));
-    return heuristic2;
-
+	/* euclidienne */
+	double heuristic2 = sqrt(pow(b->x - a->x, 2) + pow(b->y - a->y, 2));
+	return heuristic2;
 }
 
 /**
@@ -537,31 +536,29 @@ int compareEndPositions(const void* a, const void* b)
  */
 int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 {
-    int direction;
-	InfoLine line;
-	Pos2Dint point;
+	int x = start.x;
+	int y = start.y;
+	int dx = end.x - start.x;
+	int dy = end.y - start.y;
+	int n = abs(dx) + abs(dy);
+	int x_inc = (dx > 0) ? 1 : -1;
+	int y_inc = (dy > 0) ? 1 : -1;
+	int error = dx - dy;
+	dx *= 2;
+	dy *= 2;
 
-	initLine(start.x, start.y, end.x, end.y, &line);
-
-	/* Parcourir les points de la ligne */
-    if (start.x < end.x) {
-        direction = +1;
-    } else {
-        direction = -1;
-    }
-	while (nextPoint(&line, &point, direction) > 0) {
-		if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height) {
-			/* Point en dehors des limites de la carte */
+	for (; n > 0; --n) {
+		if (map[y][x] == '.') {
 			return 0;
 		}
-
-		if (map[point.y][point.x] == '.') {
-			/* Mur détecté */
-			return 0;
+		if (error > 0) {
+			x += x_inc;
+			error -= dy;
+		} else {
+			y += y_inc;
+			error += dx;
 		}
 	}
-
-	/* Aucun mur détecté, le chemin est dégagé */
 	return 1;
 }
 
@@ -732,11 +729,11 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
-    if (isPathClear(map, width, height, currentPos, newPos) == 0) {
+	if (isPathClear(map, width, height, currentPos, newPos) == 0) {
 		return 0;
 	}
 
-    /*if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
+	/*if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
 		return 0;
 	}*/
 
@@ -816,10 +813,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newPos.x = newX;
 				newPos.y = newY;
 
-                if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
+				if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
 										  thirdX, thirdY, maxGas, accX, accY) == 0) {
 					continue;
-                }
+				}
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 
@@ -906,9 +903,9 @@ int main()
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
 		start = createNode(myX, myY, NULL, speedX, speedY, 0);
-        if (round == 1){
-            findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
-        }
+		if (round == 1) {
+			findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
+		}
 		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 		fflush(stderr);
