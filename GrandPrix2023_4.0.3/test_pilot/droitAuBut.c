@@ -737,6 +737,13 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
+	/* Vérifier qu'il y'a assez d'essence pour finir la course */
+	gasCost = abs(accX) + abs(accY);
+	newGas = currentNode->gas - gasCost;
+	if (newGas < 0) {
+		return 0;
+	}
+
 	return 1;
 }
 
@@ -824,17 +831,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 				if (map[newY][newX] == '~') {
 					currentNode->g_cost += 4;
-				}
-
-				if (map[newY][newX] == '~') {
-					gasCost = 4;
-				} else {
-					gasCost = 1;
-				}
-				newGas = currentNode->gas - gasCost;
-				if (newGas < 0) {
-					free(neighbour);
-					continue;
 				}
 
 				neighbour->g_cost = currentNode->g_cost;
