@@ -474,8 +474,8 @@ void freePath(List* path)
  */
 double heuristicCost(Node* a, Node* b)
 {
-	/* chebyshev distance */
-	return fmax(abs(a->x - b->x), abs(a->y - b->y));
+	/* euclidienne */
+	return sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2));
 }
 
 /**
