@@ -711,23 +711,23 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
-	if (isPathClear(map, width, height, currentPos, newPos) == 0) {
+	/* if (isPathClear(map, width, height, currentPos, newPos) == 0) {
 		return 0;
-	}
+	} */
 
-	if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
+	/* if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
 		return 0;
-	}
+	} */
 
-	if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
+	/* if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
 		return 0;
-	}
+	} */
 
-	gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
+	/* gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
 	newGas = currentNode->gas + gasCost;
 	if (newGas < 0 || newGas > maxGas) {
 		return 0;
-	}
+	} */
 
 	return 1;
 }
@@ -760,7 +760,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int newY;
 	int gasCost;
 	int newGas;
-	int penalty = 0;
 	Node* neighbour;
 	Pos2Dint currentPos;
 	Pos2Dint newPos;
@@ -793,8 +792,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
-				penalty = 0;
-
 				newSpeedX = currentNode->speedX + accX;
 				newSpeedY = currentNode->speedY + accY;
 
