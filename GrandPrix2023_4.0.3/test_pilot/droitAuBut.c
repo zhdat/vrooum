@@ -813,6 +813,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newPos.x = newX;
 				newPos.y = newY;
 
+				currentNode->gas = maxGas;
+
 				if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
 										  thirdX, thirdY, maxGas, accX, accY) == 0) {
 					continue;
