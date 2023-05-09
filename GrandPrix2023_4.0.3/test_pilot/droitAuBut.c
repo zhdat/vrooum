@@ -700,6 +700,10 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
+	if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
+		return 0;
+	}
+
 	/* if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 1)) {
 		return 0;
 	} */
@@ -709,10 +713,6 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 	} */
 
 	/* if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
-		return 0;
-	} */
-
-	/* if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
 		return 0;
 	} */
 
