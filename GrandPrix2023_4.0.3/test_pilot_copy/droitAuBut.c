@@ -688,6 +688,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							removeElementFromList(openSet, existingElementInOpenSet);
 						}
 						addNodeToList(neighbour, openSet);
+						fprintf(stderr, "Added node (%d, %d) to open set with f_cost : %f\n", neighbour->x, neighbour->y, neighbour->f_cost);
 					}
 				}
 			}
