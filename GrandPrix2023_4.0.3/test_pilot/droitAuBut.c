@@ -707,9 +707,9 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
-	if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 1)) {
+	/* if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 1)) {
 		return 0;
-	}
+	} */
 
 	/* if (isPathClear(map, width, height, currentPos, newPos) == 0) {
 		return 0;
@@ -807,9 +807,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 										  thirdX, thirdY, maxGas, accX, accY) == 0) {
 					continue;
 				}
-
-				gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
-				newGas = currentNode->gas + gasCost;
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 
