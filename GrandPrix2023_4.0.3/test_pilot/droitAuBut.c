@@ -806,16 +806,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newPos.x = newX;
 				newPos.y = newY;
 
-				/* if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
+				if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
 										  thirdX, thirdY, maxGas, accX, accY) == 0) {
-					continue;
-				} */
-
-				if (newX == currentNode->x && newY == currentNode->y) {
-					continue; /* ignorer le noeud lui-même */
-				}
-
-				if (newX >= width || newY >= height || newX < 0 || newY < 0) {
 					continue;
 				}
 
@@ -826,10 +818,9 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 				if (map[newY][newX] == '~') {
 					currentNode->g_cost += 4;
-					fprintf(stderr, "g_cost : %f", currentNode->g_cost);
 				}
 
-				neighbour->g_cost = currentNode->g_cost + penalty;
+				neighbour->g_cost = currentNode->g_cost;
 				neighbour->h_cost = heuristicCost(neighbour, end);
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
