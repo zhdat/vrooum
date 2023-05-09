@@ -364,7 +364,7 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 	}
 
 	/* Parcourir les points de la ligne */
-	while (nextPoint(&line, &point, direction) > 0) {
+	while (nextPoint(&line, &point, 1) > 0) {
 		if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height) {
 			/* Point en dehors des limites de la carte */
 			return 0;
