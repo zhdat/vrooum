@@ -487,11 +487,7 @@ double heuristicCost(Node* a, Node* b, int accX, int accY)
     int safety_margin = 10;
     /* Retourner la somme des temps de parcours restants et de la marge de sécurité */
     double heuristic1 = remaining_time + safety_margin;
-
-    /* euclidienne */
-    double euclidienne = sqrt(pow(b->x - a->x, 2) + pow(b->y - a->y, 2));
-
-    return fmax(heuristic1, euclidienne);
+    return heuristic1;
 
 }
 
@@ -727,19 +723,19 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
-	/* if (isPathClear(map, width, height, currentPos, newPos) == 0) {
+    if (isPathClear(map, width, height, currentPos, newPos) == 0) {
 		return 0;
-	} */
+	}
 
-	/* if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
+    if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
 		return 0;
-	} */
+	}
 
-	/* gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
+    gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
 	newGas = currentNode->gas + gasCost;
 	if (newGas < 0 || newGas > maxGas) {
 		return 0;
-	} */
+	}
 
 	return 1;
 }
@@ -817,30 +813,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newPos.x = newX;
 				newPos.y = newY;
 
-				/* if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
+                if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
 										  thirdX, thirdY, maxGas, accX, accY) == 0) {
 					continue;
-				} */
-
-				if (newX == currentNode->x && newY == currentNode->y) {
-					continue; /* ignorer le noeud lui-même */
-				}
-
-				if (newX >= width || newY >= height || newX < 0 || newY < 0) {
-					continue;
-				}
-
-				if (map[newY][newX] == '.') {
-					continue;
-				}
-
-				if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
-					continue;
-				}
-
-				if (map[newY][newX] == '~' && SpeedNorme(newSpeedX, newSpeedY) > 1) {
-					continue;
-				}
+                }
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 
