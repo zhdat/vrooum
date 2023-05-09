@@ -487,7 +487,10 @@ double heuristicCost(Node* a, Node* b, int accX, int accY)
     int safety_margin = 10;
     /* Retourner la somme des temps de parcours restants et de la marge de sécurité */
     double heuristic1 = remaining_time + safety_margin;
-    return heuristic1;
+
+    /* euclidienne */
+    double heuristic2 = sqrt(pow(b->x - a->x, 2) + pow(b->y - a->y, 2));
+    return heuristic2;
 
 }
 
