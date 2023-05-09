@@ -824,6 +824,17 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					currentNode->g_cost += 4;
 				}
 
+				if (map[newY][newX] == '~') {
+					gasCost = 4;
+				} else {
+					gasCost = 1;
+				}
+				newGas = currentNode->gas - gasCost;
+				if (newGas < 0) {
+					free(neighbour);
+					continue;
+				}
+
 				neighbour->g_cost = currentNode->g_cost;
 				neighbour->h_cost = heuristicCost(neighbour, end, accX, accY);
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
