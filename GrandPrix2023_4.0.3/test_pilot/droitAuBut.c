@@ -696,7 +696,7 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
-	if (map[newY][newX] != '#' && map[newY][newX] != '~' && map[newY][newX] != '=') {
+	if (map[newY][newX] == '.') {
 		return 0;
 	}
 
