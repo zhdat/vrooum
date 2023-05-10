@@ -892,9 +892,6 @@ int main()
 		fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
 		fflush(stderr);
 
-		start->x = myX;
-		start->y = myY;
-
 		if (round == 1) {
 			/* Trouver les positions de départ et d'arrivée sur la carte */
 			start = createNode(myX, myY, NULL, speedX, speedY, 0);
@@ -902,6 +899,9 @@ int main()
 			fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 			fflush(stderr);
 		}
+
+		start->x = myX;
+		start->y = myY;
 
 		findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, arrayEnd, &end);
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
