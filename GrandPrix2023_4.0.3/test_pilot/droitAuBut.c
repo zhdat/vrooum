@@ -919,7 +919,7 @@ int main()
 		reverseList(path);
 		printPath(path);
 
-		while (path == NULL) {
+		while (path == NULL && i < arrayEnd->size) {
 			fprintf(stderr, "    Path not found: \n");
 			end = createNode(arrayEnd->array[i].x, arrayEnd->array[i].y, NULL, speedX, speedY, 0);
 			fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
