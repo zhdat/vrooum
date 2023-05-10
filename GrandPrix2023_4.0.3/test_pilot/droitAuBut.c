@@ -893,11 +893,11 @@ int main()
 			start = createNode(myX, myY, NULL, speedX, speedY, 0);
 			arrayEnd = findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
 			fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
-			fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 			fflush(stderr);
 		}
 
 		findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, arrayEnd, &end);
+		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
