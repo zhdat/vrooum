@@ -807,12 +807,16 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				if (map[newY][newX] == '.') {
+				if (map[newX][newY] == '.') {
 					continue;
 				}
 
 				if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
 					continue;
+				}
+
+				if (map[currentNode->y][currentNode->x] == '~') {
+					fprintf(stderr, "Current node is sand\n");
 				}
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
