@@ -828,9 +828,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 			for (accY = -1; accY <= 1; accY++) {
 				newSpeedX = currentNode->speedX + accX;
 				newSpeedY = currentNode->speedY + accY;
-				fprintf(stderr, "newSpeedX = %d, newSpeedY = %d\n", newSpeedX, newSpeedY);
 
-				if (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 5)
+				if (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 30)
 					continue;
 
 				newX = currentNode->x + newSpeedX;
