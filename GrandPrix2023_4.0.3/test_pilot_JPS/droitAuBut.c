@@ -829,7 +829,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newSpeedX = currentNode->speedX + accX;
 				newSpeedY = currentNode->speedY + accY;
 
-				if (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 2)
+				if (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 5)
 					continue;
 
 				newX = currentNode->x + newSpeedX;
@@ -848,12 +848,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				if ((map[newY][newX] == '~') && (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) >= 1))
 					continue;
 
-				if (isPathClear(map, width, height, currentPos, newPos) == 0)
-					continue;
+				/* if (isPathClear(map, width, height, currentPos, newPos) == 0)
+					continue; */
 
 				neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
-				fprintf(stderr, "neighbour: %d %d %d %d %d %f\n", neighbour->x, neighbour->y, neighbour->speedX, neighbour->speedY, neighbour->gas,
-						neighbour->f_cost);
 
 				if (!hs_contains(closedSet, neighbour)) {
 					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
