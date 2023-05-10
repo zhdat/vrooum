@@ -871,20 +871,16 @@ int main()
 
 		/* Trouver les positions de départ et d'arrivée sur la carte */
 		start = createNode(myX, myY, NULL, speedX, speedY, 0);
-		if (round == 1) {
-			findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
-		}
+		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
 		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 		fflush(stderr);
 
-		if (round == 1) {
-			/* Executer l'algorithme A* pour trouver le chemin */
-			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
-			fprintf(stderr, "    Path found: \n");
-			reverseList(path);
-			printPath(path);
-		}
+		/* Executer l'algorithme A* pour trouver le chemin */
+		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
+		fprintf(stderr, "    Path found: \n");
+		reverseList(path);
+		printPath(path);
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY);
@@ -901,15 +897,6 @@ int main()
 		fflush(stdout); /* CAUTION : This is necessary  */
 		fprintf(stderr, "    Action: %s   Gas remaining: %d\n", action, gasLevel);
 		fflush(stderr);
-
-		/* Passer au noeud suivant dans le path */
-		if (path != NULL) {
-			if (path->head != NULL) {
-				ListElement* nextElement = path->head->next;
-				free(path->head);
-				path->head = nextElement;
-			}
-		}
 
 		if (0 && round > 4) { /* (DISABLED) Force a segfault for testing purpose */
 			int* p = NULL;
