@@ -710,26 +710,43 @@ int SpeedNorme(int speedX, int speedY)
 	return (int)(speedX * speedX + speedY * speedY);
 }
 
-int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, int newX, int newY, int newSpeedX, int newSpeedY, Pos2Dint currentPos,
-						  Pos2Dint newPos, int secondX, int secondY, int thirdX, int thirdY, int maxGas, int accX, int accY)
-{
-	if (newX == currentNode->x && newY == currentNode->y) {
-		return 0; /* ignorer le noeud lui-même */
-	}
+Node* createNeighbourNode(int accX, int accY, Node* currentNode, int width, int height, char** map, int secondX, int secondY, int thirdX, int thirdY, int newSpeedX, int newSpeedY, int newGas, Node* end) {
+    int newX = currentNode->x + accX;
+    int newY = currentNode->y + accY;
 
-	if (newX >= width || newY >= height || newX < 0 || newY < 0) {
-		return 0;
-	}
+    if (newX == currentNode->x && newY == currentNode->y) {
+        return NULL; /* ignorer le noeud lui-même */
+    }
 
-	if (map[newY][newX] == '.') {
-		return 0;
-	}
+    if (newX >= width || newY >= height || newX < 0 || newY < 0) {
+        return NULL;
+    }
 
-	if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
-		return 0;
-	}
+    if (map[newY][newX] == '.') {
+        return NULL;
+    }
 
-	return 1;
+    if ((map[newY][newX] == '~' || (map[currentNode->y][currentNode->x] == '~')) && (accX != 0 && accY != 0)) {
+        return NULL;
+    }
+
+    if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
+        return NULL;
+    }
+
+    Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
+
+    neighbour->g_cost = currentNode->g_cost + 1;
+
+    if (map[newY][newX] == '~') {
+        neighbour->g_cost += 4;
+    }
+
+    neighbour->h_cost = heuristicCost(neighbour, end);
+
+    neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+
+    return neighbour;
 }
 
 /**
@@ -796,44 +813,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
-				newX = currentNode->x + accX;
-				newY = currentNode->y + accY;
 
-				if (newX == currentNode->x && newY == currentNode->y) {
-					continue; /* ignorer le noeud lui-même */
-				}
-
-				if (newX >= width || newY >= height || newX < 0 || newY < 0) {
-					continue;
-				}
-
-				if (map[newY][newX] == '.') {
-					continue;
-				}
-					
-				if ((map[newY][newX] == '~' || (map[currentNode->y][currentNode->x] == '~')) && (accX != 0 && accY != 0)) {
-					continue;
-				}
-
-				if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
-					continue;
-				}
-
-				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
-
-				neighbour->g_cost = currentNode->g_cost + 1;
-
-				if (map[newY][newX] == '~') {
-					neighbour->g_cost += 4;
-				}
-
-				neighbour->h_cost = heuristicCost(neighbour, end);
-
-				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
-
-				if (neighbour->x == end->x && neighbour->y == end->y) {
-					fprintf(stderr, "Neighbour (%d, %d) is the end node\n", neighbour->x, neighbour->y);
-				}
+				neighbour = createNeighbourNode(accX, accY, currentNode, width, height, map, secondX, secondY, thirdX, thirdY, currentNode->speedX + accX, currentNode->speedY + accY, currentNode->gas, end);
 
 				if (!hs_contains(closedSet, neighbour)) {
 					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
