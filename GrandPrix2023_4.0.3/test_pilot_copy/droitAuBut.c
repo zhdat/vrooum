@@ -681,6 +681,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
+				if (neighbour->x == end->x && neighbour->y == end->y) {
+					fprintf(stderr, "Neighbour (%d, %d) is the end node\n", neighbour->x, neighbour->y);
+				}
+
 				if (!nodeInList(neighbour, closedSet)) {
 					ListElement* existingElementInOpenSet;
 					Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
@@ -688,11 +692,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					if (existingNodeInOpenSet == NULL || neighbour->f_cost < existingNodeInOpenSet->f_cost) {
 						if (existingNodeInOpenSet != NULL) {
 							removeElementFromList(openSet, existingElementInOpenSet);
-							fprintf(stderr, "Removed node (%d, %d) with f_cost : %f from open set\n", existingNodeInOpenSet->x,
-									existingNodeInOpenSet->y, existingNodeInOpenSet->f_cost);
 						}
 						addNodeToList(neighbour, openSet);
-						fprintf(stderr, "Added node (%d, %d) to open set with f_cost : %f\n", neighbour->x, neighbour->y, neighbour->f_cost);
 					}
 				}
 			}

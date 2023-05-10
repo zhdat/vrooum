@@ -849,11 +849,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					if (existingNodeInOpenSet == NULL || neighbour->f_cost < existingNodeInOpenSet->f_cost) {
 						if (existingNodeInOpenSet != NULL) {
 							pq_remove(openSet, existingNodeInOpenSet);
-							fprintf(stderr, "Removing node (%d, %d) with f_cost %f\n", existingNodeInOpenSet->x, existingNodeInOpenSet->y,
-									existingNodeInOpenSet->f_cost);
 						}
 						pq_push(openSet, neighbour);
-						fprintf(stderr, "Pushing node (%d, %d) with f_cost %f\n", neighbour->x, neighbour->y, neighbour->f_cost);
 					}
 				}
 			}
