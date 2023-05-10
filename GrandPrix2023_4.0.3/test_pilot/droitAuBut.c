@@ -894,7 +894,7 @@ int main()
 			fflush(stderr);
 		}
 
-		findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, &arrayEnd, &end);
+		findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, arrayEnd, &end);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
