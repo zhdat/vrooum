@@ -584,6 +584,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 {
 	int x, y;
 	int i;
+	int j;
 	EndPosition* endPositions;
 	double distance;
 	EndPosition endPosition;
@@ -607,6 +608,11 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 	}
 
 	qsort(endPositions, endPositionCount, sizeof(EndPosition), compareEndPositions);
+	fprintf(stderr, "endPositionCount = %d\n", endPositionCount);
+
+	for (j = 0; j < endPositionCount; j++) {
+		fprintf(stderr, "endPositions[%d] = (%d, %d, %f)\n", j, endPositions[j].x, endPositions[j].y, endPositions[j].distance);
+	}
 
 	for (i = 0; i < endPositionCount; i++) {
 		int x = endPositions[i].x;

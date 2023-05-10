@@ -70,7 +70,7 @@ typedef struct PriorityQueue {
 typedef struct {
 	int x;
 	int y;
-	int distance;
+	double distance;
 } EndPosition;
 
 /* ------------------------------------------------------------------------------------------------------------------ */
