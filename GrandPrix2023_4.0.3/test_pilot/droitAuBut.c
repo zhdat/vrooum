@@ -592,12 +592,11 @@ ArrayEnd* findEndPositions(char** map, int width, int height, Node* start, Node*
 
 	int endPositionCount = 0;
 	endPositions = (EndPosition*)malloc(sizeof(EndPosition) * width * height);
-	arrayEnd = (ArrayEnd*)malloc(sizeof(EndPosition));
+	arrayEnd = (ArrayEnd*)malloc(sizeof(ArrayEnd) * 1000);
 
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
 			if (map[y][x] == '=') {
-				arrayEnd = (ArrayEnd*)realloc(arrayEnd, sizeof(EndPosition) * (endPositionCount + 2));
 				Node node;
 				node.x = x;
 				node.y = y;
