@@ -710,43 +710,30 @@ int SpeedNorme(int speedX, int speedY)
 	return (int)(speedX * speedX + speedY * speedY);
 }
 
-Node* createNeighbourNode(int accX, int accY, Node* currentNode, int width, int height, char** map, int secondX, int secondY, int thirdX, int thirdY, int newSpeedX, int newSpeedY, int newGas, Node* end) {
-    int newX = currentNode->x + accX;
-    int newY = currentNode->y + accY;
+int shouldContinue(int newX, int newY, int width, int height, char** map, int currentNodeX, int currentNodeY, int accX, int accY, int secondX,
+				   int secondY, int thirdX, int thirdY)
+{
+	if (newX == currentNodeX && newY == currentNodeY) {
+		return 0; /* ignore the current node */
+	}
 
-    if (newX == currentNode->x && newY == currentNode->y) {
-        return NULL; /* ignorer le noeud lui-même */
-    }
+	if (newX >= width || newY >= height || newX < 0 || newY < 0) {
+		return 0; /* out of bounds */
+	}
 
-    if (newX >= width || newY >= height || newX < 0 || newY < 0) {
-        return NULL;
-    }
+	if (map[newY][newX] == '.') {
+		return 0; /* obstacle */
+	}
 
-    if (map[newY][newX] == '.') {
-        return NULL;
-    }
+	if ((map[newY][newX] == '~' || (map[currentNodeY][currentNodeX] == '~')) && (accX != 0 && accY != 0)) {
+		return 0; /* diagonal movement in sand */
+	}
 
-    if ((map[newY][newX] == '~' || (map[currentNode->y][currentNode->x] == '~')) && (accX != 0 && accY != 0)) {
-        return NULL;
-    }
+	if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
+		return 0; /* position occupied by another racer */
+	}
 
-    if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
-        return NULL;
-    }
-
-    Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
-
-    neighbour->g_cost = currentNode->g_cost + 1;
-
-    if (map[newY][newX] == '~') {
-        neighbour->g_cost += 4;
-    }
-
-    neighbour->h_cost = heuristicCost(neighbour, end);
-
-    neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
-
-    return neighbour;
+	return 1; /* continue with current iteration */
 }
 
 /**
@@ -813,8 +800,24 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
+				newX = currentNode->x + accX;
+				newY = currentNode->y + accY;
 
-				neighbour = createNeighbourNode(accX, accY, currentNode, width, height, map, secondX, secondY, thirdX, thirdY, currentNode->speedX + accX, currentNode->speedY + accY, currentNode->gas, end);
+				if (shouldContinue(newX, newY, width, height, map, currentNode->x, currentNode->y, accX, accY, secondX, secondY, thirdX, thirdY)) {
+					continue;
+				}
+
+				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
+
+				neighbour->g_cost = currentNode->g_cost + 1;
+
+				if (map[newY][newX] == '~') {
+					neighbour->g_cost += 4;
+				}
+
+				neighbour->h_cost = heuristicCost(neighbour, end);
+
+				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
 				if (!hs_contains(closedSet, neighbour)) {
 					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
