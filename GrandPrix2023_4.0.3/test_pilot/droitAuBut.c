@@ -843,6 +843,10 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
+				if (neighbour->x == end->x && neighbour->y == end->y) {
+					fprintf(stderr, "Neighbour (%d, %d) is the end node\n", neighbour->x, neighbour->y);
+				}
+
 				if (!hs_contains(closedSet, neighbour)) {
 					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
 
