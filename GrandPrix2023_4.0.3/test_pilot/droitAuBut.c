@@ -579,8 +579,8 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
  * @param speedX
  * @param speedY
  */
-ArrayEnd findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
-						  int speedY)
+ArrayEnd* findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
+						   int speedY)
 {
 	int x, y;
 	int i;
@@ -588,7 +588,7 @@ ArrayEnd findEndPositions(char** map, int width, int height, Node* start, Node**
 	EndPosition* endPositions;
 	double distance;
 	EndPosition endPosition;
-	ArrayEnd arrayEnd;
+	ArrayEnd* arrayEnd;
 
 	int endPositionCount = 0;
 	endPositions = (EndPosition*)malloc(sizeof(EndPosition) * width * height);
@@ -603,11 +603,11 @@ ArrayEnd findEndPositions(char** map, int width, int height, Node* start, Node**
 				endPosition.x = x;
 				endPosition.y = y;
 				endPosition.distance = distance;
-				arrayEnd.array[endPositionCount++] = endPosition;
+				arrayEnd->array[endPositionCount++] = endPosition;
 			}
 		}
 	}
-	arrayEnd.size = endPositionCount;
+	arrayEnd->size = endPositionCount;
 	return arrayEnd;
 }
 
