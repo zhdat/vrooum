@@ -815,10 +815,6 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				if ((map[currentNode->x][currentNode->y] == '~') && (accX != 0 || accY != 0)) {
-					continue;
-				}
-
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 
 				neighbour->g_cost = currentNode->g_cost + 1;
