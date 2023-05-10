@@ -596,7 +596,7 @@ ArrayEnd* findEndPositions(char** map, int width, int height, Node* start, Node*
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
 			if (map[y][x] == '=') {
-				arrayEnd = (ArrayEnd*)realloc(arrayEnd, sizeof(ArrayEnd) * (endPositionCount + 1));
+				arrayEnd = (ArrayEnd*)realloc(arrayEnd, sizeof(ArrayEnd) * (endPositionCount + 2));
 				Node node;
 				node.x = x;
 				node.y = y;
