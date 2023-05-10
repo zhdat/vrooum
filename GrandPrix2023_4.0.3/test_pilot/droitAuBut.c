@@ -815,8 +815,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				if (map[currentNode->y][currentNode->x] == '~') {
-					fprintf(stderr, "Current node is sand\n");
+				if (map[currentNode->y][currentNode->x] == '~' && (accX != 0 || accY != 0)) {
+					continue;
 				}
 
 				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
