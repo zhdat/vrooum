@@ -604,7 +604,9 @@ ArrayEnd* findEndPositions(char** map, int width, int height, Node* start, Node*
 				endPosition.x = x;
 				endPosition.y = y;
 				endPosition.distance = distance;
+				fprintf(stderr, "BIP");
 				arrayEnd->array[endPositionCount++] = endPosition;
+				fprintf(stderr, "BOP");
 			}
 		}
 	}
