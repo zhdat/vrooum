@@ -852,8 +852,8 @@ int main()
 	char line_buffer[MAX_LINE_LENGTH];
 	char** map;
 	int myX, myY, secondX, secondY, thirdX, thirdY;
-	ArrayEnd arrayEnd;
 
+	ArrayEnd* arrayEnd = NULL;
 	Node* start = NULL;
 	Node* end = NULL;
 	List* path = NULL;
