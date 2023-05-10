@@ -807,7 +807,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				if (map[newX][newY] == '.') {
+				if (map[newY][newX] == '.') {
 					continue;
 				}
 
