@@ -593,11 +593,11 @@ ArrayEnd* findEndPositions(char** map, int width, int height, Node* start, Node*
 	int endPositionCount = 0;
 	endPositions = (EndPosition*)malloc(sizeof(EndPosition) * width * height);
 	arrayEnd = (ArrayEnd*)malloc(sizeof(ArrayEnd));
+	arrayEnd->array = (EndPosition*)malloc(sizeof(EndPosition));
 
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
 			if (map[y][x] == '=') {
-				arrayEnd->array = (EndPosition*)malloc(sizeof(EndPosition) * (endPositionCount + 1));
 				Node node;
 				node.x = x;
 				node.y = y;
@@ -605,9 +605,8 @@ ArrayEnd* findEndPositions(char** map, int width, int height, Node* start, Node*
 				endPosition.x = x;
 				endPosition.y = y;
 				endPosition.distance = distance;
-				fprintf(stderr, "BIP");
 				arrayEnd->array[endPositionCount++] = endPosition;
-				fprintf(stderr, "BOP");
+				arrayEnd->array = (EndPosition*)realloc(arrayEnd->array, sizeof(EndPosition) * (endPositionCount + 1));
 			}
 		}
 	}
