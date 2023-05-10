@@ -611,20 +611,20 @@ ArrayEnd* findEndPositions(char** map, int width, int height, Node* start, Node*
 	return arrayEnd;
 }
 
-void findBestEnd(int myX, int myY, int secondX, int secondY, int thirdX, int thirdY, int speedX, int speedY, ArrayEnd array, Node** end)
+void findBestEnd(int myX, int myY, int secondX, int secondY, int thirdX, int thirdY, int speedX, int speedY, ArrayEnd* array, Node** end)
 {
 	int j;
 	int i;
-	qsort(array.array, array.size, sizeof(EndPosition), compareEndPositions);
-	*end = createNode(array.array[0].x, array.array[0].y, NULL, speedX, speedY, 0);
+	qsort(array->array, array->size, sizeof(EndPosition), compareEndPositions);
+	*end = createNode(array->array[0].x, array->array[0].y, NULL, speedX, speedY, 0);
 
-	for (j = 0; j < array.size; j++) {
-		fprintf(stderr, "endPositions[%d] = (%d, %d, %f)\n", j, array.array[j].x, array.array[j].y, array.array[j].distance);
+	for (j = 0; j < array->size; j++) {
+		fprintf(stderr, "endPositions[%d] = (%d, %d, %f)\n", j, array->array[j].x, array->array[j].y, array->array[j].distance);
 	}
 
-	for (i = 0; i < array.size; i++) {
-		int x = array.array[i].x;
-		int y = array.array[i].y;
+	for (i = 0; i < array->size; i++) {
+		int x = array->array[i].x;
+		int y = array->array[i].y;
 		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
 			*end = createNode(x, y, NULL, speedX, speedY, 0);
 			break;
@@ -893,7 +893,7 @@ int main()
 			fflush(stderr);
 		}
 
-		findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, arrayEnd, &end);
+		findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, &arrayEnd, &end);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
