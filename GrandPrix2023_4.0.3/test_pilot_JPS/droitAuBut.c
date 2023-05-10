@@ -538,7 +538,7 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 	dy *= 2;
 
 	for (; n > 0; --n) {
-		if (map[y][x] != '#' || map[y][x] != '~' || map[y][x] != '=' || map[y][x] != '1' || map[y][x] != '2' || map[y][x] != '3') {
+		if (map[y][x] == '.') {
 			return 0;
 		}
 		/* Move to the next point. */
