@@ -803,7 +803,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newX = currentNode->x + accX;
 				newY = currentNode->y + accY;
 
-				if (shouldContinue(newX, newY, width, height, map, currentNode->x, currentNode->y, accX, accY, secondX, secondY, thirdX, thirdY)) {
+				if (shouldContinue(newX, newY, width, height, map, currentNode->x, currentNode->y, accX, accY, secondX, secondY, thirdX, thirdY) ==
+					0) {
 					continue;
 				}
 
