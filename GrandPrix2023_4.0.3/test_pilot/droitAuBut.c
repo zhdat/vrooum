@@ -504,7 +504,12 @@ int compareEndPositions(const void* a, const void* b)
 	const EndPosition* positionA = (const EndPosition*)a;
 	const EndPosition* positionB = (const EndPosition*)b;
 
-	return positionA->distance - positionB->distance;
+	if (positionA->distance < positionB->distance)
+		return -1;
+	else if (positionA->distance > positionB->distance)
+		return 1;
+	else
+		return 0;
 }
 
 /**
