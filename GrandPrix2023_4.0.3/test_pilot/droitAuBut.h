@@ -73,6 +73,11 @@ typedef struct {
 	double distance;
 } EndPosition;
 
+typedef struct ArrayEnd {
+	EndPosition* array;
+	int size;
+} ArrayEnd;
+
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 /* Fonctions Hash */
@@ -308,8 +313,8 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand);
  * @param speedX
  * @param speedY
  */
-void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
-					  int speedY);
+ArrayEnd findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
+						  int speedY);
 
 /**
  * @brief Détermine l'accélération à partir du chemin

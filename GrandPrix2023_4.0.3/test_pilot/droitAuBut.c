@@ -579,8 +579,8 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
  * @param speedX
  * @param speedY
  */
-void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
-					  int speedY)
+ArrayEnd findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
+						  int speedY)
 {
 	int x, y;
 	int i;
@@ -588,6 +588,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 	EndPosition* endPositions;
 	double distance;
 	EndPosition endPosition;
+	ArrayEnd arrayEnd;
 
 	int endPositionCount = 0;
 	endPositions = (EndPosition*)malloc(sizeof(EndPosition) * width * height);
@@ -602,21 +603,28 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 				endPosition.x = x;
 				endPosition.y = y;
 				endPosition.distance = distance;
-				endPositions[endPositionCount++] = endPosition;
+				arrayEnd.array[endPositionCount++] = endPosition;
 			}
 		}
 	}
+	arrayEnd.size = endPositionCount;
+	return arrayEnd;
+}
 
-	qsort(endPositions, endPositionCount, sizeof(EndPosition), compareEndPositions);
-	fprintf(stderr, "endPositionCount = %d\n", endPositionCount);
+void findBestEnd(int myX, int myY, int secondX, int secondY, int thirdX, int thirdY, int speedX, int speedY, ArrayEnd array, Node** end)
+{
+	int j;
+	int i;
+	qsort(array.array, array.size, sizeof(EndPosition), compareEndPositions);
+	*end = createNode(array.array[0].x, array.array[0].y, NULL, speedX, speedY, 0);
 
-	for (j = 0; j < endPositionCount; j++) {
-		fprintf(stderr, "endPositions[%d] = (%d, %d, %f)\n", j, endPositions[j].x, endPositions[j].y, endPositions[j].distance);
+	for (j = 0; j < array.size; j++) {
+		fprintf(stderr, "endPositions[%d] = (%d, %d, %f)\n", j, array.array[j].x, array.array[j].y, array.array[j].distance);
 	}
 
-	for (i = 0; i < endPositionCount; i++) {
-		int x = endPositions[i].x;
-		int y = endPositions[i].y;
+	for (i = 0; i < array.size; i++) {
+		int x = array.array[i].x;
+		int y = array.array[i].y;
 		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
 			*end = createNode(x, y, NULL, speedX, speedY, 0);
 			break;
@@ -844,6 +852,7 @@ int main()
 	char line_buffer[MAX_LINE_LENGTH];
 	char** map;
 	int myX, myY, secondX, secondY, thirdX, thirdY;
+	ArrayEnd arrayEnd;
 
 	Node* start = NULL;
 	Node* end = NULL;
@@ -875,12 +884,16 @@ int main()
 		fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
 		fflush(stderr);
 
-		/* Trouver les positions de départ et d'arrivée sur la carte */
-		start = createNode(myX, myY, NULL, speedX, speedY, 0);
-		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
-		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
-		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
-		fflush(stderr);
+		if (round == 1) {
+			/* Trouver les positions de départ et d'arrivée sur la carte */
+			start = createNode(myX, myY, NULL, speedX, speedY, 0);
+			arrayEnd = findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
+			fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
+			fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
+			fflush(stderr);
+		}
+
+		findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, arrayEnd, &end);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
