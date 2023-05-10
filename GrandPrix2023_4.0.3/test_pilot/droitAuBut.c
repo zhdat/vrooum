@@ -692,9 +692,6 @@ int SpeedNorme(int speedX, int speedY)
 int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, int newX, int newY, int newSpeedX, int newSpeedY, Pos2Dint currentPos,
 						  Pos2Dint newPos, int secondX, int secondY, int thirdX, int thirdY, int maxGas, int accX, int accY)
 {
-	int newGas;
-	int gasCost;
-
 	if (newX == currentNode->x && newY == currentNode->y) {
 		return 0; /* ignorer le noeud lui-même */
 	}
@@ -707,25 +704,7 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
 		return 0;
 	}
 
-	if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
-		return 0;
-	}
-
-	if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY >= 1)) {
-		return 0;
-	}
-
-	if (isPathClear(map, width, height, currentPos, newPos) == 0) {
-		return 0;
-	}
-
 	if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
-		return 0;
-	}
-
-	gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
-	newGas = currentNode->gas + gasCost;
-	if (newGas < 0 || newGas > maxGas) {
 		return 0;
 	}
 
@@ -796,48 +775,34 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
-				newSpeedX = currentNode->speedX + accX;
-				newSpeedY = currentNode->speedY + accY;
+				newX = currentNode->x + accX;
+				newY = currentNode->y + accY;
 
-				newX = currentNode->x + newSpeedX;
-				newY = currentNode->y + newSpeedY;
+				if (newX == currentNode->x && newY == currentNode->y) {
+					continue; /* ignorer le noeud lui-même */
+				}
 
-				currentPos.x = currentNode->x;
-				currentPos.y = currentNode->y;
-				newPos.x = newX;
-				newPos.y = newY;
-
-				if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX, secondY,
-										  thirdX, thirdY, maxGas, accX, accY) == 0) {
+				if (newX >= width || newY >= height || newX < 0 || newY < 0) {
 					continue;
 				}
 
-				gasCost = gasConsumption(accX, accY, currentNode->speedX, currentNode->speedY, 0);
-				newGas = currentNode->gas + gasCost;
-
-				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
-				distance = sqrt((newX - currentNode->x) * (newX - currentNode->x) + (newY - currentNode->y) * (newY - currentNode->y));
-
-				if (currentNode->parent != NULL) {
-					int previousSpeedX = currentNode->parent->speedX;
-					int previousSpeedY = currentNode->parent->speedY;
-
-					if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
-						penalty = 50;
-					}
+				if (map[newY][newX] == '.') {
+					continue;
 				}
 
-				neighbour->g_cost = currentNode->g_cost + distance + penalty;
+				if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
+					continue;
+				}
+
+				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
+
+				neighbour->g_cost = currentNode->g_cost + 1;
 
 				if (map[newY][newX] == '~') {
 					neighbour->g_cost += 4;
 				}
 
 				neighbour->h_cost = heuristicCost(neighbour, end);
-				if (neighbour->gas < neighbour->h_cost) {
-					free(neighbour);
-					continue;
-				}
 
 				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
