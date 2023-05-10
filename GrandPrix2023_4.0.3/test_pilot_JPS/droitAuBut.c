@@ -522,28 +522,36 @@ int compareEndPositions(const void* a, const void* b)
  * @param end
  * @return int 1 si le chemin est libre, 0 sinon
  */
+#include <stdlib.h> // for abs
+
 int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 {
-	InfoLine line;
-	Pos2Dint point;
+	int dx = abs(end.x - start.x);
+	int dy = abs(end.y - start.y);
+	int x = start.x;
+	int y = start.y;
+	int n = 1 + dx + dy;
+	int x_inc = (end.x > start.x) ? 1 : -1;
+	int y_inc = (end.y > start.y) ? 1 : -1;
+	int error = dx - dy;
+	dx *= 2;
+	dy *= 2;
 
-	initLine(start.x, start.y, end.x, end.y, &line);
-
-	/* Parcourir les points de la ligne */
-	while (nextPoint(&line, &point, 1) > 0) {
-		if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height) {
-			/* Point en dehors des limites de la carte */
+	for (; n > 0; --n) {
+		if (map[y][x] != '#' || map[y][x] != '~' || map[y][x] != '=' || map[y][x] != '1' || map[y][x] != '2' || map[y][x] != '3') {
 			return 0;
 		}
-
-		if (map[point.y][point.x] == '.') {
-			/* Mur détecté */
-			return 0;
+		/* Move to the next point. */
+		if (error > 0) {
+			x += x_inc;
+			error -= dy;
+		} else {
+			y += y_inc;
+			error += dx;
 		}
 	}
 
-	/* Aucun mur détecté, le chemin est dégagé */
-	return 1;
+	return 1; /* The path is clear */
 }
 
 /**
