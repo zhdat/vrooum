@@ -892,6 +892,9 @@ int main()
 		fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
 		fflush(stderr);
 
+		start->x = myX;
+		start->y = myY;
+
 		if (round == 1) {
 			/* Trouver les positions de départ et d'arrivée sur la carte */
 			start = createNode(myX, myY, NULL, speedX, speedY, 0);
