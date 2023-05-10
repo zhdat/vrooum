@@ -815,7 +815,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				if ((map[newY][newX] == '~') && (accX != 0 || accY != 0)) {
+				if ((map[currentNode->x][currentNode->y] == '~') && (accX != 0 || accY != 0)) {
 					continue;
 				}
 
