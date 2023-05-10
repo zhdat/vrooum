@@ -738,6 +738,25 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 
 Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, int newSpeedY, int newGas, char** map, Node* end)
 {
+	int accelerationX = newX - currentNode->x - currentNode->speedX;
+	int accelerationY = newY - currentNode->y - currentNode->speedY;
+	if (accelerationX < -1) {
+		accelerationX = -1;
+	} else if (accelerationX > 1) {
+		accelerationX = 1;
+	}
+	if (accelerationY < -1) {
+		accelerationY = -1;
+	} else if (accelerationY > 1) {
+		accelerationY = 1;
+	}
+	newSpeedX = currentNode->speedX + accelerationX;
+	newSpeedY = currentNode->speedY + accelerationY;
+	if (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 25) {
+		double angle = atan2(newSpeedY, newSpeedX);
+		newSpeedX = round(5 * cos(angle));
+		newSpeedY = round(5 * sin(angle));
+	}
 	Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 	neighbour->g_cost = currentNode->g_cost + 1;
 	if (map[newY][newX] == '~') {
