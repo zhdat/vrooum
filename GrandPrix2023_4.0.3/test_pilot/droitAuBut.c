@@ -736,6 +736,18 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 	return 1; /* continue with current iteration */
 }
 
+Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, int newSpeedY, int newGas, char** map, Node* end)
+{
+	Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
+	neighbour->g_cost = currentNode->g_cost + 1;
+	if (map[newY][newX] == '~') {
+		neighbour->g_cost += 4;
+	}
+	neighbour->h_cost = heuristicCost(neighbour, end);
+	neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+	return neighbour;
+}
+
 /**
  * @brief Calcule le chemin le plus court
  *
@@ -808,23 +820,17 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					continue;
 				}
 
-				fprintf(stderr, "BIP\n");
-
-				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
-
+				neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
+				/* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 				neighbour->g_cost = currentNode->g_cost + 1;
-
 				if (map[newY][newX] == '~') {
 					neighbour->g_cost += 4;
 				}
-
 				neighbour->h_cost = heuristicCost(neighbour, end);
-
-				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost; */
 
 				if (!hs_contains(closedSet, neighbour)) {
 					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
-
 					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 						if (existingNodeInOpenSet != NULL) {
 							pq_remove(openSet, existingNodeInOpenSet);
