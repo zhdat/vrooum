@@ -689,7 +689,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 					ListElement* existingElementInOpenSet;
 					Node* existingNodeInOpenSet = findNodeInList(neighbour, openSet, &existingElementInOpenSet);
 
-					if (existingNodeInOpenSet == NULL || neighbour->f_cost < existingNodeInOpenSet->f_cost) {
+					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 						if (existingNodeInOpenSet != NULL) {
 							removeElementFromList(openSet, existingElementInOpenSet);
 						}

@@ -850,7 +850,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				if (!hs_contains(closedSet, neighbour)) {
 					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
 
-					if (existingNodeInOpenSet == NULL || neighbour->f_cost < existingNodeInOpenSet->f_cost) {
+					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 						if (existingNodeInOpenSet != NULL) {
 							pq_remove(openSet, existingNodeInOpenSet);
 						}
