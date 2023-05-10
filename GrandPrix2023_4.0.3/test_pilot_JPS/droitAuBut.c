@@ -827,13 +827,13 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				newX = currentNode->x + newSpeedX;
 				newY = currentNode->y + newSpeedY;
 
-				if ((map[newY][newX] == '~') && (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) >= 1))
-					continue;
-
 				if (shouldContinue(newX, newY, width, height, map, currentNode->x, currentNode->y, accX, accY, secondX, secondY, thirdX, thirdY) ==
 					0) {
 					continue;
 				}
+
+				if ((map[newY][newX] == '~') && (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) >= 1))
+					continue;
 
 				neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 
