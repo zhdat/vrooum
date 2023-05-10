@@ -865,8 +865,9 @@ int main()
 	char action[100];
 	char line_buffer[MAX_LINE_LENGTH];
 	char** map;
-	int myX, myY, secondX, secondY, thirdX, thirdY;
+	int myX, myY, secondX, secondY, thirdX, thirdY, i;
 
+	i = 1;
 	ArrayEnd* arrayEnd = NULL;
 	Node* start = NULL;
 	Node* end = NULL;
@@ -917,6 +918,17 @@ int main()
 		fprintf(stderr, "    Path found: \n");
 		reverseList(path);
 		printPath(path);
+
+		while (path == NULL) {
+			fprintf(stderr, "    Path not found: \n");
+			end = createNode(arrayEnd->array[i].x, arrayEnd->array[i].y, NULL, speedX, speedY, 0);
+			fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
+			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
+			fprintf(stderr, "    Path found: \n");
+			reverseList(path);
+			printPath(path);
+			i++;
+		}
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY);
