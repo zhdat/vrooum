@@ -70,8 +70,13 @@ typedef struct PriorityQueue {
 typedef struct {
 	int x;
 	int y;
-	int distance;
+	double distance;
 } EndPosition;
+
+typedef struct ArrayEnd {
+	EndPosition* array;
+	int size;
+} ArrayEnd;
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 
@@ -308,8 +313,8 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand);
  * @param speedX
  * @param speedY
  */
-void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
-					  int speedY);
+ArrayEnd* findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
+						   int speedY);
 
 /**
  * @brief Détermine l'accélération à partir du chemin
@@ -333,7 +338,8 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
  */
 int SpeedNorme(int speedX, int speedY);
 
-int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, int newX, int newY, int newSpeedX, int newSpeedY);
+int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, int newX, int newY, int newSpeedX, int newSpeedY, Pos2Dint currentPos,
+						  Pos2Dint newPos, int secondX, int secondY, int thirdX, int thirdY, int maxGas, int accX, int accY);
 
 /**
  * @brief Calcule le chemin le plus court

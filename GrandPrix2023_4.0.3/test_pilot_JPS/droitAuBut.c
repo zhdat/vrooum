@@ -9,182 +9,6 @@
 #define BOOSTS_AT_START 5
 #define INFINITE INT_MAX
 
-/* JPS algorithme */
-
-/* Fonction pour vérifier si un point est un "jump point" */
-int isJumpPoint(Node* currentNode, Node* neighbor, int dx, int dy, char** map, int width, int height)
-{
-	int speedX = neighbor->x - currentNode->x;
-	int speedY = neighbor->y - currentNode->y;
-	Pos2Dint currentPos = { .x = currentNode->x, .y = currentNode->y };
-	Pos2Dint newPos = { .x = neighbor->x, .y = neighbor->y };
-	int accX = dx - speedX;
-	int accY = dy - speedY;
-
-	/* On vérifie si le voisin doit être exploré */
-	if (shouldExploreNeighbor(currentNode, map, width, height, neighbor->x, neighbor->y, speedX, speedY)) {
-		/* On vérifie si le voisin a un voisin forcé */
-		int forcedX = neighbor->x + dx;
-		int forcedY = neighbor->y + dy;
-		return shouldExploreNeighbor(currentNode, map, width, height, forcedX, forcedY, speedX, speedY);
-	}
-
-	return 0;
-}
-
-/* Fonction pour obtenir les voisins */
-List* getNeighbors(Node* node, char** map, int width, int height)
-{
-	int dx, dy;
-	List* neighbors = initList();
-
-	/* On considère tous les points dans un rayon de 1 autour du noeud courant comme des voisins potentiels */
-	for (dx = -1; dx <= 1; dx++) {
-		for (dy = -1; dy <= 1; dy++) {
-			if (dx == 0 && dy == 0) {
-				continue;
-			}
-
-			int neighborX = node->x + dx;
-			int neighborY = node->y + dy;
-
-			if (neighborX >= 0 && neighborX < width && neighborY >= 0 && neighborY < height && map[neighborY][neighborX] != '.') {
-				Node* neighbor = createNode(neighborX, neighborY, node, 0, 0, 0);
-				addNodeToList(neighbor, neighbors);
-			}
-		}
-	}
-
-	return neighbors;
-}
-
-/* Fonction pour calculer l'heuristique */
-double heuristicJPS(Node* node1, Node* node2)
-{
-	/* Chebyshev distance */
-	int dx = abs(node1->x - node2->x);
-	int dy = abs(node1->y - node2->y);
-	return fmax(dx, dy);
-}
-
-/* Fonction pour effectuer un saut */
-Node* jump(Node* currentNode, Node* neighbor, Node* endNode, char** map, int width, int height)
-{
-	if (neighbor == NULL) {
-		return NULL;
-	}
-
-	if (neighbor->x < 0 || neighbor->x >= width || neighbor->y < 0 || neighbor->y >= height || map[neighbor->y][neighbor->x] == '.') {
-		return NULL;
-	}
-
-	if (nodeEquals(neighbor, endNode)) {
-		return neighbor;
-	}
-
-	int dx = (neighbor->x - currentNode->x) / fmax(abs(neighbor->x - currentNode->x), 1);
-	int dy = (neighbor->y - currentNode->y) / fmax(abs(neighbor->y - currentNode->y), 1);
-
-	fprintf(stderr, "Jumping from (%d, %d) to (%d, %d)\n", currentNode->x, currentNode->y, neighbor->x, neighbor->y);
-	fprintf(stderr, "dx: %d, dy: %d\n", dx, dy);
-
-	/* Check for forced neighbors */
-	if (isJumpPoint(currentNode, neighbor, dx, dy, map, width, height)) {
-		fprintf(stderr, "Forced neighbor: (%d, %d)\n", neighbor->x, neighbor->y);
-		return neighbor;
-	}
-
-	/* Diagonal case */
-	if (dx != 0 && dy != 0) {
-		if (jump(neighbor, createNode(neighbor->x + dx, neighbor->y, neighbor, 0, 0, 0), endNode, map, width, height) != NULL ||
-			jump(neighbor, createNode(neighbor->x, neighbor->y + dy, neighbor, 0, 0, 0), endNode, map, width, height) != NULL) {
-			return neighbor;
-		}
-	}
-
-	/* Horizontal/vertical case */
-	if (dx != 0 || dy != 0) {
-		if (jump(neighbor, createNode(neighbor->x + dx, neighbor->y, neighbor, 0, 0, 0), endNode, map, width, height) != NULL) {
-			return neighbor;
-		}
-	}
-
-	return NULL;
-}
-
-/* Fonction pour reconstruire le chemin */
-List* reconstructPath(Node* endNode)
-{
-	List* path = initList();
-	Node* currentNode = endNode;
-
-	while (currentNode != NULL) {
-		addNodeToList(currentNode, path);
-		currentNode = currentNode->parent;
-	}
-
-	reverseList(path);
-	return path;
-}
-
-/* Fonction pour identifier les successeurs */
-void identifySuccessors(Node* currentNode, PriorityQueue* openSet, Node* endNode, char** map, int width, int height)
-{
-	List* neighbors = getNeighbors(currentNode, map, width, height);
-	ListElement* neighborElement = neighbors->head;
-
-	fprintf(stderr, "Identifying successors for node (%d, %d)\n", currentNode->x, currentNode->y);
-
-	while (neighborElement != NULL) {
-		Node* neighbor = (Node*)neighborElement->data;
-
-		fprintf(stderr, "Neighbor: (%d, %d)\n", neighbor->x, neighbor->y);
-
-		Node* jumpNode = jump(currentNode, neighbor, endNode, map, width, height);
-
-		fprintf(stderr, "Neighbor: (%d, %d)\n", neighbor->x, neighbor->y);
-
-		if (jumpNode != NULL) {
-			if (!pq_find(openSet, jumpNode)) {
-				jumpNode->g_cost = currentNode->g_cost + heuristicJPS(currentNode, jumpNode);
-				jumpNode->h_cost = heuristicJPS(jumpNode, endNode);
-				jumpNode->f_cost = jumpNode->g_cost + jumpNode->h_cost;
-				jumpNode->parent = currentNode;
-				pq_push(openSet, jumpNode);
-			}
-		}
-		neighborElement = neighborElement->next;
-	}
-
-	freePath(neighbors);
-}
-
-/* L'algorithme JPS lui-même */
-List* jps(Node* startNode, Node* endNode, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int maxGas,
-		  int currentSpeedX, int currentSpeedY)
-{
-	PriorityQueue* openSet = pq_init();
-	pq_push(openSet, startNode);
-
-	fprintf(stderr, "JPS: %d %d %d %d %d %d %d %d\n", startNode->x, startNode->y, endNode->x, endNode->y, secondX, secondY, thirdX, thirdY);
-
-	while (!pq_is_empty(openSet)) {
-		Node* currentNode = pq_pop(openSet);
-
-		if (nodeEquals(currentNode, endNode)) {
-			pq_free(openSet);
-			return reconstructPath(currentNode);
-		}
-
-		fprintf(stderr, "JPS: %d %d\n", currentNode->x, currentNode->y);
-
-		identifySuccessors(currentNode, openSet, endNode, map, width, height);
-	}
-
-	pq_free(openSet);
-	return NULL; /* Return NULL if no path is found */
-}
-
 /* TESTS */
 
 static unsigned int hash_function(Node* node)
@@ -383,8 +207,7 @@ int nodeEquals(Node* node1, Node* node2)
 	if (node1 == NULL || node2 == NULL) {
 		return 0;
 	}
-	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY &&
-		   node1->gas == node2->gas;
+	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY;
 }
 
 /**
@@ -642,7 +465,7 @@ void freePath(List* path)
 /* Fonctions algorithme */
 
 /**
- * @brief Calcule le coût heuristique euclidienne
+ * @brief Calcule le coût heuristique
  *
  * @param a
  * @param b
@@ -650,7 +473,7 @@ void freePath(List* path)
  */
 double heuristicCost(Node* a, Node* b)
 {
-	return abs(a->x - b->x) + abs(a->y - b->y);
+	return sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2));
 }
 
 /**
@@ -681,7 +504,12 @@ int compareEndPositions(const void* a, const void* b)
 	const EndPosition* positionA = (const EndPosition*)a;
 	const EndPosition* positionB = (const EndPosition*)b;
 
-	return positionA->distance - positionB->distance;
+	if (positionA->distance < positionB->distance)
+		return -1;
+	else if (positionA->distance > positionB->distance)
+		return 1;
+	else
+		return 0;
 }
 
 /**
@@ -702,7 +530,7 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 	initLine(start.x, start.y, end.x, end.y, &line);
 
 	/* Parcourir les points de la ligne */
-	while (nextPoint(&line, &point, +1) > 0) {
+	while (nextPoint(&line, &point, 1) > 0) {
 		if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height) {
 			/* Point en dehors des limites de la carte */
 			return 0;
@@ -756,17 +584,21 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
  * @param speedX
  * @param speedY
  */
-void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
-					  int speedY)
+ArrayEnd* findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
+						   int speedY)
 {
 	int x, y;
 	int i;
+	int j;
 	EndPosition* endPositions;
 	double distance;
 	EndPosition endPosition;
+	ArrayEnd* arrayEnd;
 
 	int endPositionCount = 0;
 	endPositions = (EndPosition*)malloc(sizeof(EndPosition) * width * height);
+	arrayEnd = (ArrayEnd*)malloc(sizeof(ArrayEnd));
+	arrayEnd->array = (EndPosition*)malloc(sizeof(EndPosition));
 
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
@@ -778,16 +610,35 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 				endPosition.x = x;
 				endPosition.y = y;
 				endPosition.distance = distance;
-				endPositions[endPositionCount++] = endPosition;
+				arrayEnd->array[endPositionCount++] = endPosition;
+				arrayEnd->array = (EndPosition*)realloc(arrayEnd->array, sizeof(EndPosition) * (endPositionCount + 1));
 			}
 		}
 	}
+	arrayEnd->size = endPositionCount;
+	return arrayEnd;
+}
 
-	qsort(endPositions, endPositionCount, sizeof(EndPosition), compareEndPositions);
+void findBestEnd(int myX, int myY, int secondX, int secondY, int thirdX, int thirdY, int speedX, int speedY, ArrayEnd* array, Node** end)
+{
+	int j;
+	int i;
 
-	for (i = 0; i < endPositionCount; i++) {
-		int x = endPositions[i].x;
-		int y = endPositions[i].y;
+	for (i = 0; i < array->size; i++) {
+		array->array[i].distance =
+			heuristicCost(createNode(array->array[i].x, array->array[i].y, NULL, speedX, speedY, 0), createNode(myX, myY, NULL, speedX, speedY, 0));
+	}
+
+	qsort(array->array, array->size, sizeof(EndPosition), compareEndPositions);
+	*end = createNode(array->array[0].x, array->array[0].y, NULL, speedX, speedY, 0);
+
+	for (j = 0; j < array->size; j++) {
+		fprintf(stderr, "endPositions[%d] = (%d, %d, %f)\n", j, array->array[j].x, array->array[j].y, array->array[j].distance);
+	}
+
+	for (i = 0; i < array->size; i++) {
+		int x = array->array[i].x;
+		int y = array->array[i].y;
 		if (isPositionOccupied(x, y, secondX, secondY, thirdX, thirdY) == 0) {
 			*end = createNode(x, y, NULL, speedX, speedY, 0);
 			break;
@@ -833,18 +684,18 @@ void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int
 		*accelerationY = desiredSpeedY - speedY;
 	}
 
-	/* 	if (*accelerationX > 1) {
-			*accelerationX = 1;
-		}
-		if (*accelerationX < -1) {
-			*accelerationX = -1;
-		}
-		if (*accelerationY > 1) {
-			*accelerationY = 1;
-		}
-		if (*accelerationY < -1) {
-			*accelerationY = -1;
-		} */
+	if (*accelerationX > 1) {
+		*accelerationX = 1;
+	}
+	if (*accelerationX < -1) {
+		*accelerationX = -1;
+	}
+	if (*accelerationY > 1) {
+		*accelerationY = 1;
+	}
+	if (*accelerationY < -1) {
+		*accelerationY = -1;
+	}
 }
 
 /**
@@ -859,32 +710,53 @@ int SpeedNorme(int speedX, int speedY)
 	return (int)(speedX * speedX + speedY * speedY);
 }
 
-int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, int newX, int newY, int newSpeedX, int newSpeedY)
+int shouldContinue(int newX, int newY, int width, int height, char** map, int currentNodeX, int currentNodeY, int accX, int accY, int secondX,
+				   int secondY, int thirdX, int thirdY)
 {
-	int newGas;
-	int gasCost;
-
-	if (newX == currentNode->x && newY == currentNode->y) {
-		return 0; /* ignorer le noeud lui-même */
+	if (newX == currentNodeX && newY == currentNodeY) {
+		return 0; /* ignore the current node */
 	}
 
 	if (newX >= width || newY >= height || newX < 0 || newY < 0) {
-		return 0;
+		return 0; /* out of bounds */
 	}
 
 	if (map[newY][newX] == '.') {
-		return 0;
+		return 0; /* obstacle */
 	}
 
-	if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
-		return 0;
+	if ((map[newY][newX] == '~' || (map[currentNodeY][currentNodeX] == '~')) && (accX != 0 && accY != 0)) {
+		return 0; /* diagonal movement in sand */
 	}
 
-	if (map[newY][newX] == '~' && (newSpeedX * newSpeedX + newSpeedY * newSpeedY > 1)) {
-		return 0;
+	if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
+		return 0; /* position occupied by another racer */
 	}
 
-	return 1;
+	return 1; /* continue with current iteration */
+}
+
+Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, int newSpeedY, int newGas, char** map, Node* end)
+{
+	Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
+	neighbour->g_cost = currentNode->g_cost + 1;
+	if (map[newY][newX] == '~') {
+		neighbour->g_cost += 4;
+	}
+	neighbour->h_cost = heuristicCost(neighbour, end);
+	neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+	return neighbour;
+}
+
+List* getPath(Node* currentNode, Node* end)
+{
+	List* path = initList();
+	Node* pathNode = currentNode;
+	while (pathNode != NULL) {
+		addNodeToList(pathNode, path);
+		pathNode = pathNode->parent;
+	}
+	return path;
 }
 
 /**
@@ -915,6 +787,8 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	int newY;
 	int gasCost;
 	int newGas;
+	int distance;
+	int penalty = 0;
 	Node* neighbour;
 	Pos2Dint currentPos;
 	Pos2Dint newPos;
@@ -935,12 +809,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		Node* currentNode = pq_pop(openSet);
 
 		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
-			List* path = initList();
-			Node* pathNode = currentNode;
-			while (pathNode != NULL) {
-				addNodeToList(pathNode, path);
-				pathNode = pathNode->parent;
-			}
+			List* path = getPath(currentNode, end);
 			return path;
 		}
 
@@ -949,65 +818,24 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
-				newSpeedX = currentNode->speedX + accX;
-				newSpeedY = currentNode->speedY + accY;
+				newX = currentNode->x + accX;
+				newY = currentNode->y + accY;
 
-				newX = currentNode->x + newSpeedX;
-				newY = currentNode->y + newSpeedY;
-
-				currentPos.x = currentNode->x;
-				currentPos.y = currentNode->y;
-				newPos.x = newX;
-				newPos.y = newY;
-
-				/* if (shouldExploreNeighbor(currentNode, map, width, height, newX, newY, newSpeedX, newSpeedY, currentPos, newPos, secondX,
-				secondY, thirdX, thirdY, maxGas, accX, accY) == 0) { continue;
-				} */
-
-				if (newX == currentNode->x && newY == currentNode->y) {
-					continue; /* ignorer le noeud lui-même */
-				}
-
-				if (newX >= width || newY >= height || newX < 0 || newY < 0) {
+				if (shouldContinue(newX, newY, width, height, map, currentNode->x, currentNode->y, accX, accY, secondX, secondY, thirdX, thirdY) ==
+					0) {
 					continue;
 				}
 
-				if (map[newY][newX] == '.') {
-					continue;
-				}
-
-				if (SpeedNorme(newSpeedX, newSpeedY) > 25) {
-					continue;
-				}
-
-				if (map[newY][newX] == '~' && SpeedNorme(newSpeedX, newSpeedY) > 1) {
-					continue;
-				}
-
-				neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
-
-				if (map[newY][newX] == '~') {
-					currentNode->g_cost += 4;
-				}
-
-				neighbour->g_cost = currentNode->g_cost;
-				neighbour->h_cost = heuristicCost(neighbour, end);
-				neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
+				neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 
 				if (!hs_contains(closedSet, neighbour)) {
 					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
-
-					if (existingNodeInOpenSet == NULL || neighbour->f_cost < existingNodeInOpenSet->f_cost) {
+					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 						if (existingNodeInOpenSet != NULL) {
 							pq_remove(openSet, existingNodeInOpenSet);
-							free(existingNodeInOpenSet);
 						}
 						pq_push(openSet, neighbour);
-					} else {
-						free(neighbour);
 					}
-				} else {
-					free(neighbour);
 				}
 			}
 		}
@@ -1033,8 +861,10 @@ int main()
 	char action[100];
 	char line_buffer[MAX_LINE_LENGTH];
 	char** map;
-	int myX, myY, secondX, secondY, thirdX, thirdY;
+	int myX, myY, secondX, secondY, thirdX, thirdY, i;
 
+	i = 1;
+	ArrayEnd* arrayEnd = NULL;
 	Node* start = NULL;
 	Node* end = NULL;
 	List* path = NULL;
@@ -1057,6 +887,7 @@ int main()
 	fprintf(stderr, "\n=== Race start ===\n");
 
 	while (!feof(stdin)) {
+		i = 1;
 		round++;
 		fprintf(stderr, "=== ROUND %d\n", round);
 		fflush(stderr);
@@ -1065,17 +896,36 @@ int main()
 		fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
 		fflush(stderr);
 
-		/* Trouver les positions de départ et d'arrivée sur la carte */
-		start = createNode(myX, myY, NULL, speedX, speedY, 0);
-		findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
-		fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
+		if (round == 1) {
+			/* Trouver les positions de départ et d'arrivée sur la carte */
+			start = createNode(myX, myY, NULL, speedX, speedY, 0);
+			arrayEnd = findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
+			fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
+			fflush(stderr);
+		}
+
+		start->x = myX;
+		start->y = myY;
+
+		findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, arrayEnd, &end);
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
-		fflush(stderr);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
-		path = jps(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
+		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
 		fprintf(stderr, "    Path found: \n");
+		reverseList(path);
 		printPath(path);
+
+		while (path == NULL && i < arrayEnd->size) {
+			fprintf(stderr, "    Path not found: \n");
+			end = createNode(arrayEnd->array[i].x, arrayEnd->array[i].y, NULL, speedX, speedY, 0);
+			fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
+			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
+			fprintf(stderr, "    Path found: \n");
+			reverseList(path);
+			printPath(path);
+			i++;
+		}
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY);
@@ -1092,6 +942,7 @@ int main()
 		fflush(stdout); /* CAUTION : This is necessary  */
 		fprintf(stderr, "    Action: %s   Gas remaining: %d\n", action, gasLevel);
 		fflush(stderr);
+
 		if (0 && round > 4) { /* (DISABLED) Force a segfault for testing purpose */
 			int* p = NULL;
 			fprintf(stderr, "Good Bye!\n");
