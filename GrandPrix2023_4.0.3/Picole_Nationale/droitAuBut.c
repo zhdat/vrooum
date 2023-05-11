@@ -53,7 +53,7 @@ Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas)
 	return newNode;
 }
 
-double heuristicCost(Node *a, Node *b, int i, int i1, char **pString)
+int heuristicCost(Node* a, Node* b)
 {
 	return abs(a->x - b->x) + abs(a->y - b->y);
 }
@@ -274,7 +274,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	List* closedSet = initList();
 
 	start->g_cost = 0;
-	start->h_cost = heuristicCost(start, end, 0, 0, NULL);
+	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 
 	addNodeToList(start, openSet);
@@ -339,7 +339,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 							if (map[newY][newX] == '~') {
 								neighbour->g_cost = currentNode->g_cost + 4;
 							}
-							neighbour->h_cost = heuristicCost(neighbour, end, 0, 0, NULL);
+							neighbour->h_cost = heuristicCost(neighbour, end);
 
 							/* Ajouter une vérification pour s'assurer qu'il y a suffisamment de gaz pour atteindre le nœud d'arrivée */
 							if (neighbour->gas < neighbour->h_cost) {
@@ -397,7 +397,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 				Node node;
 				node.x = x;
 				node.y = y;
-				distance = heuristicCost(start, &node, 0, 0, NULL);
+				distance = heuristicCost(start, &node);
 				endPosition.x = x;
 				endPosition.y = y;
 				endPosition.distance = distance;

@@ -471,7 +471,7 @@ void freePath(List* path)
  * @param b
  * @return int le coût heuristique
  */
-double heuristicCost(Node *a, Node *b, int i, int i1, char **pString)
+double heuristicCost(Node* a, Node* b)
 {
 	return sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2));
 }
@@ -606,7 +606,7 @@ ArrayEnd* findEndPositions(char** map, int width, int height, Node* start, Node*
 				Node node;
 				node.x = x;
 				node.y = y;
-				distance = heuristicCost(start, &node, 0, 0, NULL);
+				distance = heuristicCost(start, &node);
 				endPosition.x = x;
 				endPosition.y = y;
 				endPosition.distance = distance;
@@ -626,8 +626,7 @@ void findBestEnd(int myX, int myY, int secondX, int secondY, int thirdX, int thi
 
 	for (i = 0; i < array->size; i++) {
 		array->array[i].distance =
-                heuristicCost(createNode(array->array[i].x, array->array[i].y, NULL, speedX, speedY, 0),
-                              createNode(myX, myY, NULL, speedX, speedY, 0), 0, 0, NULL);
+			heuristicCost(createNode(array->array[i].x, array->array[i].y, NULL, speedX, speedY, 0), createNode(myX, myY, NULL, speedX, speedY, 0));
 	}
 
 	qsort(array->array, array->size, sizeof(EndPosition), compareEndPositions);
@@ -744,7 +743,7 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 	if (map[newY][newX] == '~') {
 		neighbour->g_cost += 4;
 	}
-	neighbour->h_cost = heuristicCost(neighbour, end, 0, 0, NULL);
+	neighbour->h_cost = heuristicCost(neighbour, end);
 	neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 	return neighbour;
 }
@@ -798,7 +797,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	HashSet* closedSet = hs_init();
 
 	start->g_cost = 0;
-	start->h_cost = heuristicCost(start, end, 0, 0, NULL);
+	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 	start->gas = maxGas;
 	start->speedX = currentSpeedX;

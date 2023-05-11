@@ -295,7 +295,7 @@ void freePath(List* path)
  * @param b
  * @return int le coût heuristique
  */
-double heuristicCost(Node *a, Node *b, int i, int i1, char **pString)
+double heuristicCost(Node* a, Node* b)
 {
 	double dx = abs(a->x - b->x);
 	double dy = abs(a->y - b->y);
@@ -428,7 +428,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 				Node node;
 				node.x = x;
 				node.y = y;
-				distance = heuristicCost(start, &node, 0, 0, NULL);
+				distance = heuristicCost(start, &node);
 				endPosition.x = x;
 				endPosition.y = y;
 				endPosition.distance = distance;
@@ -608,7 +608,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	List* closedSet = initList();
 
 	start->g_cost = 0;
-	start->h_cost = heuristicCost(start, end, 0, 0, NULL);
+	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 	start->gas = maxGas;
 	start->speedX = currentSpeedX;
@@ -670,7 +670,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 				if (map[newY][newX] == '~') {
 					neighbour->g_cost += 4;
 				}
-				neighbour->h_cost = heuristicCost(neighbour, end, 0, 0, NULL);
+				neighbour->h_cost = heuristicCost(neighbour, end);
 
 				if (neighbour->gas < neighbour->h_cost) {
 					free(neighbour);

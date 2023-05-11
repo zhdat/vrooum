@@ -38,7 +38,7 @@ Node* createNode(int x, int y, Node* parent)
 	return newNode;
 }
 
-double heuristicCost(Node *a, Node *b, int i, int i1, char **pString)
+int heuristicCost(Node* a, Node* b)
 {
 	return abs(a->x - b->x) + abs(a->y - b->y);
 }
@@ -123,7 +123,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height)
 	List* openSet = initList();
 	List* closedSet = initList();
 	start->g_cost = 0;
-	start->h_cost = heuristicCost(start, end, 0, 0, NULL);
+	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 
 	addNodeToList(start, openSet);
@@ -158,7 +158,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height)
 				if (newX >= 0 && newX < width && newY >= 0 && newY < height && (map[newY][newX] == '#' || map[newY][newX] == '=')) {
 					Node* neighbour = createNode(newX, newY, currentNode);
 					neighbour->g_cost = currentNode->g_cost + 1;
-					neighbour->h_cost = heuristicCost(neighbour, end, 0, 0, NULL);
+					neighbour->h_cost = heuristicCost(neighbour, end);
 					neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 
 					if (nodeInList(neighbour, closedSet) && !nodeInList(neighbour, openSet)) {
