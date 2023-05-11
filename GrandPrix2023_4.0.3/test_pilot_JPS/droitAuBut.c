@@ -898,7 +898,7 @@ int main() {
         start->x = myX;
         start->y = myY;
 
-        findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, arrayEnd, &end);
+        findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, arrayEnd, &end, map);
         fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 
         /* Executer l'algorithme A* pour trouver le chemin */
