@@ -785,6 +785,7 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
             return path;
         }
         fprintf(stderr, "gas : %d\n", currentNode->gas);
+        fprintf(stderr, "newGas : %d\n", newGas);
 
         hs_insert(closedSet, currentNode);
 
