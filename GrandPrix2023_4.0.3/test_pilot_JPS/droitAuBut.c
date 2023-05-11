@@ -887,7 +887,7 @@ int main() {
 
         if (round == 1) {
             /* Trouver les positions de départ et d'arrivée sur la carte */
-            start = createNode(myX, myY, NULL, speedX, speedY, 0);
+            start = createNode(myX, myY, NULL, speedX, speedY, gasLevel);
             arrayEnd = findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX,
                                         speedY);
             fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
