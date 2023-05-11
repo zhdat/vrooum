@@ -82,11 +82,11 @@ typedef struct ArrayEnd {
 
 /* Fonctions Hash */
 
-HashSet* hs_init();
+HashSet* hsInit();
 
-void hs_insert(HashSet* hs, Node* node);
+void hsInsert(HashSet* hs, Node* node);
 
-int hs_contains(HashSet* hs, Node* node);
+int hsContains(HashSet* hs, Node* node);
 
 void hs_free(HashSet* hs);
 

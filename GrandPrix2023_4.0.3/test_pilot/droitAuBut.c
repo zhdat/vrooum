@@ -16,7 +16,7 @@ static unsigned int hash_function(Node* node)
 	return (node->x * 31 + node->y) % HASH_SET_SIZE;
 }
 
-HashSet* hs_init()
+HashSet* hsInit()
 {
 	int i;
 	HashSet* hs = (HashSet*)malloc(sizeof(HashSet));
@@ -26,18 +26,18 @@ HashSet* hs_init()
 	return hs;
 }
 
-void hs_insert(HashSet* hs, Node* node)
+void hsInsert(HashSet* hs, Node* node)
 {
-	unsigned int hash = hash_function(node);
+	unsigned int hash = hashFunction(node);
 	HashSetElement* newElement = (HashSetElement*)malloc(sizeof(HashSetElement));
 	newElement->node = node;
 	newElement->next = hs->buckets[hash];
 	hs->buckets[hash] = newElement;
 }
 
-int hs_contains(HashSet* hs, Node* node)
+int hsContains(HashSet* hs, Node* node)
 {
-	unsigned int hash = hash_function(node);
+	unsigned int hash = hashFunction(node);
 	HashSetElement* current = hs->buckets[hash];
 
 	while (current != NULL) {
@@ -794,7 +794,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 	Pos2Dint newPos;
 
 	PriorityQueue* openSet = pq_init();
-	HashSet* closedSet = hs_init();
+	HashSet* closedSet = hsInit();
 
 	start->g_cost = 0;
 	start->h_cost = heuristicCost(start, end);
@@ -813,7 +813,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 			return path;
 		}
 
-		hs_insert(closedSet, currentNode);
+        hsInsert(closedSet, currentNode);
 
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
@@ -828,7 +828,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 
 				neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 
-				if (!hs_contains(closedSet, neighbour)) {
+				if (!hsContains(closedSet, neighbour)) {
 					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
 					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 						if (existingNodeInOpenSet != NULL) {
