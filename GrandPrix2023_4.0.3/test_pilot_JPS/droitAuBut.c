@@ -817,8 +817,8 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
 
                 if (isPathClear(map, width, height, currentPos, newPos) == 0)
                     continue;
-                newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
 
+                newGas = currentNode->gas - gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
                 /* Si le nouveau niveau de carburant est inférieur à zéro, le déplacement n'est pas possible */
                 if (newGas < 0)
                     continue;
