@@ -511,7 +511,7 @@ int isPathClear(char **map, int width, int height, Pos2Dint start, Pos2Dint end)
         if (map[p.y][p.x] == '.') {
             return 0;
         }
-        printf("Visiting point (%d,%d)\n", p.x, p.y);
+        fprintf(stderr, "Path is clear\n")
     }
     return 1; /*Path is clear*/
 }
@@ -810,8 +810,8 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
                 if ((map[newY][newX] == '~') && (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
                     continue;
 
-                /*if (isPathClear(map, width, height, currentPos, newPos) == 0)
-                    continue;*/
+                if (isPathClear(map, width, height, currentPos, newPos) == 0)
+                    continue;
 
                 neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 
