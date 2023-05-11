@@ -715,9 +715,6 @@ Node *createNeighbourNode(int newX, int newY, Node *currentNode, int newSpeedX, 
     if (map[newY][newX] == '~') {
         neighbour->g_cost += 4;
     }
-    if (map[newY + 1][newX] == '.' || map[newY - 1][newX] == '.' || map[newY][newX + 1] == '.' || map[newY][newX - 1] == '.') {
-        neighbour->g_cost += 2;
-    }
     neighbour->h_cost = heuristicCost(neighbour, end);
     neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
     return neighbour;
@@ -813,6 +810,10 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
                     continue;
 
                 if (isPathClear(map, width, height, currentPos, newPos) == 0)
+                    continue;
+
+                /*Add a condition to verify if we have enough gas to finish the race*/
+                if (currentNode->gas <= 0)
                     continue;
 
                 neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
