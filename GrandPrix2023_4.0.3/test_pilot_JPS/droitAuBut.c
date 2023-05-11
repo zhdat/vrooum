@@ -810,8 +810,8 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
                 if ((map[newY][newX] == '~') && (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
                     continue;
 
-                if (isPathClear(map, width, height, currentPos, newPos) == 0)
-                    continue;
+                /*if (isPathClear(map, width, height, currentPos, newPos) == 0)
+                    continue;*/
 
                 neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 
