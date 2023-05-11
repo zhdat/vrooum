@@ -809,7 +809,8 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
                     0) {
                     continue;
                 }
-
+                if ((map[currentNode->y][currentNode->x] == '~') && (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
+                    continue;
                 if ((map[newY][newX] == '~') && (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
                     continue;
 
