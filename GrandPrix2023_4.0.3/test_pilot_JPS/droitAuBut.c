@@ -845,7 +845,7 @@ int main() {
     int gasLevel;
     int boosts = BOOSTS_AT_START;
     int round = 0;
-    int accelerationX = 1, accelerationY = 0;
+    int accelerationX = 0, accelerationY = 0;
     int speedX = 0, speedY = 0;
     char action[100];
     char line_buffer[MAX_LINE_LENGTH];
