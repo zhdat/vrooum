@@ -450,8 +450,7 @@ void freePath(List *path) {
 double heuristicCost(Node *a, Node *b, int speedX, int speedY, char **map) {
     double distance = sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2));
     int inSand = (map[a->y][a->x] == '~') ? 1 : 0;
-    double expectedGasConsumption = gasConsumption(a->x - b->x, a->y - b->y, speedX, speedY, inSand);
-    fprintf(stderr, "Expected gas consumption: %f\n", expectedGasConsumption);
+    double expectedGasConsumption = -(gasConsumption(a->x - b->x, a->y - b->y, speedX, speedY, inSand));
     return distance + expectedGasConsumption;
 }
 
