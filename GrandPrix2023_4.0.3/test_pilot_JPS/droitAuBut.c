@@ -486,7 +486,7 @@ int compareEndPositions(const void *a, const void *b) {
 }
 
 /**
- * @brief Vérifie si le chemin ne contient pas de mur
+ * @brief Vérifie si le chemin ne contient pas de mur entre deux positions.
  *
  * @param map
  * @param width
@@ -495,35 +495,25 @@ int compareEndPositions(const void *a, const void *b) {
  * @param end
  * @return int 1 si le chemin est libre, 0 sinon
  */
-#include <stdlib.h> // for abs
-
 int isPathClear(char **map, int width, int height, Pos2Dint start, Pos2Dint end) {
-    int dx = abs(end.x - start.x);
-    int dy = abs(end.y - start.y);
-    int x = start.x;
-    int y = start.y;
-    int n = 1 + dx + dy;
-    int x_inc = (end.x > start.x) ? 1 : -1;
-    int y_inc = (end.y > start.y) ? 1 : -1;
-    int error = dx - dy;
-    dx *= 2;
-    dy *= 2;
-
-    for (; n > 0; --n) {
-        if (map[y][x] == '.') {
+    InfoLine vline;
+    Pos2Dint p;
+    initLine(start.x, start.y, end.x, end.y, &vline);
+    while (nextPoint(&vline, &p, +1) > 0) {
+        if (p.x == start.x && p.y == start.y) {
+            /* We suppose that the start position is not worth visiting! */
+            continue;
+        }
+        if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height) {
+            /* We suppose that the map is surrounded by walls! */
             return 0;
         }
-        /* Move to the next point. */
-        if (error > 0) {
-            x += x_inc;
-            error -= dy;
-        } else {
-            y += y_inc;
-            error += dx;
+        if (map[p.y][p.x] == '.') {
+            return 0;
         }
+        printf("Visiting point (%d,%d)\n", p.x, p.y);
     }
-
-    return 1; /* The path is clear */
+    return 1; /*Path is clear*/
 }
 
 /**
