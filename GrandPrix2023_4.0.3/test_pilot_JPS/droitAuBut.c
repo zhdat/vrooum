@@ -504,14 +504,14 @@ int isPathClear(char **map, int width, int height, Pos2Dint start, Pos2Dint end)
             /* We suppose that the start position is not worth visiting! */
             continue;
         }
+
+        fprintf(stderr, "p.x = %d, p.y = %d\n", p.x, p.y);
+
         if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height) {
             /* We suppose that the map is surrounded by walls! */
             return 0;
         }
         if (map[p.y][p.x] == '.') {
-            return 0;
-        }
-        if (map[p.y + 1][p.x] == '.' || map[p.y - 1][p.x] == '.' || map[p.y][p.x + 1] == '.' || map[p.y][p.x - 1] == '.') {
             return 0;
         }
     }
