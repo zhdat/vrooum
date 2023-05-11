@@ -812,8 +812,8 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
                 if (isPathClear(map, width, height, currentPos, newPos) == 0)
                     continue;
 
-                /*Add a condition to verify if we have enough gas to finish the race*/
-                if (currentNode->gas <= 0)
+                newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
+                if (newGas < 0)
                     continue;
 
                 neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
