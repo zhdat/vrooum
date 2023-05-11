@@ -511,7 +511,6 @@ int isPathClear(char **map, int width, int height, Pos2Dint start, Pos2Dint end)
         if (map[p.y][p.x] == '.') {
             return 0;
         }
-        fprintf(stderr, "p.x = %d, p.y = %d\n", p.x, p.y);
     }
     return 1; /*Path is clear*/
 }
@@ -715,6 +714,9 @@ Node *createNeighbourNode(int newX, int newY, Node *currentNode, int newSpeedX, 
     neighbour->g_cost = currentNode->g_cost + 1;
     if (map[newY][newX] == '~') {
         neighbour->g_cost += 4;
+    }
+    if (map[newY + 1][newX] == '.' || map[newY - 1][newX] == '.' || map[newY][newX + 1] == '.' || map[newY][newX - 1] == '.') {
+        neighbour->g_cost += 2;
     }
     neighbour->h_cost = heuristicCost(neighbour, end);
     neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
