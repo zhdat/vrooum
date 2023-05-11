@@ -595,14 +595,14 @@ findEndPositions(char **map, int width, int height, Node *start, Node **end, int
 
 void
 findBestEnd(int myX, int myY, int secondX, int secondY, int thirdX, int thirdY, int speedX, int speedY, ArrayEnd *array,
-            Node **end) {
+            Node **end, char **map) {
     int j;
     int i;
 
     for (i = 0; i < array->size; i++) {
         array->array[i].distance =
                 heuristicCost(createNode(array->array[i].x, array->array[i].y, NULL, speedX, speedY, 0),
-                              createNode(myX, myY, NULL, speedX, speedY, 0), speedX, speedY, NULL);
+                              createNode(myX, myY, NULL, speedX, speedY, 0), speedX, speedY, map);
     }
 
     qsort(array->array, array->size, sizeof(EndPosition), compareEndPositions);
