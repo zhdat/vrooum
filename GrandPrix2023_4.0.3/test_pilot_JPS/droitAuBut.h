@@ -247,7 +247,7 @@ void freePath(List* path);
  * @param b
  * @return int le coût heuristique
  */
-double heuristicCost(Node* a, Node* b);
+double heuristicCost(Node* a, Node* b, int speedX, int speedY, char** map);
 
 /**
  * @brief Vérifie si une position est occupée
