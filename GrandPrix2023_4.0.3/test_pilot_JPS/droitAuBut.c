@@ -511,7 +511,7 @@ int isPathClear(char **map, int width, int height, Pos2Dint start, Pos2Dint end)
         if (map[p.y][p.x] == '.') {
             return 0;
         }
-        fprintf(stderr, "Path is clear\n")
+        fprintf(stderr, "Path is clear\n");
     }
     return 1; /*Path is clear*/
 }
