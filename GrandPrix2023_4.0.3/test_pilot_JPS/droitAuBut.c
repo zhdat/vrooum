@@ -809,13 +809,20 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
                     0) {
                     continue;
                 }
-                if ((map[currentNode->y][currentNode->x] == '~') && (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
+                if ((map[currentNode->y][currentNode->x] == '~') &&
+                    (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
                     continue;
                 if ((map[newY][newX] == '~') && (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
                     continue;
 
                 if (isPathClear(map, width, height, currentPos, newPos) == 0)
                     continue;
+                newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
+
+                /* Si le nouveau niveau de carburant est inférieur à zéro, le déplacement n'est pas possible */
+                if (newGas < 0)
+                    continue;
+
 
                 neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 
