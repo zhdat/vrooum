@@ -511,6 +511,9 @@ int isPathClear(char **map, int width, int height, Pos2Dint start, Pos2Dint end)
         if (map[p.y][p.x] == '.') {
             return 0;
         }
+        if (map[p.y + 1][p.x] == '.' || map[p.y - 1][p.x] == '.' || map[p.y][p.x + 1] == '.' || map[p.y][p.x - 1] == '.') {
+            return 0;
+        }
     }
     return 1; /*Path is clear*/
 }
