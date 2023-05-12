@@ -829,7 +829,7 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
                     int previousSpeedY = currentNode->parent->speedY;
 
                     if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
-                        neighbour->g_cost += 10;
+                        neighbour->g_cost += 5;
                     }
                 }
 
