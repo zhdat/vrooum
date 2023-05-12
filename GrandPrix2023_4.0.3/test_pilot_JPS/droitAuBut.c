@@ -452,7 +452,7 @@ double heuristicCost(Node *a, Node *b, int speedX, int speedY, char **map) {
     double d_min = fmin(dx, dy);
     double d_max = fmax(dx, dy);
     double diagonal_cost = sqrt(2);
-    double orthogonal_cost = 2;
+    double orthogonal_cost = 4;
 
     double heuristic1 = d_min * diagonal_cost + (d_max - d_min) * orthogonal_cost;
 
