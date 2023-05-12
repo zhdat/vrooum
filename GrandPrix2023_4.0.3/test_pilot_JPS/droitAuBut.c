@@ -779,12 +779,10 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
         Node *currentNode = pq_pop(openSet);
 
         if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
-            List *path = getPath(currentNode, end);
+            List *path;
+            path = getPath(currentNode, end);
             return path;
         }
-        fprintf(stderr, "gas : %d\n", currentNode->gas);
-        fprintf(stderr, "newGas : %d\n", newGas);
-        fprintf(stderr, "f_cost : %f\n", currentNode->f_cost);
 
         hsInsert(closedSet, currentNode);
 
@@ -819,11 +817,10 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
                 if (isPathClear(map, width, height, currentPos, newPos) == 0)
                     continue;
 
-                newGas = currentNode->gas - gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
+                newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
                 /* Si le nouveau niveau de carburant est inférieur à zéro, le déplacement n'est pas possible */
                 if (newGas < 0)
                     continue;
-
 
                 neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 
