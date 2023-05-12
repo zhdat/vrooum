@@ -819,7 +819,7 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
 
                 newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
                 /* Si le nouveau niveau de carburant est inférieur à zéro, le déplacement n'est pas possible */
-                if (newGas < 0)
+                if (newGas <= 10)
                     continue;
 
                 neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
