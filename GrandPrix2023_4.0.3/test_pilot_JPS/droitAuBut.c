@@ -425,11 +425,12 @@ void removeElementFromList(List *list, ListElement *element) {
  * @param path
  */
 void freePath(List *path) {
+    ListElement *current;
+    ListElement *tmp;
     if (path == NULL){
         return;
     }
-    ListElement *current = path->head;
-    ListElement *tmp;
+    current = path->head;
     while (current != NULL) {
         tmp = current;
         current = current->next;
