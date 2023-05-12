@@ -795,7 +795,7 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
                 newSpeedX = currentNode->speedX + accX;
                 newSpeedY = currentNode->speedY + accY;
 
-                if (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 3)
+                if ((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY) > 16)
                     continue;
 
                 newX = currentNode->x + newSpeedX;
