@@ -910,7 +910,7 @@ int main() {
 
         /* Executer l'algorithme A* pour trouver le chemin */
         path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse);
-        while (path == NULL){
+        while (path == NULL && vitesse > 0){
             vitesse--;
             path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse);
         }
