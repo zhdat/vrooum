@@ -462,7 +462,7 @@ double heuristicCost(Node *a, Node *b, int speedX, int speedY, char **map) {
 
     double heuristic2 = distance + expectedGasConsumption;
 
-    double combined_heuristic = 5 * heuristic1 + 0.5 * heuristic2; /* Change the weights as you see fit*/
+    double combined_heuristic = 50 * heuristic1 + 0.5 * heuristic2; /* Change the weights as you see fit*/
 
     return combined_heuristic;
 
