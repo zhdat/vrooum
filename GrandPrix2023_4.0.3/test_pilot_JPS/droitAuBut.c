@@ -460,10 +460,8 @@ double heuristicCost(const Node *a, const Node *b) {
 
     double heuristic1 = dMin * diagonalCost + (dMax - dMin) * orthogonalCost;
 
-    double combinedHeuristic = heuristic1; /* Change the weights as you see fit*/
-
-    return combinedHeuristic;
-
+    double heuristic2 = abs(a->x - b->x) + abs(a->y - b->y);
+    return heuristic2;
 }
 
 
