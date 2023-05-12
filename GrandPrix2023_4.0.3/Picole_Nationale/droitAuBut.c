@@ -260,8 +260,8 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
 }
 
 /* A star */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int startSpeedX,
-			int startSpeedY, int maxGas)
+List *aStar(Node *start, Node *end, char **map, int width, int height, int secondX, int secondY, int thirdX, int thirdY,
+            int maxGas, int currentSpeedX, int currentSpeedY, int speedMax)
 {
 	int accX;
 	int accY;
@@ -319,7 +319,7 @@ List* aStar(Node* start, Node* end, char** map, int width, int height, int secon
 						int gasCost = gasConsumption(accX, accY, speedX, speedY, 0);
 						int newGas = currentNode->gas + gasCost;
 
-						if (newGas < 0 || newGas > maxGas) {
+						if (newGas < 0 || newGas > currentSpeedY) {
 							continue; /* ignorer les mouvements illégaux */
 						}
 
@@ -536,7 +536,7 @@ int main()
 	fflush(stderr);
 
 	/* Executer l'algorithme A* pour trouver le chemin */
-	path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel);
+	path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel, 0);
 	fprintf(stderr, "    Path found: \n");
 	reverseList(path);
 	printPath(path);
@@ -561,7 +561,7 @@ int main()
 			fflush(stderr);
 
 			/* Executer l'algorithme A* pour trouver le chemin */
-			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel);
+			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, speedX, speedY, gasLevel, 0);
 			fprintf(stderr, "    Path found: \n");
 			reverseList(path);
 			printPath(path);

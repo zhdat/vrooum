@@ -587,8 +587,8 @@ void removeElementFromList(List* list, ListElement* element)
  * @param maxGas
  * @return List* le chemin le plus court
  */
-List* aStar(Node* start, Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int maxGas,
-			int currentSpeedX, int currentSpeedY)
+List *aStar(Node *start, Node *end, char **map, int width, int height, int secondX, int secondY, int thirdX, int thirdY,
+            int maxGas, int currentSpeedX, int currentSpeedY, int speedMax)
 {
 	int accX;
 	int accY;
@@ -759,7 +759,7 @@ int main()
 
 		if (round == 1) {
 			/* Executer l'algorithme A* pour trouver le chemin */
-			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
+			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, 0);
 			fprintf(stderr, "    Path found: \n");
 			reverseList(path);
 			printPath(path);

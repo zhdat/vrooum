@@ -751,8 +751,7 @@ List *getPath(Node *currentNode, Node *end) {
  * @return List* le chemin le plus court
  */
 List *aStar(Node *start, Node *end, char **map, int width, int height, int secondX, int secondY, int thirdX, int thirdY,
-            int maxGas,
-            int currentSpeedX, int currentSpeedY) {
+            int maxGas, int currentSpeedX, int currentSpeedY, int speedMax) {
     int accX;
     int accY;
     int newSpeedX;
@@ -795,7 +794,7 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
                 newSpeedX = currentNode->speedX + accX;
                 newSpeedY = currentNode->speedY + accY;
 
-                if ((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY) > 16)
+                if ((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY) > speedMax)
                     continue;
 
                 newX = currentNode->x + newSpeedX;
@@ -848,6 +847,7 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 /* Fonction Main() */
+int vitesse = 25;
 
 int main() {
     int row;
@@ -911,7 +911,11 @@ int main() {
         fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 
         /* Executer l'algorithme A* pour trouver le chemin */
-        path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
+        path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse);
+        while (path == NULL){
+            vitesse--;
+            path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse);
+        }
         fprintf(stderr, "    Path found: \n");
         reverseList(path);
         printPath(path);
@@ -920,7 +924,7 @@ int main() {
             fprintf(stderr, "    Path not found: \n");
             end = createNode(arrayEnd->array[i].x, arrayEnd->array[i].y, NULL, speedX, speedY, 0);
             fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
-            path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY);
+            path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, 0);
             fprintf(stderr, "    Path found: \n");
             reverseList(path);
             printPath(path);
