@@ -824,6 +824,23 @@ List *aStar(Node *start, const Node *end, char **map, int width, int height, int
                         continue;
                     }
 
+                    Pos2Dint currentPos;
+                    Pos2Dint newPos;
+
+                    currentPos.x = currentNode->x;
+                    currentPos.y = currentNode->y;
+                    newPos.x = newX;
+                    newPos.y = newY;
+
+                    if ((map[currentNode->y][currentNode->x] == '~') &&
+                        (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
+                        continue;
+                    if ((map[newY][newX] == '~') && (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
+                        continue;
+
+                    if (isPathClear(map, width, height, currentPos, newPos) == 0)
+                        continue;
+
                     newGas =
                             currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
                     /* Si le nouveau niveau de carburant est inférieur à zéro, le déplacement n'est pas possible */
