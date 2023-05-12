@@ -461,7 +461,7 @@ double heuristicCost(const Node *a, const Node *b) {
     double heuristic1 = dMin * diagonalCost + (dMax - dMin) * orthogonalCost;
 
     double heuristic2 = sqrt(a->x * a->x + a->y * a->y);
-    return heuristic2;
+    return heuristic1;
 }
 
 
@@ -584,7 +584,7 @@ findEndPositions(char **map, int width, int height, const Node *start) {
                 Node node;
                 node.x = x;
                 node.y = y;
-                distance = heuristicCost(start, &node);
+                distance = sqrt((start->x - x) * (start->x - x) + (start->y - y) * (start->y - y));
                 endPosition.x = x;
                 endPosition.y = y;
                 endPosition.distance = distance;
