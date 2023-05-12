@@ -461,7 +461,7 @@ double heuristicCost(const Node *a, const Node *b) {
     double heuristic1 = dMin * diagonalCost + (dMax - dMin) * orthogonalCost;
 
     double heuristic2 = sqrt(a->x * a->x + a->y * a->y);
-    return fmax(heuristic1, heuristic2);
+    return fmin(heuristic1, heuristic2);
 }
 
 
@@ -693,13 +693,6 @@ int SpeedNorme(int speedX, int speedY) {
 
 int shouldContinue(int newX, int newY, int width, int height, char **map, int currentNodeX, int currentNodeY, int accX,
                    int accY, int secondX, int secondY, int thirdX, int thirdY, int newSpeedX, int newSpeedY) {
-    Pos2Dint currentPos;
-    Pos2Dint newPos;
-
-    currentPos.x = currentNodeX;
-    currentPos.y = currentNodeY;
-    newPos.x = newX;
-    newPos.y = newY;
 
     if (newX == currentNodeX && newY == currentNodeY) {
         return 0; /* ignore the current node */
