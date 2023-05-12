@@ -747,11 +747,11 @@ List *getPath(Node *currentNode, Node *end) {
  * @param thirdY
  * @param startSpeedX
  * @param startSpeedY
- * @param maxGas
+ * @param gasLevel
  * @return List* le chemin le plus court
  */
 List *aStar(Node *start, Node *end, char **map, int width, int height, int secondX, int secondY, int thirdX, int thirdY,
-            int maxGas, int currentSpeedX, int currentSpeedY, int speedMax) {
+            int gasLevel, int currentSpeedX, int currentSpeedY, int speedMax, int maxGas) {
     int accX;
     int accY;
     int newSpeedX;
@@ -769,7 +769,7 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
     start->g_cost = 0;
     start->h_cost = heuristicCost(start, end, currentSpeedX, currentSpeedY, map);
     start->f_cost = start->g_cost + start->h_cost;
-    start->gas = maxGas;
+    start->gas = gasLevel;
     start->speedX = currentSpeedX;
     start->speedY = currentSpeedY;
 
@@ -819,7 +819,7 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
 
                 newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
                 /* Si le nouveau niveau de carburant est inférieur à zéro, le déplacement n'est pas possible */
-                if (newGas <= 10)
+                if (newGas <= (int)(0.01 * (1 / maxGas)))
                     continue;
 
                 neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
@@ -850,6 +850,7 @@ int main() {
     int row;
     int width, height;
     int gasLevel;
+    int maxGas;
     int boosts = BOOSTS_AT_START;
     int round = 0;
     int accelerationX = 0, accelerationY = 0;
@@ -868,6 +869,7 @@ int main() {
     boosts = boosts;                            /* Prevent warning "unused variable" */
     fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
     sscanf(line_buffer, "%d %d %d", &width, &height, &gasLevel);
+    maxGas = gasLevel;
     fprintf(stderr, "=== >Map< ===\n");
     fprintf(stderr, "Size %d x %d\n", width, height);
     fprintf(stderr, "Gas at start %d \n\n", gasLevel);
@@ -895,7 +897,7 @@ int main() {
 
         if (round == 1) {
             /* Trouver les positions de départ et d'arrivée sur la carte */
-            start = createNode(myX, myY, NULL, speedX, speedY, gasLevel);
+            start = createNode(myX, myY, NULL, speedX, speedY, maxGas);
             arrayEnd = findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX,
                                         speedY);
             fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
@@ -909,10 +911,10 @@ int main() {
         fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 
         /* Executer l'algorithme A* pour trouver le chemin */
-        path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse);
+        path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas);
         while (path == NULL && vitesse > 0){
             vitesse--;
-            path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse);
+            path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas);
         }
         fprintf(stderr, "    Path found: \n");
         reverseList(path);
@@ -922,7 +924,7 @@ int main() {
             fprintf(stderr, "    Path not found: \n");
             end = createNode(arrayEnd->array[i].x, arrayEnd->array[i].y, NULL, speedX, speedY, 0);
             fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
-            path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, 0);
+            path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, maxGas);
             fprintf(stderr, "    Path found: \n");
             reverseList(path);
             printPath(path);

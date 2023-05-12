@@ -355,10 +355,10 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
  * @param thirdY
  * @param startSpeedX
  * @param startSpeedY
- * @param maxGas
+ * @param gasLevel
  * @return List* le chemin le plus court
  */
 List *aStar(Node *start, Node *end, char **map, int width, int height, int secondX, int secondY, int thirdX, int thirdY,
-            int maxGas, int currentSpeedX, int currentSpeedY, int speedMax);
+            int gasLevel, int currentSpeedX, int currentSpeedY, int speedMax);
 
 #endif /* DROITAUBUT_H */
