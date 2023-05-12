@@ -824,15 +824,6 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
 
                 neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 
-                if (currentNode->parent != NULL) {
-                    int previousSpeedX = currentNode->parent->speedX;
-                    int previousSpeedY = currentNode->parent->speedY;
-
-                    if (previousSpeedX != newSpeedX || previousSpeedY != newSpeedY) {
-                        neighbour->g_cost += 5;
-                    }
-                }
-
                 if (!hsContains(closedSet, neighbour)) {
                     Node *existingNodeInOpenSet = pq_find(openSet, neighbour);
                     if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
