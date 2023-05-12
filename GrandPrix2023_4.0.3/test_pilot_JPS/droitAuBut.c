@@ -718,7 +718,7 @@ Node *createNeighbourNode(int newX, int newY, Node *currentNode, int newSpeedX, 
     if (map[newY][newX] == '~') {
         neighbour->g_cost += 20;
     }
-    if (currentNode->speedX != newSpeedX || currentNode->speedY != newSpeedY) {
+    if (abs(currentNode->speedX) > abs(newSpeedX) || abs(currentNode->speedY) > abs(newSpeedY)) {
         neighbour->g_cost += 10;
     }
 
