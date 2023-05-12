@@ -43,7 +43,7 @@ int heuristicCost(Node* a, Node* b)
 	return abs(a->x - b->x) + abs(a->y - b->y);
 }
 
-int nodeInList(Node* node, List* list)
+int nodeInList(const Node *node, List* list)
 {
 	ListElement* current = list->head;
 	while (current != NULL) {
@@ -110,7 +110,7 @@ List* initList()
 	return newList;
 }
 
-int isListEmpty(List* list)
+int isListEmpty(const List *list)
 {
 	return list->head == NULL;
 }

@@ -7,6 +7,7 @@
 #include <string.h>
 #include <search.h>
 #include "follow_line.h"
+#include "droitAuBut.h"
 
 /* Structures utiles au projet */
 
@@ -86,7 +87,7 @@ int nodeEquals(Node* node1, Node* node2);
  * @param node2
  * @return int 1 si les noeuds sont égaux, 0 sinon
  */
-int nodeEqualsWithoutSpeed(Node* node1, Node* node2);
+int nodeEqualsWithoutSpeed(const Node *node1, const Node *node2);
 
 /**
  * @brief Vérifie si un noeud est dans une liste
@@ -95,7 +96,7 @@ int nodeEqualsWithoutSpeed(Node* node1, Node* node2);
  * @param list
  * @return int 1 si le noeud est dans la liste, 0 sinon
  */
-int nodeInList(Node* node, List* list);
+int nodeInList(const Node *node, List* list);
 
 /**
  * @brief Vérifie si un noeud est dans une liste et retourne l'élément de la liste
@@ -105,7 +106,7 @@ int nodeInList(Node* node, List* list);
  * @param elementInList
  * @return Node* le noeud si il est dans la liste, NULL sinon
  */
-Node* findNodeInList(Node* node, List* list, ListElement** elementInList);
+Node* findNodeInList(const Node *node, List* list, ListElement** elementInList);
 
 /**
  * @brief Ajoute un noeud dans une liste
@@ -147,7 +148,7 @@ List* initList();
  * @param list
  * @return int 1 si la liste est vide, 0 sinon
  */
-int isListEmpty(List* list);
+int isListEmpty(const List *list);
 
 /**
  * @brief Affiche le chemim
@@ -247,8 +248,7 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand);
  * @param speedX
  * @param speedY
  */
-void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
-					  int speedY);
+ArrayEnd findEndPositions(char **map, int width, int height, const Node *start);
 
 /**
  * @brief Détermine l'accélération à partir du chemin
@@ -261,7 +261,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
  * @param speedX
  * @param speedY
  */
-void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY);
+void determineAcceleration(const List *path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY);
 
 /**
  * @brief Calcule la norme de la vitesse

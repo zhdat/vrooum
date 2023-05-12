@@ -35,7 +35,7 @@ void hsInsert(HashSet* hs, Node* node)
 	hs->buckets[hash] = newElement;
 }
 
-int hsContains(HashSet* hs, Node* node)
+int hsContains(const HashSet *hs, const Node *node)
 {
 	unsigned int hash = hashFunction(node);
 	HashSetElement* current = hs->buckets[hash];
@@ -49,7 +49,7 @@ int hsContains(HashSet* hs, Node* node)
 	return 0;
 }
 
-void hs_free(HashSet* hs)
+void hsFree(HashSet* hs)
 {
 	HashSetElement* current;
 	HashSetElement* next;
@@ -68,14 +68,14 @@ void hs_free(HashSet* hs)
 	free(hs);
 }
 
-PriorityQueue* pq_init()
+PriorityQueue* pqInit()
 {
 	PriorityQueue* pq = (PriorityQueue*)malloc(sizeof(PriorityQueue));
 	pq->head = NULL;
 	return pq;
 }
 
-void pq_push(PriorityQueue* pq, Node* node)
+void pqPush(PriorityQueue* pq, Node* node)
 {
 	PriorityQueueElement* current;
 	PriorityQueueElement* newElement = (PriorityQueueElement*)malloc(sizeof(PriorityQueueElement));
@@ -96,7 +96,7 @@ void pq_push(PriorityQueue* pq, Node* node)
 	current->next = newElement;
 }
 
-Node* pq_pop(PriorityQueue* pq)
+Node* pqPop(PriorityQueue* pq)
 {
 	PriorityQueueElement* elementToRemove;
 	Node* node;
@@ -110,12 +110,12 @@ Node* pq_pop(PriorityQueue* pq)
 	return node;
 }
 
-int pq_is_empty(PriorityQueue* pq)
+int pqIsEmpty(const PriorityQueue *pq)
 {
 	return pq->head == NULL;
 }
 
-void pq_free(PriorityQueue* pq)
+void pqFree(PriorityQueue* pq)
 {
 	PriorityQueueElement* current = pq->head;
 	PriorityQueueElement* next;
@@ -129,7 +129,7 @@ void pq_free(PriorityQueue* pq)
 	free(pq);
 }
 
-Node* pq_find(PriorityQueue* pq, Node* node)
+Node* pqFind(PriorityQueue* pq, const Node *node)
 {
 	PriorityQueueElement* current = pq->head;
 	while (current != NULL) {
@@ -141,7 +141,7 @@ Node* pq_find(PriorityQueue* pq, Node* node)
 	return NULL;
 }
 
-void pq_remove(PriorityQueue* pq, Node* node)
+void pqRemove(PriorityQueue* pq, const Node *node)
 {
 	PriorityQueueElement* current;
 	if (pq->head == NULL) {
@@ -217,7 +217,7 @@ int nodeEquals(Node* node1, Node* node2)
  * @param node2
  * @return int 1 si les noeuds sont égaux, 0 sinon
  */
-int nodeEqualsWithoutSpeed(Node* node1, Node* node2)
+int nodeEqualsWithoutSpeed(const Node *node1, const Node *node2)
 {
 	if (node1 == NULL || node2 == NULL) {
 		return 0;
@@ -232,7 +232,7 @@ int nodeEqualsWithoutSpeed(Node* node1, Node* node2)
  * @param list
  * @return int 1 si le noeud est dans la liste, 0 sinon
  */
-int nodeInList(Node* node, List* list)
+int nodeInList(const Node *node, List* list)
 {
 	ListElement* current = list->head;
 	while (current != NULL) {
@@ -253,7 +253,7 @@ int nodeInList(Node* node, List* list)
  * @param elementInList
  * @return Node* le noeud si il est dans la liste, NULL sinon
  */
-Node* findNodeInList(Node* node, List* list, ListElement** elementInList)
+Node* findNodeInList(const Node *node, List* list, ListElement** elementInList)
 {
 	ListElement* currentElement = list->head;
 
@@ -368,7 +368,7 @@ List* initList()
  * @param list
  * @return int 1 si la liste est vide, 0 sinon
  */
-int isListEmpty(List* list)
+int isListEmpty(const List *list)
 {
 	return list->head == NULL;
 }
@@ -584,8 +584,7 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand)
  * @param speedX
  * @param speedY
  */
-ArrayEnd* findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
-						   int speedY)
+ArrayEnd *findEndPositions(char **map, int width, int height, const Node *start)
 {
 	int x, y;
 	int i;
@@ -657,7 +656,7 @@ void findBestEnd(int myX, int myY, int secondX, int secondY, int thirdX, int thi
  * @param speedX
  * @param speedY
  */
-void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY)
+void determineAcceleration(const List *path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY)
 {
 	int nextX, nextY;
 	Node* first;
@@ -736,7 +735,7 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 	return 1; /* continue with current iteration */
 }
 
-Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, int newSpeedY, int newGas, char** map, Node* end)
+Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, int newSpeedY, int newGas, char** map, const Node *end)
 {
 	Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 	neighbour->g_cost = currentNode->g_cost + 1;
@@ -748,7 +747,7 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 	return neighbour;
 }
 
-List* getPath(Node* currentNode, Node* end)
+List *getPath(Node *currentNode)
 {
 	List* path = initList();
 	Node* pathNode = currentNode;
@@ -793,7 +792,7 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
 	Pos2Dint currentPos;
 	Pos2Dint newPos;
 
-	PriorityQueue* openSet = pq_init();
+	PriorityQueue* openSet = pqInit();
 	HashSet* closedSet = hsInit();
 
 	start->g_cost = 0;
@@ -803,13 +802,13 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
 	start->speedX = currentSpeedX;
 	start->speedY = currentSpeedY;
 
-	pq_push(openSet, start);
+    pqPush(openSet, start);
 
-	while (!pq_is_empty(openSet)) {
-		Node* currentNode = pq_pop(openSet);
+	while (!pqIsEmpty(openSet)) {
+		Node* currentNode = pqPop(openSet);
 
 		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
-			List* path = getPath(currentNode, end);
+			List* path = getPath(currentNode);
 			return path;
 		}
 
@@ -829,12 +828,12 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
 				neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 
 				if (!hsContains(closedSet, neighbour)) {
-					Node* existingNodeInOpenSet = pq_find(openSet, neighbour);
+					Node* existingNodeInOpenSet = pqFind(openSet, neighbour);
 					if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 						if (existingNodeInOpenSet != NULL) {
-							pq_remove(openSet, existingNodeInOpenSet);
+                            pqRemove(openSet, existingNodeInOpenSet);
 						}
-						pq_push(openSet, neighbour);
+                        pqPush(openSet, neighbour);
 					}
 				}
 			}
@@ -899,7 +898,7 @@ int main()
 		if (round == 1) {
 			/* Trouver les positions de départ et d'arrivée sur la carte */
 			start = createNode(myX, myY, NULL, speedX, speedY, 0);
-			arrayEnd = findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
+			arrayEnd = findEndPositions(map, width, height, start);
 			fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 			fflush(stderr);
 		}

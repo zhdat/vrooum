@@ -4,6 +4,8 @@
 #include <string.h>
 #include <search.h>
 #include "follow_line.h"
+#include "droitAuBut.h"
+
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
 #define INFINITE 9999999
@@ -63,7 +65,7 @@ int nodeEquals(Node* node1, Node* node2)
 	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY;
 }
 
-int nodeInList(Node* node, List* list)
+int nodeInList(const Node *node, List* list)
 {
 	ListElement* current = list->head;
 	while (current != NULL) {
@@ -76,7 +78,7 @@ int nodeInList(Node* node, List* list)
 	return 0;
 }
 
-Node* findNodeInList(Node* node, List* list, ListElement** elementInList)
+Node* findNodeInList(const Node *node, List* list, ListElement** elementInList)
 {
 	ListElement* currentElement = list->head;
 
@@ -151,7 +153,7 @@ List* initList()
 	return newList;
 }
 
-int isListEmpty(List* list)
+int isListEmpty(const List *list)
 {
 	return list->head == NULL;
 }
@@ -379,8 +381,7 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
 }
 
 /* Trouver les positions de départ et d'arrivée sur la carte */
-void findEndPositions(char** map, int width, int height, Node* start, Node** end, int secondX, int secondY, int thirdX, int thirdY, int speedX,
-					  int speedY)
+ArrayEnd findEndPositions(char **map, int width, int height, const Node *start)
 {
 	int x, y;
 	int i;
@@ -419,7 +420,7 @@ void findEndPositions(char** map, int width, int height, Node* start, Node** end
 }
 
 /* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
-void determineAcceleration(List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY)
+void determineAcceleration(const List *path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY)
 {
 	int nextX, nextY;
 	Node* first;
@@ -530,7 +531,7 @@ int main()
 
 	/* Trouver les positions de départ et d'arrivée sur la carte */
 	start = createNode(myX, myY, NULL, 0, 0, gasLevel);
-	findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
+    findEndPositions(map, width, height, start);
 	fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 	fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 	fflush(stderr);
@@ -555,7 +556,7 @@ int main()
 		/* Trouver les positions de départ et d'arrivée sur la carte */
 		start = createNode(myX, myY, NULL, 0, 0, 0);
 		if (isPositionOccupied(myX, myY, secondX, secondY, thirdX, thirdY) == 1) {
-			findEndPositions(map, width, height, start, &end, secondX, secondY, thirdX, thirdY, speedX, speedY);
+            findEndPositions(map, width, height, start);
 			fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
 			fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 			fflush(stderr);
