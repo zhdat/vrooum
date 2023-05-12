@@ -886,6 +886,7 @@ int main() {
     fprintf(stderr, "\n=== Race start ===\n");
 
     while (!feof(stdin)) {
+        vitesse = 25;
         i = 1;
         round++;
         fprintf(stderr, "=== ROUND %d\n", round);
