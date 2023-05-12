@@ -717,18 +717,6 @@ int shouldContinue(int newX, int newY, int width, int height, char **map, int cu
         return 0; /* diagonal movement in sand */
     }
 
-    if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
-        return 0; /* position occupied by another racer */
-    }
-    if ((map[currentNodeY][currentNodeX] == '~') &&
-        (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
-        return 0;
-    if ((map[newY][newX] == '~') && (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
-        return 0;
-
-    if (isPathClear(map, width, height, currentPos, newPos) == 0)
-        return 0;
-
     return 1; /* continue with current iteration */
 }
 
