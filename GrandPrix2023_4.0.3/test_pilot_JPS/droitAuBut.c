@@ -716,7 +716,7 @@ Node *createNeighbourNode(int newX, int newY, Node *currentNode, int newSpeedX, 
     Node *neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
     neighbour->g_cost = currentNode->g_cost + 1;
     if (map[newY][newX] == '~') {
-        neighbour->g_cost += 20;
+        neighbour->g_cost += 10;
     }
     neighbour->h_cost = heuristicCost(neighbour, end, newSpeedX, newSpeedY, map);
     neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
