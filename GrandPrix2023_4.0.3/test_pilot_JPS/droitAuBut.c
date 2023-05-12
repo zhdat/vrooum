@@ -854,8 +854,6 @@ List *aStar(Node *start, const Node *end, char **map, int width, int height, int
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 /* Fonction Main() */
-int vitesse = 25;
-
 int main() {
     int row;
     int width;
@@ -878,6 +876,7 @@ int main() {
     int thirdX;
     int thirdY;
     int i;
+    int vitesse = 25;
 
     ArrayEnd *arrayEnd = NULL;
     Node *start = NULL;
