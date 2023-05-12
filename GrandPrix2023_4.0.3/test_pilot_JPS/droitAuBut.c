@@ -464,6 +464,8 @@ double heuristicCost(Node *a, Node *b, int speedX, int speedY, char **map) {
 
     double combined_heuristic = 0.5 * heuristic1 + 0.5 * heuristic2; /* Change the weights as you see fit*/
 
+    return combined_heuristic;
+
 }
 
 
