@@ -452,15 +452,9 @@ double heuristicCost(Node *a, Node *b, int speedX, int speedY, char **map) {
     double d_min = fmin(dx, dy);
     double d_max = fmax(dx, dy);
     double diagonal_cost = sqrt(2);
-    double orthogonal_cost = 50;
+    double orthogonal_cost = 4;
 
     double heuristic1 = d_min * diagonal_cost + (d_max - d_min) * orthogonal_cost;
-
-    double distance = sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2));
-    int inSand = (map[a->y][a->x] == '~') ? 1 : 0;
-    double expectedGasConsumption = -(gasConsumption(a->x - b->x, a->y - b->y, speedX, speedY, inSand));
-
-    double heuristic2 = distance + expectedGasConsumption;
 
     double combined_heuristic = heuristic1; /* Change the weights as you see fit*/
 
@@ -732,6 +726,9 @@ Node *createNeighbourNode(int newX, int newY, Node *currentNode, int newSpeedX, 
     neighbour->g_cost = currentNode->g_cost + 1;
     if (map[newY][newX] == '~') {
         neighbour->g_cost += 20;
+    }
+    if (newSpeedX != currentNode->speedX || newSpeedX != currentNode->speedY){
+        neighbour->g_cost += 10;
     }
     neighbour->h_cost = heuristicCost(neighbour, end, newSpeedX, newSpeedY, map);
     neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
