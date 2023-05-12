@@ -824,14 +824,6 @@ List *aStar(Node *start, const Node *end, char **map, int width, int height, int
                         0) {
                         continue;
                     }
-                    if ((map[currentNode->y][currentNode->x] == '~') &&
-                        (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
-                        continue;
-                    if ((map[newY][newX] == '~') && (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
-                        continue;
-
-                    if (isPathClear(map, width, height, currentPos, newPos) == 0)
-                        continue;
 
                     newGas =
                             currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
