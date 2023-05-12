@@ -584,7 +584,7 @@ findEndPositions(char **map, int width, int height, const Node *start) {
                 Node node;
                 node.x = x;
                 node.y = y;
-                distance = sqrt((start->x - x) * (start->x - x) + (start->y - y) * (start->y - y));
+                distance = heuristicCost(start, &node);
                 endPosition.x = x;
                 endPosition.y = y;
                 endPosition.distance = distance;
