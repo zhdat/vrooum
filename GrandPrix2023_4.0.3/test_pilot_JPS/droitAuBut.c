@@ -825,7 +825,7 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
                 neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 
                 if (newSpeedX != currentNode->speedX || newSpeedX != currentSpeedY){
-                    neighbour->g_cost += 50;
+                    neighbour->g_cost += 10;
                 }
 
                 if (!hsContains(closedSet, neighbour)) {
