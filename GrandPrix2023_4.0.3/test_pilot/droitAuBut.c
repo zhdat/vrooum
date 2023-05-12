@@ -709,8 +709,8 @@ int SpeedNorme(int speedX, int speedY)
 	return (int)(speedX * speedX + speedY * speedY);
 }
 
-int shouldContinue(int newX, int newY, int width, int height, char** map, int currentNodeX, int currentNodeY, int accX, int accY, int secondX,
-				   int secondY, int thirdX, int thirdY)
+int shouldContinue(int newX, int newY, int width, int height, char **map, int currentNodeX, int currentNodeY, int accX,
+                   int accY, int secondX, int secondY, int thirdX, int thirdY, int newSpeedX, int newSpeedY)
 {
 	if (newX == currentNodeX && newY == currentNodeY) {
 		return 0; /* ignore the current node */
@@ -820,8 +820,9 @@ List *aStar(Node *start, Node *end, char **map, int width, int height, int secon
 				newX = currentNode->x + accX;
 				newY = currentNode->y + accY;
 
-				if (shouldContinue(newX, newY, width, height, map, currentNode->x, currentNode->y, accX, accY, secondX, secondY, thirdX, thirdY) ==
-					0) {
+				if (shouldContinue(newX, newY, width, height, map, currentNode->x, currentNode->y, accX, accY, secondX,
+                                   secondY, thirdX, thirdY, 0, 0) ==
+                    0) {
 					continue;
 				}
 

@@ -693,8 +693,15 @@ int SpeedNorme(int speedX, int speedY) {
 }
 
 int shouldContinue(int newX, int newY, int width, int height, char **map, int currentNodeX, int currentNodeY, int accX,
-                   int accY, int secondX,
-                   int secondY, int thirdX, int thirdY) {
+                   int accY, int secondX, int secondY, int thirdX, int thirdY, int newSpeedX, int newSpeedY) {
+    Pos2Dint currentPos;
+    Pos2Dint newPos;
+
+    currentPos.x = currentNodeX;
+    currentPos.y = currentNodeY;
+    newPos.x = newX;
+    newPos.y = newY;
+
     if (newX == currentNodeX && newY == currentNodeY) {
         return 0; /* ignore the current node */
     }
@@ -714,6 +721,14 @@ int shouldContinue(int newX, int newY, int width, int height, char **map, int cu
     if (isPositionOccupied(newX, newY, secondX, secondY, thirdX, thirdY) == 1) {
         return 0; /* position occupied by another racer */
     }
+    if ((map[currentNodeY][currentNodeX] == '~') &&
+        (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
+        return 0;
+    if ((map[newY][newX] == '~') && (sqrt((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
+        return 0;
+
+    if (isPathClear(map, width, height, currentPos, newPos) == 0)
+        return 0;
 
     return 1; /* continue with current iteration */
 }
@@ -768,8 +783,6 @@ List *aStar(Node *start, const Node *end, char **map, int width, int height, int
     int newY;
     int newGas;
     Node *neighbour;
-    Pos2Dint currentPos;
-    Pos2Dint newPos;
 
     PriorityQueue *openSet = pqInit();
     HashSet *closedSet = hsInit();
@@ -805,14 +818,9 @@ List *aStar(Node *start, const Node *end, char **map, int width, int height, int
                     newX = currentNode->x + newSpeedX;
                     newY = currentNode->y + newSpeedY;
 
-                    currentPos.x = currentNode->x;
-                    currentPos.y = currentNode->y;
-                    newPos.x = newX;
-                    newPos.y = newY;
-
                     if (shouldContinue(newX, newY, width, height, map, currentNode->x, currentNode->y, accX, accY,
                                        secondX,
-                                       secondY, thirdX, thirdY) ==
+                                       secondY, thirdX, thirdY, 0, 0) ==
                         0) {
                         continue;
                     }
@@ -834,7 +842,7 @@ List *aStar(Node *start, const Node *end, char **map, int width, int height, int
                     neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 
                     if (!hsContains(closedSet, neighbour)) {
-                        Node *existingNodeInOpenSet = pqFind(openSet, neighbour);
+                        Node const *existingNodeInOpenSet = pqFind(openSet, neighbour);
                         if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
                             if (existingNodeInOpenSet != NULL) {
                                 pqRemove(openSet, existingNodeInOpenSet);

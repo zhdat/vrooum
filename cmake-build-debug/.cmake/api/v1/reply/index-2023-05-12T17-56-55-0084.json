@@ -8,10 +8,10 @@
 		},
 		"paths" : 
 		{
-			"cmake" : "/Users/callisteravix/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/231.8109.174/CLion.app/Contents/bin/cmake/mac/bin/cmake",
-			"cpack" : "/Users/callisteravix/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/231.8109.174/CLion.app/Contents/bin/cmake/mac/bin/cpack",
-			"ctest" : "/Users/callisteravix/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/231.8109.174/CLion.app/Contents/bin/cmake/mac/bin/ctest",
-			"root" : "/Users/callisteravix/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/231.8109.174/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25"
+			"cmake" : "/Users/callisteravix/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/231.8770.66/CLion.app/Contents/bin/cmake/mac/bin/cmake",
+			"cpack" : "/Users/callisteravix/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/231.8770.66/CLion.app/Contents/bin/cmake/mac/bin/cpack",
+			"ctest" : "/Users/callisteravix/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/231.8770.66/CLion.app/Contents/bin/cmake/mac/bin/ctest",
+			"root" : "/Users/callisteravix/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/231.8770.66/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25"
 		},
 		"version" : 
 		{
@@ -35,7 +35,7 @@
 			}
 		},
 		{
-			"jsonFile" : "cache-v2-7e3258883ac3f29e97b5.json",
+			"jsonFile" : "cache-v2-8745d932269130b030d6.json",
 			"kind" : "cache",
 			"version" : 
 			{
@@ -44,7 +44,7 @@
 			}
 		},
 		{
-			"jsonFile" : "cmakeFiles-v1-8fdeb744aeb344d2ea0a.json",
+			"jsonFile" : "cmakeFiles-v1-b7d1dd9320cbfe499846.json",
 			"kind" : "cmakeFiles",
 			"version" : 
 			{
@@ -66,7 +66,7 @@
 	{
 		"cache-v2" : 
 		{
-			"jsonFile" : "cache-v2-7e3258883ac3f29e97b5.json",
+			"jsonFile" : "cache-v2-8745d932269130b030d6.json",
 			"kind" : "cache",
 			"version" : 
 			{
@@ -76,7 +76,7 @@
 		},
 		"cmakeFiles-v1" : 
 		{
-			"jsonFile" : "cmakeFiles-v1-8fdeb744aeb344d2ea0a.json",
+			"jsonFile" : "cmakeFiles-v1-b7d1dd9320cbfe499846.json",
 			"kind" : "cmakeFiles",
 			"version" : 
 			{
