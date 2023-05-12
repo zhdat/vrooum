@@ -924,7 +924,7 @@ int main() {
             fprintf(stderr, "    Path not found: \n");
             end = createNode(arrayEnd->array[i].x, arrayEnd->array[i].y, NULL, speedX, speedY, 0);
             fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
-            path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, maxGas);
+            path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas);
             fprintf(stderr, "    Path found: \n");
             reverseList(path);
             printPath(path);
