@@ -461,7 +461,7 @@ double heuristicCost(const Node *a, const Node *b) {
     double heuristic1 = dMin * diagonalCost + (dMax - dMin) * orthogonalCost;
 
     double heuristic2 = abs(a->x - b->x) + abs(a->y - b->y);
-    return heuristic2;
+    return fmax(heuristic1, heuristic2);
 }
 
 
