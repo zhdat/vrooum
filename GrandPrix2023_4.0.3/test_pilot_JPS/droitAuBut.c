@@ -447,10 +447,6 @@ void freePath(List *path) {
  * @return int le coût heuristique
  */
 double heuristicCost(Node *a, Node *b, int speedX, int speedY, char **map) {
-    double distance = sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2));
-    int inSand = (map[a->y][a->x] == '~') ? 1 : 0;
-    double expectedGasConsumption = -(gasConsumption(a->x - b->x, a->y - b->y, speedX, speedY, inSand));
-
     double dx = abs(a->x - b->x);
     double dy = abs(a->y - b->y);
     double d_min = fmin(dx, dy);
@@ -458,11 +454,16 @@ double heuristicCost(Node *a, Node *b, int speedX, int speedY, char **map) {
     double diagonal_cost = sqrt(2);
     double orthogonal_cost = 1;
 
-    double heuristic1 = distance + expectedGasConsumption * diagonal_cost;
+    double heuristic1 = d_min * diagonal_cost + (d_max - d_min) * orthogonal_cost;
 
-    double heuristic2 = diagonal_cost * d_min + orthogonal_cost * (d_max - d_min);
+    double distance = sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2));
+    int inSand = (map[a->y][a->x] == '~') ? 1 : 0;
+    double expectedGasConsumption = -(gasConsumption(a->x - b->x, a->y - b->y, speedX, speedY, inSand));
 
-    return heuristic1;
+    double heuristic2 = distance + expectedGasConsumption;
+
+    double combined_heuristic = 0.5 * heuristic1 + 0.5 * heuristic2; // Change the weights as you see fit
+
 }
 
 
