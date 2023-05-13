@@ -603,9 +603,12 @@ findBestEnd(int myX, int myY, int secondX, int secondY, int thirdX, int thirdY, 
     int i;
 
     for (i = 0; i < array->size; i++) {
-        array->array[i].distance =
+        /*array->array[i].distance =
                 heuristicCost(createNode(array->array[i].x, array->array[i].y, NULL, speedX, speedY, 0),
-                              createNode(myX, myY, NULL, speedX, speedY, 0));
+                              createNode(myX, myY, NULL, speedX, speedY, 0));*/
+        array->array[i].distance = sqrt(
+                (array->array[i].x - myX) * (array->array[i].x - myX) + (array->array[i].y - myY) *
+                                                                       (array->array[i].y - myY));
     }
 
     qsort(array->array, array->size, sizeof(EndPosition), compareEndPositions);
