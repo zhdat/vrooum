@@ -603,9 +603,6 @@ findBestEnd(int myX, int myY, int secondX, int secondY, int thirdX, int thirdY, 
     int i;
 
     for (i = 0; i < array->size; i++) {
-        /*array->array[i].distance =
-                heuristicCost(createNode(array->array[i].x, array->array[i].y, NULL, speedX, speedY, 0),
-                              createNode(myX, myY, NULL, speedX, speedY, 0));*/
         array->array[i].distance = sqrt(
                 (array->array[i].x - myX) * (array->array[i].x - myX) + (array->array[i].y - myY) *
                                                                        (array->array[i].y - myY));
@@ -709,6 +706,10 @@ int shouldContinue(int newX, int newY, int width, int height, char **map, int cu
 
     if ((map[newY][newX] == '~' || (map[currentNodeY][currentNodeX] == '~')) && (accX != 0 && accY != 0)) {
         return 0; /* diagonal movement in sand */
+    }
+
+    if (isPositionOccupied(currentNodeX, currentNodeY, secondX, secondY, thirdX, thirdY) == 1) {
+        return 0; /* position is occupied */
     }
 
     return 1; /* continue with current iteration */
