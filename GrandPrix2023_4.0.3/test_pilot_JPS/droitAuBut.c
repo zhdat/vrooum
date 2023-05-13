@@ -829,7 +829,6 @@ List *aStar(Node *start, const Node *end, char **map, int width, int height, int
 
                     newGas =
                             currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
-                    /* Si le nouveau niveau de carburant est inférieur à zéro, le déplacement n'est pas possible */
                     if (newGas <= (int) (0.02 * maxGas))
                         continue;
 
@@ -959,7 +958,7 @@ int main() {
         fprintf(stderr, "    Acceleration: (%d, %d)\n", accelerationX, accelerationY);
 
         /* Gas consumption cannot be accurate here. */
-        gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, 0);
+        gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, map[myY][myX] == '~');
         speedX += accelerationX;
         speedY += accelerationY;
 
