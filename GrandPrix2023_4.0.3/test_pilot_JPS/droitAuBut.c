@@ -751,7 +751,7 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 	double factor = 1;
 	Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 	if (map[newY][newX] == '~') {
-		factor = 3;
+		factor = 100;
 	}
 	neighbour->g_cost = currentNode->g_cost +
 						factor * sqrt((currentNode->x - end->x) * (currentNode->x - end->x) + (currentNode->y - end->y) * (currentNode->y - end->y));
