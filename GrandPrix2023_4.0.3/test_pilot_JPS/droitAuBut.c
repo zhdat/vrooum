@@ -914,8 +914,8 @@ int main()
 	int thirdY;
 	int i;
 	int vitesse = 25;
-	int newX;
-	int newY;
+	int oldX;
+	int oldY;
 
 	ArrayEnd* arrayEnd = NULL;
 	Node* start = NULL;
@@ -951,6 +951,13 @@ int main()
 		sscanf(line_buffer, "%d %d %d %d %d %d", &myX, &myY, &secondX, &secondY, &thirdX, &thirdY);
 		fprintf(stderr, "    Positions: Me(%d,%d)  A(%d,%d), B(%d,%d)\n", myX, myY, secondX, secondY, thirdX, thirdY);
 		fflush(stderr);
+
+		if (round != 1 && oldX == myX && oldY == myY) {
+			speedX = 0;
+			speedY = 0;
+		}
+		oldX = myX;
+		oldY = myY;
 
 		if (round == 1) {
 			/* Trouver les positions de départ et d'arrivée sur la carte */
