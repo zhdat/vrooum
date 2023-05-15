@@ -749,10 +749,6 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 		return 0; /* diagonal movement in sand */
 	}
 
-	if (isPositionOccupied(currentNodeX, currentNodeY, secondX, secondY, thirdX, thirdY) == 1) {
-		return 0; /* position is occupied */
-	}
-
 	return 1; /* continue with current iteration */
 }
 
