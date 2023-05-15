@@ -863,7 +863,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 						continue;
 					}
 
-					neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, gasNeeded, map, end);
+					neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 
 					if (!hsContains(closedSet, neighbour)) {
 						Node const* existingNodeInOpenSet = pqFind(openSet, neighbour);
