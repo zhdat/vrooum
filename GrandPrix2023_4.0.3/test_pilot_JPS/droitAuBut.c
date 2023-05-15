@@ -948,17 +948,6 @@ int main()
 		i = 1;
 		round++;
 
-		if (round != 1) {
-			newX = myX + speedX;
-			newY = myY + speedY;
-		}
-		if (newX != myX && newY != myY) {
-			speedX = 0;
-			speedY = 0;
-			accelerationX = 0;
-			accelerationY = 0;
-		}
-
 		fprintf(stderr, "=== ROUND %d\n", round);
 		fflush(stderr);
 		fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read positions of pilots */
