@@ -560,13 +560,6 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end,
 		if (map[p.y][p.x] == '3') {
 			return 0;
 		}
-		/*
-		if (p.y == secondY && p.x == secondX) {
-			return 0;
-		}
-		if (p.y == thirdY && p.x == thirdX) {
-			return 0;
-		}*/
 	}
 	return 1; /*Path is clear*/
 }
@@ -863,9 +856,9 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					if (isPathClear(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0)
 						continue;
 
-					newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
+					/* newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
 					if (newGas <= (int)(0.005 * maxGas))
-						continue;
+						continue; */
 
 					neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 
