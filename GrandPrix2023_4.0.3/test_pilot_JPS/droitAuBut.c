@@ -855,7 +855,6 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					if (isPathClear(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0)
 						continue;
 
-					// Calculate the gas needed to move to the neighbor
 					int gasNeeded = gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
 					if (currentNode->gas - gasNeeded <= 0) {
 						newGas = currentNode->gas - gasNeeded;
