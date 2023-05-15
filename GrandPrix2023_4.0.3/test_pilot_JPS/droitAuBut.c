@@ -560,6 +560,13 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end,
 		if (map[p.y][p.x] == '3') {
 			return 0;
 		}
+		/*
+		if (p.y == secondY && p.x == secondX) {
+			return 0;
+		}
+		if (p.y == thirdY && p.x == thirdX) {
+			return 0;
+		}*/
 	}
 	return 1; /*Path is clear*/
 }
@@ -754,7 +761,7 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 		neighbour->g_cost += 20;
 	}
 	if (abs(currentNode->speedX) > abs(newSpeedX) || abs(currentNode->speedY) > abs(newSpeedY)) {
-		neighbour->g_cost += 2;
+		neighbour->g_cost += 10;
 	}
 
 	neighbour->h_cost = heuristicCost(neighbour, end);
@@ -857,7 +864,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 						continue;
 
 					newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
-					if (newGas <= (int)(0.005 * maxGas))
+					if (newGas <= (int)(0.02 * maxGas))
 						continue;
 
 					neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
