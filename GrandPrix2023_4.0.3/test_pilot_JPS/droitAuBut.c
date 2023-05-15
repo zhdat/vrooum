@@ -754,7 +754,7 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 		neighbour->g_cost += 4;
 	}
 	if (abs(currentNode->speedX) > abs(newSpeedX) || abs(currentNode->speedY) > abs(newSpeedY)) {
-		neighbour->g_cost += 2;
+		neighbour->g_cost += 4;
 	}
 
 	neighbour->h_cost = heuristicCost(neighbour, end);
