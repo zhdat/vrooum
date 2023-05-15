@@ -534,7 +534,7 @@ int compareEndPositions(const void* a, const void* b)
  * @param end
  * @return int 1 si le chemin est libre, 0 sinon
  */
-int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
+int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end, int secondX, int secondY, int thirdX, int thirdY)
 {
 	InfoLine vline;
 	Pos2Dint p;
@@ -549,6 +549,21 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end)
 			return 0;
 		}
 		if (map[p.y][p.x] == '.') {
+			return 0;
+		}
+		if (map[p.y][p.x] == '1') {
+			return 0;
+		}
+		if (map[p.y][p.x] == '2') {
+			return 0;
+		}
+		if (map[p.y][p.x] == '3') {
+			return 0;
+		}
+		if (p.y == secondY && p.x == secondX) {
+			return 0;
+		}
+		if (p.y == thirdY && p.x == thirdX) {
 			return 0;
 		}
 	}
@@ -848,7 +863,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					if ((map[newY][newX] == '~') && (((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
 						continue;
 
-					if (isPathClear(map, width, height, currentPos, newPos) == 0)
+					if (isPathClear(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0)
 						continue;
 
 					newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');

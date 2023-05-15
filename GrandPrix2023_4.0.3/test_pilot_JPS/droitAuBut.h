@@ -86,7 +86,7 @@ HashSet* hsInit();
 
 void hsInsert(HashSet* hs, Node* node);
 
-int hsContains(const HashSet *hs, const Node *node);
+int hsContains(const HashSet* hs, const Node* node);
 
 void hsFree(HashSet* hs);
 
@@ -100,13 +100,13 @@ void pqPush(PriorityQueue* pq, Node* node);
 
 Node* pqPop(PriorityQueue* pq);
 
-int pqIsEmpty(const PriorityQueue *pq);
+int pqIsEmpty(const PriorityQueue* pq);
 
 void pqFree(PriorityQueue* pq);
 
-Node* pqFind(PriorityQueue* pq, const Node *node);
+Node* pqFind(PriorityQueue* pq, const Node* node);
 
-void pqRemove(PriorityQueue* pq, const Node *node);
+void pqRemove(PriorityQueue* pq, const Node* node);
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 
@@ -141,7 +141,7 @@ int nodeEquals(const Node* node1, const Node* node2);
  * @param node2
  * @return int 1 si les noeuds sont égaux, 0 sinon
  */
-int nodeEqualsWithoutSpeed(const Node *node1, const Node *node2);
+int nodeEqualsWithoutSpeed(const Node* node1, const Node* node2);
 
 /**
  * @brief Vérifie l'égalité entre deux noeuds sans la vitesse
@@ -150,7 +150,7 @@ int nodeEqualsWithoutSpeed(const Node *node1, const Node *node2);
  * @param node2
  * @return int 1 si les noeuds sont égaux, 0 sinon
  */
-int nodeEqualsWithoutSpeed(const Node *node1, const Node *node2);
+int nodeEqualsWithoutSpeed(const Node* node1, const Node* node2);
 
 /**
  * @brief Vérifie si un noeud est dans une liste
@@ -159,7 +159,7 @@ int nodeEqualsWithoutSpeed(const Node *node1, const Node *node2);
  * @param list
  * @return int 1 si le noeud est dans la liste, 0 sinon
  */
-int nodeInList(const Node *node, List* list);
+int nodeInList(const Node* node, List* list);
 
 /**
  * @brief Vérifie si un noeud est dans une liste et retourne l'élément de la liste
@@ -169,7 +169,7 @@ int nodeInList(const Node *node, List* list);
  * @param elementInList
  * @return Node* le noeud si il est dans la liste, NULL sinon
  */
-Node* findNodeInList(const Node *node, List* list, ListElement** elementInList);
+Node* findNodeInList(const Node* node, List* list, ListElement** elementInList);
 
 /**
  * @brief Ajoute un noeud dans une liste
@@ -211,7 +211,7 @@ List* initList();
  * @param list
  * @return int 1 si la liste est vide, 0 sinon
  */
-int isListEmpty(const List *list);
+int isListEmpty(const List* list);
 
 /**
  * @brief Affiche le chemim
@@ -247,7 +247,7 @@ void freePath(List* path);
  * @param b
  * @return int le coût heuristique
  */
-double heuristicCost(const Node *a, const Node *b);
+double heuristicCost(const Node* a, const Node* b);
 
 /**
  * @brief Vérifie si une position est occupée
@@ -281,7 +281,7 @@ int compareEndPositions(const void* a, const void* b);
  * @param end
  * @return int 1 si le chemin est libre, 0 sinon
  */
-int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end);
+int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end, int secondX, int secondY, int thirdX, int thirdY);
 
 /**
  * @brief Compute the gas consumption of a requested acceleration
@@ -313,7 +313,7 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand);
  * @param speedX
  * @param speedY
  */
-ArrayEnd *findEndPositions(char **map, int width, int height, const Node *start);
+ArrayEnd* findEndPositions(char** map, int width, int height, const Node* start);
 
 /**
  * @brief Détermine l'accélération à partir du chemin
@@ -326,7 +326,7 @@ ArrayEnd *findEndPositions(char **map, int width, int height, const Node *start)
  * @param speedX
  * @param speedY
  */
-void determineAcceleration(const List *path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY);
+void determineAcceleration(const List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY);
 
 /**
  * @brief Calcule la norme de la vitesse
@@ -357,7 +357,7 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
  * @param gasLevel
  * @return List* le chemin le plus court
  */
-List *aStar(Node *start, const Node *end, char **map, int width, int height, int secondX, int secondY, int thirdX, int thirdY,
-            int gasLevel, int currentSpeedX, int currentSpeedY, int speedMax, int maxGas);
+List* aStar(Node* start, const Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int gasLevel,
+			int currentSpeedX, int currentSpeedY, int speedMax, int maxGas);
 
 #endif /* DROITAUBUT_H */
