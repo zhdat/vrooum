@@ -917,6 +917,8 @@ int main()
 	int thirdY;
 	int i;
 	int vitesse = 25;
+	int newX;
+	int newY;
 
 	ArrayEnd* arrayEnd = NULL;
 	Node* start = NULL;
@@ -945,6 +947,18 @@ int main()
 		vitesse = 25;
 		i = 1;
 		round++;
+
+		if (round != 1) {
+			newX = myX + speedX;
+			newY = myY + speedY;
+		}
+		if (newX != myX && newY != myY) {
+			speedX = 0;
+			speedY = 0;
+			accelerationX = 0;
+			accelerationY = 0;
+		}
+
 		fprintf(stderr, "=== ROUND %d\n", round);
 		fflush(stderr);
 		fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read positions of pilots */
