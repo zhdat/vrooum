@@ -756,7 +756,7 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 	neighbour->g_cost =
 		currentNode->g_cost +
 		factor * (sqrt((currentNode->x - newX) * (currentNode->x - newX) + (currentNode->y - newY) * (currentNode->y - newY)) +
-				  sqrt((currentNode->x - end->x) * (currentNode->x - end->x) + (currentNode->y - end->y) * (currentNode->y - end->y)));
+				  2 * sqrt((currentNode->x - end->x) * (currentNode->x - end->x) + (currentNode->y - end->y) * (currentNode->y - end->y)));
 
 	neighbour->h_cost = heuristicCost(neighbour, end);
 	neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
