@@ -748,10 +748,10 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 
 Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, int newSpeedY, int newGas, char** map, const Node* end)
 {
-	int factor = 1;
+	double factor = 1;
 	Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 	if (map[newY][newX] == '~') {
-		factor = 2;
+		factor = 3;
 	}
 	neighbour->g_cost = currentNode->g_cost +
 						factor * sqrt((currentNode->x - end->x) * (currentNode->x - end->x) + (currentNode->y - end->y) * (currentNode->y - end->y));
