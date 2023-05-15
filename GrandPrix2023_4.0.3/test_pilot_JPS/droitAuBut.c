@@ -856,8 +856,8 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 						continue;
 
 					int gasNeeded = gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
-					if (currentNode->gas - gasNeeded <= 0) {
-						newGas = currentNode->gas - gasNeeded;
+					if (currentNode->gas + gasNeeded <= 0) {
+						newGas = currentNode->gas + gasNeeded;
 						continue;
 					}
 
