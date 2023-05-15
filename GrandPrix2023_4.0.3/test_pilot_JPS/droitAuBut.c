@@ -749,13 +749,14 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, int newSpeedY, int newGas, char** map, const Node* end)
 {
 	double factor = 1;
+	double speedPenalty = 0.5;
 	Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 	if (map[newY][newX] == '~') {
 		factor = 4;
 	}
 	neighbour->g_cost = currentNode->g_cost + factor;
 
-	neighbour->h_cost = heuristicCost(neighbour, end);
+	neighbour->h_cost = heuristicCost(neighbour, end) + speedPenalty * (5 - fmax(newSpeedX, newSpeedY));
 	neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
 	return neighbour;
 }
@@ -854,11 +855,14 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					if (isPathClear(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0)
 						continue;
 
-					/* newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
-					if (newGas <= (int)(0.005 * maxGas))
-						continue; */
+					// Calculate the gas needed to move to the neighbor
+					int gasNeeded = gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
+					if (currentNode->gas - gasNeeded <= 0) {
+						newGas = currentNode->gas - gasNeeded;
+						continue;
+					}
 
-					neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
+					neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, gasNeeded, map, end);
 
 					if (!hsContains(closedSet, neighbour)) {
 						Node const* existingNodeInOpenSet = pqFind(openSet, neighbour);
