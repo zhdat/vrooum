@@ -856,6 +856,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 						continue;
 
 					int gasNeeded = gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
+					fprintf(stderr, "gasNeeded: %d\n", gasNeeded);
 					newGas = currentNode->gas + gasNeeded;
 					if (currentNode->gas + gasNeeded <= 0) {
 						continue;
