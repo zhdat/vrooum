@@ -864,7 +864,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 						continue;
 
 					newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
-					if (newGas <= 0)
+					if (newGas < 0)
 						continue;
 
 					neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
