@@ -766,7 +766,7 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 	Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 	factor = 1;
 	if (map[newY][newX] == '~') {
-		factor = 2;
+		factor = 4;
 	}
 	if (abs(currentNode->speedX) > abs(newSpeedX) || abs(currentNode->speedY) > abs(newSpeedY)) {
 		factor += 1;
