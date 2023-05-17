@@ -749,6 +749,14 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 		return 0; /* diagonal movement in sand */
 	}
 
+	if (newX == secondX && newY == secondY) {
+		return 0;
+	}
+
+	if (newX == thirdX && newY == thirdY) {
+		return 0;
+	}
+
 	return 1; /* continue with current iteration */
 }
 
