@@ -881,7 +881,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					if (isPathClear(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0)
 						continue;
 
-					if (isCarInCone(secondX, secondY, thirdX, thirdY, newX, newY, start->speedX, start->speedY, 0.5, start->speedX + accX)) {
+					if (isCarInCone(secondX, secondY, thirdX, thirdY, newX, newY, start->speedX, start->speedY, 0.2, start->speedX + accX)) {
 						continue;
 					}
 
