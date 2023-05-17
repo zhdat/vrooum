@@ -760,35 +760,19 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 	return 1; /* continue with current iteration */
 }
 
-int isCarInCone(int secondX, int secondY, int thirdX, int thirdY, int myX, int myY, int mySpeedX, int mySpeedY, int coneAngle, int coneDistance)
-{
-	int dx = secondX - myX;
-	int dy = secondY - myY;
-	int distance = sqrt(dx * dx + dy * dy);
-
-	if (distance > coneDistance) {
-		return 0;
-	}
-
-	int dotProduct = dx * mySpeedX + dy * mySpeedY;
-
-	if (acos(dotProduct / (distance * sqrt(mySpeedX * mySpeedX + mySpeedY * mySpeedY))) <= coneAngle) {
-		fprintf(stderr, "Voiture présente\n");
-	} else {
-		fprintf(stderr, "Voiture non-présente\n");
-	}
-}
-
 Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, int newSpeedY, int newGas, char** map, const Node* end)
 {
+	int factor;
 	Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
-	neighbour->g_cost = currentNode->g_cost + 1;
+	factor = 1;
 	if (map[newY][newX] == '~') {
-		neighbour->g_cost += 10;
+		factor = 2;
 	}
 	if (abs(currentNode->speedX) > abs(newSpeedX) || abs(currentNode->speedY) > abs(newSpeedY)) {
-		neighbour->g_cost += 5;
+		factor += 0.5;
 	}
+	neighbour->g_cost =
+		currentNode->g_cost + factor * sqrt((currentNode->x - newX) * (currentNode->x - newX) + (currentNode->y - newY) * (currentNode->y - newY));
 
 	neighbour->h_cost = heuristicCost(neighbour, end);
 	neighbour->f_cost = neighbour->g_cost + neighbour->h_cost;
