@@ -771,10 +771,9 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 	if (abs(currentNode->speedX) > abs(newSpeedX) || abs(currentNode->speedY) > abs(newSpeedY)) {
 		factor += 1;
 	}
-	/* if ((currentNode->speedX == newSpeedX && currentNode->speedY != newSpeedY) ||
-		(currentNode->speedX != newSpeedX && currentNode->speedY == newSpeedY)) {
+	if (SpeedNorme(newSpeedX, newSpeedY) < 25) {
 		factor += 1;
-	} */
+	}
 	neighbour->g_cost =
 		currentNode->g_cost + factor * sqrt((currentNode->x - newX) * (currentNode->x - newX) + (currentNode->y - newY) * (currentNode->y - newY));
 
