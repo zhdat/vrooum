@@ -862,17 +862,13 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					if (isPathClear(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0)
 						continue;
 
-					if ((start->speedX + accX > 0) && (start->speedX + accX + start->x > secondX)) {
-						continue;
-					}
-					if ((start->speedX + accX < 0) && (start->speedX + accX + start->x < secondX)) {
-						continue;
-					}
-					if ((start->speedY + accY > 0) && (start->speedY + accY + start->y > secondY)) {
-						continue;
-					}
-					if ((start->speedY + accY < 0) && (start->speedY + accY + start->y < secondY)) {
-						continue;
+					double angleToOtherCar = atan2(secondY - currentNode->y, secondX - currentNode->x);
+					double currentDirection = atan2(currentSpeedY, currentSpeedX);
+					double distanceToOtherCar = sqrt(pow(secondX - currentNode->x, 2) + pow(secondY - currentNode->y, 2));
+
+					if (abs(angleToOtherCar - currentDirection) <= 0.7853 / 2 &&
+						distanceToOtherCar <= fmax(currentSpeedX + accX, currentSpeedY + accY)) {
+						fprintf(stderr, "Voiture présente dans l'arc de cercle");
 					}
 
 					newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
