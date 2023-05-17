@@ -862,6 +862,19 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					if (isPathClear(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0)
 						continue;
 
+					if ((start->speedX + accX > 0) && (start->speedX + accX + start->x > secondX)) {
+						continue;
+					}
+					if ((start->speedX + accX < 0) && (start->speedX + accX + start->x < secondX)) {
+						continue;
+					}
+					if ((start->speedY + accY > 0) && (start->speedY + accY + start->y > secondY)) {
+						continue;
+					}
+					if ((start->speedY + accY < 0) && (start->speedY + accY + start->y < secondY)) {
+						continue;
+					}
+
 					newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
 					if (newGas < 0)
 						continue;
