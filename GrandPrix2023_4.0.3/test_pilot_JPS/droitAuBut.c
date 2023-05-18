@@ -749,9 +749,9 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 		return 0; /* obstacle */
 	}
 
-	if ((map[currentNodeY][currentNodeX] == '~') && (accX != 0 && accY != 0)) {
+	/* if ((map[currentNodeY][currentNodeX] == '~') && (accX != 0 && accY != 0)) {
 		return 0;
-	}
+	} */
 
 	/* if (newX == secondX && newY == secondY) {
 		return 0;
@@ -868,11 +868,6 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					currentPos.y = currentNode->y;
 					newPos.x = newX;
 					newPos.y = newY;
-
-					/* if ((map[currentNode->y][currentNode->x] == '~') && (((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
-						continue; */
-					/* if ((map[newY][newX] == '~') && (((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
-						continue; */
 
 					if (isPathClear(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0)
 						continue;
