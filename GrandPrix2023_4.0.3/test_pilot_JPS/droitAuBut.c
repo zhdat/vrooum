@@ -978,6 +978,7 @@ int main()
 		if (map[myY][myX] == '~') {
 			speedX = 0;
 			speedY = 0;
+			fprintf(stderr, "    Je suis dans le sable\n");
 		}
 
 		if (round == 1) {
