@@ -721,6 +721,10 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 	/* Accélération dans le sable */
 	if (map[myY][myX] == '~') {
 		fprintf(stderr, "\n<In sand\n");
+		if (SpeedNorme(speedX + *accelerationX, speedY + *accelerationY) > 1) {
+			*accelerationX = 0;
+			*accelerationY = 0;
+		}
 	}
 }
 
@@ -751,7 +755,7 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 		return 0; /* obstacle */
 	}
 
-	if ((map[newY][newX] == '~' || (map[currentNodeY][currentNodeX] == '~')) && (accX != 0 && accY != 0)) {
+	if ((map[currentNodeY][currentNodeX] == '~') && (accX != 0 && accY != 0)) {
 		return 0;
 	}
 
