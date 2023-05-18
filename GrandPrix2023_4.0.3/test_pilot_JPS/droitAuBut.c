@@ -749,6 +749,12 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 		return 0; /* diagonal movement in sand */
 	}
 
+	if (map[newY][newX] == '~' || map[currentNodeY][currentNodeX] == '~') {
+		if (SpeedNorme(newSpeedX, newSpeedY) > 1) {
+			return 0; /* speed too high in sand */
+		}
+	}
+
 	/* if (newX == secondX && newY == secondY) {
 		return 0;
 	}
@@ -865,8 +871,8 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					newPos.x = newX;
 					newPos.y = newY;
 
-					if ((map[currentNode->y][currentNode->x] == '~') && (((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
-						continue;
+					/* if ((map[currentNode->y][currentNode->x] == '~') && (((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
+						continue; */
 					/* if ((map[newY][newX] == '~') && (((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
 						continue; */
 
