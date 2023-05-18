@@ -720,7 +720,7 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 
 	/* Accélération dans le sable */
 	if (map[myY][myX] == '~') {
-		fprintf(stderr, "\n<In sand\n");
+				fprintf(stderr, "\n<In sand\n");
 	}
 }
 
@@ -978,6 +978,7 @@ int main()
 		if (map[myY][myX] == '~') {
 			speedX = 0;
 			speedY = 0;
+			vitesse = 1;
 			fprintf(stderr, "    Je suis dans le sable\n");
 		}
 
