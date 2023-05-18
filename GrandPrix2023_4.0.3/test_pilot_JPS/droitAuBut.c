@@ -975,6 +975,11 @@ int main()
 		oldX = myX;
 		oldY = myY;
 
+		if (map[myY][myX] == '~') {
+			speedX = 0;
+			speedY = 0;
+		}
+
 		if (round == 1) {
 			/* Trouver les positions de départ et d'arrivée sur la carte */
 			start = createNode(myX, myY, NULL, speedX, speedY, maxGas);
