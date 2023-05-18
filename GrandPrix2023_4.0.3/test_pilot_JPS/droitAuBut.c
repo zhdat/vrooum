@@ -720,7 +720,7 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 
 	/* Accélération dans le sable */
 	if (map[myY][myX] == '~') {
-				fprintf(stderr, "\n<In sand\n");
+		fprintf(stderr, "\n<In sand\n");
 	}
 }
 
@@ -751,9 +751,9 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 		return 0; /* obstacle */
 	}
 
-	/* if ((map[newY][newX] == '~' || (map[currentNodeY][currentNodeX] == '~')) && (accX != 0 && accY != 0)) {
+	if (map[currentNodeY][currentNodeX] == '~' && (accX != 0 && accY != 0)) {
 		return 0;
-	} */
+	}
 
 	/* if (newX == secondX && newY == secondY) {
 		return 0;
@@ -974,13 +974,6 @@ int main()
 		}
 		oldX = myX;
 		oldY = myY;
-
-		if (map[myY][myX] == '~') {
-			speedX = 0;
-			speedY = 0;
-			vitesse = 1;
-			fprintf(stderr, "    Je suis dans le sable\n");
-		}
 
 		if (round == 1) {
 			/* Trouver les positions de départ et d'arrivée sur la carte */
