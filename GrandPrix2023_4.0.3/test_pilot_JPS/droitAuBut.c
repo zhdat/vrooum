@@ -749,9 +749,9 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 		return 0; /* obstacle */
 	}
 
-	/* if ((map[currentNodeY][currentNodeX] == '~') && (accX != 0 && accY != 0)) {
+	if ((map[currentNodeY][currentNodeX] == '~') && (accX != 0 && accY != 0)) {
 		return 0;
-	} */
+	}
 
 	/* if (newX == secondX && newY == secondY) {
 		return 0;
@@ -773,7 +773,7 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 		factor += 4;
 	}
 	if (SpeedNorme(newSpeedX, newSpeedY) < 25) {
-		factor += 1;
+		factor += 4;
 	}
 	neighbour->g_cost =
 		currentNode->g_cost + factor * sqrt((currentNode->x - newX) * (currentNode->x - newX) + (currentNode->y - newY) * (currentNode->y - newY));
