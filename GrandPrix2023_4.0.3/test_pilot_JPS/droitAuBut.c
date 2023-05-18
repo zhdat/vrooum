@@ -865,10 +865,10 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					newPos.x = newX;
 					newPos.y = newY;
 
-					/* if ((map[currentNode->y][currentNode->x] == '~') && (((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
-						continue; */
-					if ((map[newY][newX] == '~') && (((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
+					if ((map[currentNode->y][currentNode->x] == '~') && (((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
 						continue;
+					/* if ((map[newY][newX] == '~') && (((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY)) > 1))
+						continue; */
 
 					if (isPathClear(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0)
 						continue;
