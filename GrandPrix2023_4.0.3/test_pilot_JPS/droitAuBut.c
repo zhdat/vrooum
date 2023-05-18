@@ -677,7 +677,7 @@ void findBestEnd(int myX, int myY, int secondX, int secondY, int thirdX, int thi
  * @param speedX
  * @param speedY
  */
-void determineAcceleration(const List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY)
+void determineAcceleration(const List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY, char** map)
 {
 	int nextX;
 	int nextY;
@@ -704,6 +704,7 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 		*accelerationY = desiredSpeedY - speedY;
 	}
 
+	/* Vérifier si l'accélération est trop grande */
 	if (*accelerationX > 1) {
 		*accelerationX = 1;
 	}
@@ -715,6 +716,12 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 	}
 	if (*accelerationY < -1) {
 		*accelerationY = -1;
+	}
+
+	/* Accélération dans le sable */
+	if (map[myY][myX] == '~' && SpeedNorme(speedX, speedY) > 1) {
+		*accelerationX = 0;
+		*accelerationY = 0;
 	}
 }
 
@@ -747,12 +754,6 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 
 	if ((map[newY][newX] == '~' || (map[currentNodeY][currentNodeX] == '~')) && (accX != 0 && accY != 0)) {
 		return 0; /* diagonal movement in sand */
-	}
-
-	if (map[newY][newX] == '~' || map[currentNodeY][currentNodeX] == '~') {
-		if (SpeedNorme(newSpeedX, newSpeedY) > 1) {
-			return 0; /* speed too high in sand */
-		}
 	}
 
 	/* if (newX == secondX && newY == secondY) {
@@ -1016,7 +1017,7 @@ int main()
 		}
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
-		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY);
+		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map);
 		fprintf(stderr, "    Acceleration: (%d, %d)\n", accelerationX, accelerationY);
 
 		/* Gas consumption cannot be accurate here. */

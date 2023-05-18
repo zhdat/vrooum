@@ -326,7 +326,7 @@ ArrayEnd* findEndPositions(char** map, int width, int height, const Node* start)
  * @param speedX
  * @param speedY
  */
-void determineAcceleration(const List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY);
+void determineAcceleration(const List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY, char** map);
 
 /**
  * @brief Calcule la norme de la vitesse
