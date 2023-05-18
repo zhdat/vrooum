@@ -751,7 +751,7 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 		return 0; /* obstacle */
 	}
 
-	if (map[currentNodeY][currentNodeX] == '~' && (accX != 0 && accY != 0)) {
+	if ((map[newY][newX] == '~' || (map[currentNodeY][currentNodeX] == '~')) && (accX != 0 && accY != 0)) {
 		return 0;
 	}
 
