@@ -560,12 +560,6 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end,
 		if (map[p.y][p.x] == '3') {
 			return 0;
 		}
-		if (p.x == secondX && p.y == secondY) {
-			return 0;
-		}
-		if (p.x == thirdX && p.y == thirdY) {
-			return 0;
-		}
 	}
 	return 1; /*Path is clear*/
 }
