@@ -754,6 +754,7 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 	}
 
 	if ((map[newY][newX] == '~' || (map[currentNodeY][currentNodeX] == '~')) && (accX != 0 && accY != 0)) {
+		fprintf(stderr, "In sand pathclear\n");
 		return 0; /* diagonal movement in sand */
 	}
 
