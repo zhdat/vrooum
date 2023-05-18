@@ -768,9 +768,6 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 	if (map[newY][newX] == '~') {
 		factor += 2;
 	}
-	/* if (abs(currentNode->speedX) > abs(newSpeedX) || abs(currentNode->speedY) > abs(newSpeedY)) {
-		factor += 4;
-	} */
 	if (SpeedNorme(newSpeedX, newSpeedY) < 25) {
 		factor += 1;
 	}
@@ -884,7 +881,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 
 					if (!hsContains(closedSet, neighbour)) {
 						Node const* existingNodeInOpenSet = pqFind(openSet, neighbour);
-						if (existingNodeInOpenSet == NULL || neighbour->f_cost < existingNodeInOpenSet->f_cost) {
+						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 							if (existingNodeInOpenSet != NULL) {
 								pqRemove(openSet, existingNodeInOpenSet);
 							}
