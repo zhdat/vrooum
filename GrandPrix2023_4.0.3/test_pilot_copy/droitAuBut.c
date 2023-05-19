@@ -1021,6 +1021,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 		}
 
 		hsInsert(closedSet, currentNode);
+		fprintf(stderr, "current : %d %d\n", currentNode->x, currentNode->y);
 
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
