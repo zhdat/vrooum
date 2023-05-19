@@ -120,6 +120,7 @@ void deleteFromHash(HashTable* ht, char* key)
 	HashNode* list = ht->list[pos];
 	HashNode *temp = list, *prev = NULL;
 	fprintf(stderr, "deleteFromHash %s\n", key);
+	fprintf(stderr, "deleteFromHash %s\n", temp->key);
 	while (temp) {
 		fprintf(stderr, "deleteFromHash %s\n", temp->key);
 		if (strcmp(temp->key, key) == 0) {
