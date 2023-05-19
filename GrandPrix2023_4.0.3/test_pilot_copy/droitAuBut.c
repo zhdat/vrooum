@@ -127,6 +127,7 @@ void deleteFromHash(HashTable* ht, char* key)
 			} else {
 				prev->next = temp->next;
 			}
+			fprintf(stderr, "deleteFromHash %s\n", temp->key);
 			char* tempKey = temp->key;
 			HashNode* tempNextNode = temp->next;
 			free(tempKey);
