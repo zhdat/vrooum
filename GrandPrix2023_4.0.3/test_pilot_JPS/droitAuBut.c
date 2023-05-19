@@ -1090,6 +1090,7 @@ int main()
 				}
 			}
 		}
+		printPath(path);
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map, &boosts);
