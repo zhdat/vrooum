@@ -41,7 +41,7 @@ int hsContains(const HashSet* hs, const Node* node)
 	HashSetElement* current = hs->buckets[hash];
 
 	while (current != NULL) {
-		if (nodeEqualsWithoutSpeed(current->node, node)) {
+		if (nodeEquals(current->node, node)) {
 			return 1;
 		}
 		current = current->next;
@@ -133,7 +133,7 @@ Node* pqFind(PriorityQueue* pq, const Node* node)
 {
 	PriorityQueueElement* current = pq->head;
 	while (current != NULL) {
-		if (nodeEqualsWithoutSpeed(current->node, node)) {
+		if (nodeEquals(current->node, node)) {
 			return current->node;
 		}
 		current = current->next;
@@ -147,7 +147,7 @@ void pqRemove(PriorityQueue* pq, const Node* node)
 	if (pq->head == NULL) {
 		return;
 	}
-	if (nodeEqualsWithoutSpeed(pq->head->node, node)) {
+	if (nodeEquals(pq->head->node, node)) {
 		PriorityQueueElement* elementToRemove = pq->head;
 		pq->head = pq->head->next;
 		free(elementToRemove);
@@ -155,7 +155,7 @@ void pqRemove(PriorityQueue* pq, const Node* node)
 	}
 	current = pq->head;
 	while (current->next != NULL) {
-		if (nodeEqualsWithoutSpeed(current->next->node, node)) {
+		if (nodeEquals(current->next->node, node)) {
 			PriorityQueueElement* elementToRemove = current->next;
 			current->next = current->next->next;
 			free(elementToRemove);
@@ -207,7 +207,8 @@ int nodeEquals(const Node* node1, const Node* node2)
 	if (node1 == NULL || node2 == NULL) {
 		return 0;
 	}
-	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY;
+	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY &&
+		   node1->gas == node2->gas;
 }
 
 /**
@@ -792,14 +793,6 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 		return 0;
 	}
 
-	/* if (newX == secondX && newY == secondY) {
-		return 0;
-	}
-
-	if (newX == thirdX && newY == thirdY) {
-		return 0;
-	} */
-
 	return 1; /* continue with current iteration */
 }
 
@@ -1032,26 +1025,7 @@ int main()
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied, occupiedX,
 					 occupiedY);
-		while (path == NULL && vitesse > 0) {
-			vitesse--;
-			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
-						 occupiedX, occupiedY);
-		}
 		reverseList(path);
-
-		while (path == NULL && i < arrayEnd->size) {
-			vitesse = 25;
-			end = createNode(arrayEnd->array[i].x, arrayEnd->array[i].y, NULL, speedX, speedY, 0);
-			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
-						 occupiedX, occupiedY);
-			while (path == NULL && vitesse > 0) {
-				vitesse--;
-				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
-							 occupiedX, occupiedY);
-			}
-			reverseList(path);
-			i++;
-		}
 
 		if (path != NULL) {
 			Node* firstNode;
@@ -1071,11 +1045,6 @@ int main()
 				occupiedY = firstNode->y;
 				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
 							 occupiedX, occupiedY);
-				while (path == NULL && vitesse > 0) {
-					vitesse--;
-					path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas,
-								 occupied, occupiedX, occupiedY);
-				}
 				reverseList(path);
 			}
 		}
