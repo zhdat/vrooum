@@ -118,22 +118,19 @@ void deleteFromHash(HashTable* ht, char* key)
 {
 	int pos = hashCode(ht, key);
 	HashNode* list = ht->list[pos];
-	fprintf(stderr, "deleteFromHash %s\n", key);
-	fprintf(stderr, "list %s\n", list->key);
+
+	if (!list) {
+		return;
+	}
+
 	HashNode *temp = list, *prev = NULL;
-	fprintf(stderr, "deleteFromHash %s\n", key);
-	fprintf(stderr, "list %s\n", list->key);
-	fprintf(stderr, "deleteFromHash %s\n", temp->key);
 	while (temp) {
-		fprintf(stderr, "deleteFromHash %s\n", temp->key);
 		if (strcmp(temp->key, key) == 0) {
-			fprintf(stderr, "deleteFromHash %s\n", temp->key);
 			if (temp == list) {
 				ht->list[pos] = list->next;
 			} else {
 				prev->next = temp->next;
 			}
-			fprintf(stderr, "deleteFromHash %s\n", temp->key);
 			char* tempKey = temp->key;
 			HashNode* tempNextNode = temp->next;
 			free(tempKey);
@@ -141,7 +138,6 @@ void deleteFromHash(HashTable* ht, char* key)
 			temp = tempNextNode;
 			return;
 		}
-		fprintf(stderr, "deleteFromHash %s\n", temp->key);
 		prev = temp;
 		temp = temp->next;
 	}
