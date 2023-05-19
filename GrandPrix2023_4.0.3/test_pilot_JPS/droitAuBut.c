@@ -998,7 +998,6 @@ int main()
 	int oldX;
 	int oldY;
 	int occupied;
-	int boosts = 5;
 
 	ArrayEnd* arrayEnd = NULL;
 	Node* start = NULL;
