@@ -41,7 +41,7 @@ int hsContains(const HashSet* hs, const Node* node)
 	HashSetElement* current = hs->buckets[hash];
 
 	while (current != NULL) {
-		if (nodeEqualsWithoutSpeed(current->node, node)) {
+		if (nodeEquals(current->node, node)) {
 			return 1;
 		}
 		current = current->next;
@@ -147,7 +147,7 @@ void pqRemove(PriorityQueue* pq, const Node* node)
 	if (pq->head == NULL) {
 		return;
 	}
-	if (nodeEqualsWithoutSpeed(pq->head->node, node)) {
+	if (nodeEquals(pq->head->node, node)) {
 		PriorityQueueElement* elementToRemove = pq->head;
 		pq->head = pq->head->next;
 		free(elementToRemove);
@@ -155,7 +155,7 @@ void pqRemove(PriorityQueue* pq, const Node* node)
 	}
 	current = pq->head;
 	while (current->next != NULL) {
-		if (nodeEqualsWithoutSpeed(current->next->node, node)) {
+		if (nodeEquals(current->next->node, node)) {
 			PriorityQueueElement* elementToRemove = current->next;
 			current->next = current->next->next;
 			free(elementToRemove);
@@ -817,7 +817,7 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 	Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 	factor = 1;
 	if (map[newY][newX] == '~') {
-		factor += 2;
+		factor += 4;
 	}
 	if (SpeedNorme(newSpeedX, newSpeedY) < 25) {
 		factor += 2;
