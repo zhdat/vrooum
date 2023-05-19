@@ -1072,7 +1072,7 @@ int main()
 
 		if (path != NULL) {
 			Node* firstNode;
-			firstNode = path->head->data;
+			firstNode = path->head->next->data;
 			fprintf(stderr, " premier node : (%d, %d)", firstNode->x, firstNode->y);
 
 			if ((firstNode->x == secondX && firstNode->y == secondY) || (firstNode->x == thirdX && firstNode->y == thirdY)) {
