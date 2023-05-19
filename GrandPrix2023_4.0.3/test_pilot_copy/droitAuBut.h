@@ -54,13 +54,10 @@ typedef struct HashSet {
 	HashSetElement* buckets[HASH_SET_SIZE];
 } HashSet;
 
-typedef struct PriorityQueueElement {
-	Node* node;
-	struct PriorityQueueElement* next;
-} PriorityQueueElement;
-
 typedef struct PriorityQueue {
-	PriorityQueueElement* head;
+	Node** nodes;
+	int size;
+	int capacity;
 } PriorityQueue;
 
 /**

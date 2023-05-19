@@ -8,6 +8,9 @@
 
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
+#define PARENT(i) ((i - 1) / 2)
+#define LEFT(i) (2 * i + 1)
+#define RIGHT(i) (2 * i + 2)
 
 /* TESTS */
 
@@ -68,100 +71,106 @@ void hsFree(HashSet* hs)
 	free(hs);
 }
 
-PriorityQueue* pqInit()
+PriorityQueue* pqInit(int capacity)
 {
 	PriorityQueue* pq = (PriorityQueue*)malloc(sizeof(PriorityQueue));
-	pq->head = NULL;
+	if (!pq)
+		return NULL;
+	pq->nodes = (Node**)malloc(sizeof(Node*) * capacity);
+	if (!pq->nodes) {
+		free(pq);
+		return NULL;
+	}
+	pq->size = 0;
+	pq->capacity = capacity;
 	return pq;
+}
+
+void swap(Node** a, Node** b)
+{
+	Node* t = *a;
+	*a = *b;
+	*b = t;
 }
 
 void pqPush(PriorityQueue* pq, Node* node)
 {
-	PriorityQueueElement* current;
-	PriorityQueueElement* newElement = (PriorityQueueElement*)malloc(sizeof(PriorityQueueElement));
-	newElement->node = node;
-	newElement->next = NULL;
-
-	if (pq->head == NULL || pq->head->node->f_cost > node->f_cost) {
-		newElement->next = pq->head;
-		pq->head = newElement;
-		return;
+	if (pq->size == pq->capacity) {
+		pq->capacity *= 2;
+		pq->nodes = (Node**)realloc(pq->nodes, sizeof(Node*) * pq->capacity);
 	}
 
-	current = pq->head;
-	while (current->next != NULL && current->next->node->f_cost < node->f_cost) {
-		current = current->next;
+	int i = pq->size;
+	pq->nodes[i] = node;
+	pq->size++;
+
+	while (i != 0 && pq->nodes[PARENT(i)]->f_cost > pq->nodes[i]->f_cost) {
+		swap(&pq->nodes[i], &pq->nodes[PARENT(i)]);
+		i = PARENT(i);
 	}
-	newElement->next = current->next;
-	current->next = newElement;
 }
 
 Node* pqPop(PriorityQueue* pq)
 {
-	PriorityQueueElement* elementToRemove;
-	Node* node;
-	if (pq->head == NULL) {
+	if (pq->size == 0)
 		return NULL;
+
+	Node* root = pq->nodes[0];
+	pq->nodes[0] = pq->nodes[pq->size - 1];
+	pq->size--;
+	MinHeapify(pq, 0);
+
+	return root;
+}
+
+void MinHeapify(PriorityQueue* pq, int i)
+{
+	int left = LEFT(i);
+	int right = RIGHT(i);
+	int smallest = i;
+
+	if (left < pq->size && pq->nodes[left]->f_cost < pq->nodes[i]->f_cost)
+		smallest = left;
+
+	if (right < pq->size && pq->nodes[right]->f_cost < pq->nodes[smallest]->f_cost)
+		smallest = right;
+
+	if (smallest != i) {
+		swap(&pq->nodes[i], &pq->nodes[smallest]);
+		MinHeapify(pq, smallest);
 	}
-	elementToRemove = pq->head;
-	node = elementToRemove->node;
-	pq->head = elementToRemove->next;
-	free(elementToRemove);
-	return node;
 }
 
 int pqIsEmpty(const PriorityQueue* pq)
 {
-	return pq->head == NULL;
+	return pq->size == 0;
 }
 
 void pqFree(PriorityQueue* pq)
 {
-	PriorityQueueElement* current = pq->head;
-	PriorityQueueElement* next;
-
-	while (current != NULL) {
-		next = current->next;
-		free(current);
-		current = next;
-	}
-
+	free(pq->nodes);
 	free(pq);
 }
 
 Node* pqFind(PriorityQueue* pq, const Node* node)
 {
-	PriorityQueueElement* current = pq->head;
-	while (current != NULL) {
-		if (nodeEquals(current->node, node)) {
-			return current->node;
+	for (int i = 0; i < pq->size; i++) {
+		if (nodeEquals(pq->nodes[i], node)) {
+			return pq->nodes[i];
 		}
-		current = current->next;
 	}
 	return NULL;
 }
 
 void pqRemove(PriorityQueue* pq, const Node* node)
 {
-	PriorityQueueElement* current;
-	if (pq->head == NULL) {
-		return;
-	}
-	if (nodeEquals(pq->head->node, node)) {
-		PriorityQueueElement* elementToRemove = pq->head;
-		pq->head = pq->head->next;
-		free(elementToRemove);
-		return;
-	}
-	current = pq->head;
-	while (current->next != NULL) {
-		if (nodeEquals(current->next->node, node)) {
-			PriorityQueueElement* elementToRemove = current->next;
-			current->next = current->next->next;
-			free(elementToRemove);
-			return;
+	for (int i = 0; i < pq->size; i++) {
+		if (nodeEquals(pq->nodes[i], node)) {
+			swap(&pq->nodes[i], &pq->nodes[pq->size - 1]);
+			pq->size--;
+			MinHeapify(pq, i);
+			break;
 		}
-		current = current->next;
 	}
 }
 
@@ -847,7 +856,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 	int newGas;
 	Node* neighbour;
 
-	PriorityQueue* openSet = pqInit();
+	PriorityQueue* openSet = pqInit(10);
 	HashSet* closedSet = hsInit();
 
 	start->g_cost = 0;
