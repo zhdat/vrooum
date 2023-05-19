@@ -1026,6 +1026,7 @@ int main()
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied, occupiedX,
 					 occupiedY);
 		reverseList(path);
+		printPath(path);
 
 		if (path != NULL) {
 			Node* firstNode;
@@ -1046,6 +1047,7 @@ int main()
 				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
 							 occupiedX, occupiedY);
 				reverseList(path);
+				printPath(path);
 			}
 		}
 
