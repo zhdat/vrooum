@@ -217,16 +217,15 @@ Node* pqPop(PriorityQueue* pq)
 	deleteFromHash(pq->hashTable, key);
 	free(key);
 
-	if (pq->size > 1) {
-		pq->nodes[0] = pq->nodes[pq->size - 1];
+	pq->size--;
+
+	if (pq->size > 0) {
+		pq->nodes[0] = pq->nodes[pq->size];
 		key = nodeHashKey(pq->nodes[0]);
 		insertToHash(pq->hashTable, key, 0);
 		free(key);
 
-		pq->size--;
 		MinHeapify(pq, 0);
-	} else {
-		pq->size--;
 	}
 
 	return root;
