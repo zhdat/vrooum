@@ -1088,10 +1088,10 @@ int main()
 					path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas,
 								 occupied, occupiedX, occupiedY);
 				}
+				reverseList(path);
+				printPath(path);
 			}
 		}
-		reverseList(path);
-		printPath(path);
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map, &boosts);
