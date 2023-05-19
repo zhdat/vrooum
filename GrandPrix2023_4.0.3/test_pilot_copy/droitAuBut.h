@@ -7,7 +7,8 @@
 #include <string.h>
 #include <search.h>
 #include "follow_line.h"
-#include "droitAuBut.h"
+
+#define HASH_SET_SIZE 1024
 
 /* Structures utiles au projet */
 
@@ -44,6 +45,24 @@ typedef struct List {
 	ListElement* head;
 } List;
 
+typedef struct HashSetElement {
+	Node* node;
+	struct HashSetElement* next;
+} HashSetElement;
+
+typedef struct HashSet {
+	HashSetElement* buckets[HASH_SET_SIZE];
+} HashSet;
+
+typedef struct PriorityQueueElement {
+	Node* node;
+	struct PriorityQueueElement* next;
+} PriorityQueueElement;
+
+typedef struct PriorityQueue {
+	PriorityQueueElement* head;
+} PriorityQueue;
+
 /**
  * @brief Structure représentant une position finale
  *
@@ -51,8 +70,43 @@ typedef struct List {
 typedef struct {
 	int x;
 	int y;
-	int distance;
+	double distance;
 } EndPosition;
+
+typedef struct ArrayEnd {
+	EndPosition* array;
+	int size;
+} ArrayEnd;
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+/* Fonctions Hash */
+
+HashSet* hsInit();
+
+void hsInsert(HashSet* hs, Node* node);
+
+int hsContains(const HashSet* hs, const Node* node);
+
+void hsFree(HashSet* hs);
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+/* Fonctions PriorityQueue */
+
+PriorityQueue* pqInit();
+
+void pqPush(PriorityQueue* pq, Node* node);
+
+Node* pqPop(PriorityQueue* pq);
+
+int pqIsEmpty(const PriorityQueue* pq);
+
+void pqFree(PriorityQueue* pq);
+
+Node* pqFind(PriorityQueue* pq, const Node* node);
+
+void pqRemove(PriorityQueue* pq, const Node* node);
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 
@@ -78,7 +132,7 @@ Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas);
  * @param node2
  * @return int 1 si les noeuds sont égaux, 0 sinon
  */
-int nodeEquals(Node* node1, Node* node2);
+int nodeEquals(const Node* node1, const Node* node2);
 
 /**
  * @brief Vérifie l'égalité entre deux noeuds sans la vitesse
@@ -87,7 +141,16 @@ int nodeEquals(Node* node1, Node* node2);
  * @param node2
  * @return int 1 si les noeuds sont égaux, 0 sinon
  */
-int nodeEqualsWithoutSpeed(const Node *node1, const Node *node2);
+int nodeEqualsWithoutSpeed(const Node* node1, const Node* node2);
+
+/**
+ * @brief Vérifie l'égalité entre deux noeuds sans la vitesse
+ *
+ * @param node1
+ * @param node2
+ * @return int 1 si les noeuds sont égaux, 0 sinon
+ */
+int nodeEqualsWithoutSpeed(const Node* node1, const Node* node2);
 
 /**
  * @brief Vérifie si un noeud est dans une liste
@@ -96,7 +159,7 @@ int nodeEqualsWithoutSpeed(const Node *node1, const Node *node2);
  * @param list
  * @return int 1 si le noeud est dans la liste, 0 sinon
  */
-int nodeInList(const Node *node, List* list);
+int nodeInList(const Node* node, List* list);
 
 /**
  * @brief Vérifie si un noeud est dans une liste et retourne l'élément de la liste
@@ -106,7 +169,7 @@ int nodeInList(const Node *node, List* list);
  * @param elementInList
  * @return Node* le noeud si il est dans la liste, NULL sinon
  */
-Node* findNodeInList(const Node *node, List* list, ListElement** elementInList);
+Node* findNodeInList(const Node* node, List* list, ListElement** elementInList);
 
 /**
  * @brief Ajoute un noeud dans une liste
@@ -117,7 +180,7 @@ Node* findNodeInList(const Node *node, List* list, ListElement** elementInList);
 void addNodeToList(Node* node, List* list);
 
 /**
- * @brief Supprime un noeud d'une liste avec le plus petit coût f
+ * @brief Supprime un noeud d'une liste
  *
  * @param list
  * @return Node* le noeud supprimé
@@ -133,7 +196,7 @@ void freeNode(Node* node);
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 
-/* Fonctions List */
+/* Fonctions list */
 
 /**
  * @brief Initialise une liste
@@ -148,7 +211,7 @@ List* initList();
  * @param list
  * @return int 1 si la liste est vide, 0 sinon
  */
-int isListEmpty(const List *list);
+int isListEmpty(const List* list);
 
 /**
  * @brief Affiche le chemim
@@ -163,6 +226,8 @@ void printPath(List* path);
  * @param list
  */
 void reverseList(List* list);
+
+void removeElementFromList(List* list, ListElement* element);
 
 /**
  * @brief Libère la mémoire d'une liste
@@ -182,7 +247,7 @@ void freePath(List* path);
  * @param b
  * @return int le coût heuristique
  */
-double heuristicCost(Node* a, Node* b);
+double heuristicCost(const Node* a, const Node* b);
 
 /**
  * @brief Vérifie si une position est occupée
@@ -216,7 +281,9 @@ int compareEndPositions(const void* a, const void* b);
  * @param end
  * @return int 1 si le chemin est libre, 0 sinon
  */
-int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end);
+int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end, int secondX, int secondY, int thirdX, int thirdY);
+
+int isPathClear_Occupied(char** map, int width, int height, Pos2Dint start, Pos2Dint end, int secondX, int secondY, int thirdX, int thirdY);
 
 /**
  * @brief Compute the gas consumption of a requested acceleration
@@ -248,7 +315,7 @@ int gasConsumption(int accX, int accY, int speedX, int speedY, int inSand);
  * @param speedX
  * @param speedY
  */
-ArrayEnd findEndPositions(char **map, int width, int height, const Node *start);
+ArrayEnd* findEndPositions(char** map, int width, int height, const Node* start);
 
 /**
  * @brief Détermine l'accélération à partir du chemin
@@ -261,7 +328,8 @@ ArrayEnd findEndPositions(char **map, int width, int height, const Node *start);
  * @param speedX
  * @param speedY
  */
-void determineAcceleration(const List *path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY);
+void determineAcceleration(const List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY, char** map,
+						   int* boosts);
 
 /**
  * @brief Calcule la norme de la vitesse
@@ -271,6 +339,9 @@ void determineAcceleration(const List *path, int myX, int myY, int* acceleration
  * @return int la norme de la vitesse
  */
 int SpeedNorme(int speedX, int speedY);
+
+int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, int newX, int newY, int newSpeedX, int newSpeedY, Pos2Dint currentPos,
+						  Pos2Dint newPos, int secondX, int secondY, int thirdX, int thirdY, int maxGas, int accX, int accY);
 
 /**
  * @brief Calcule le chemin le plus court
@@ -289,7 +360,7 @@ int SpeedNorme(int speedX, int speedY);
  * @param gasLevel
  * @return List* le chemin le plus court
  */
-List *aStar(Node *start, Node *end, char **map, int width, int height, int secondX, int secondY, int thirdX, int thirdY,
-            int gasLevel, int currentSpeedX, int currentSpeedY, int speedMax);
+List* aStar(Node* start, const Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int gasLevel,
+			int currentSpeedX, int currentSpeedY, int speedMax, int maxGas, int occupied, int occupiedX, int occupiedY);
 
 #endif /* DROITAUBUT_H */
