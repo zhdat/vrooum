@@ -917,7 +917,9 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					newPos.y = newY;
 
 					if (occupied == 1) {
+						fprintf(stderr, "\nRentre dans la boucle occupied ! \n");
 						if (newX == occupiedX && newY == occupiedY) {
+							fprintf(stderr, "\nTrouve un noud incompatible \n");
 							continue;
 						}
 					}
