@@ -757,7 +757,7 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 		}
 	}
 
-	if (boosts > 0) {
+	/* if (boosts > 0) {
 		int boostOptions[3] = { -2, 2 };
 		int i;
 		for (i = 0; i < 3; i++) {
@@ -780,7 +780,7 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 				}
 			}
 		}
-	}
+	} */
 }
 
 /**
