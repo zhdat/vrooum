@@ -961,7 +961,7 @@ int main()
 	int thirdX;
 	int thirdY;
 	int i;
-	int vitesse = 9;
+	int vitesse = 25;
 	int oldX;
 	int oldY;
 	int occupied;
@@ -993,7 +993,7 @@ int main()
 	fprintf(stderr, "\n=== Race start ===\n");
 
 	while (!feof(stdin)) {
-		vitesse = 9;
+		vitesse = 25;
 		i = 1;
 		occupied = 0;
 		round++;
@@ -1026,7 +1026,6 @@ int main()
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied, occupiedX,
 					 occupiedY);
 		reverseList(path);
-		printPath(path);
 
 		if (path != NULL) {
 			Node* firstNode;
@@ -1040,14 +1039,13 @@ int main()
 
 			if ((firstNode->x == secondX && firstNode->y == secondY) || (firstNode->x == thirdX && firstNode->y == thirdY) ||
 				isPathClear_Occupied(map, width, height, startNodePos, firstNodePos, secondX, secondY, thirdX, thirdY) == 0) {
-				vitesse = 9;
+				vitesse = 25;
 				occupied = 1;
 				occupiedX = firstNode->x;
 				occupiedY = firstNode->y;
 				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
 							 occupiedX, occupiedY);
 				reverseList(path);
-				printPath(path);
 			}
 		}
 
