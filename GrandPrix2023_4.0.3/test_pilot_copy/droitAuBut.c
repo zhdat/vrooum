@@ -1009,6 +1009,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 	start->speedY = currentSpeedY;
 
 	pqPush(openSet, start);
+	fprintf(stderr, "end : %d %d\n", end->x, end->y);
 
 	while (!pqIsEmpty(openSet)) {
 		Node* currentNode = pqPop(openSet);
