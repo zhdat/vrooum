@@ -1082,8 +1082,8 @@ int main()
 				fprintf(stderr, "\nVoiture rencontré !\n");
 				vitesse = 25;
 				occupied = 1;
-				firstNode->x = occupiedX;
-				firstNode->y = occupiedY;
+				occupiedX = firstNode->x;
+				occupiedY = firstNode->y;
 				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
 							 occupiedX, occupiedY);
 				while (path == NULL && vitesse > 0) {
