@@ -1012,6 +1012,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 	fprintf(stderr, "end : %d %d\n", end->x, end->y);
 
 	while (!pqIsEmpty(openSet)) {
+		fprintf(stderr, "openSet : %d\n", openSet->size);
 		Node* currentNode = pqPop(openSet);
 		fprintf(stderr, "current : %d %d\n", currentNode->x, currentNode->y);
 
