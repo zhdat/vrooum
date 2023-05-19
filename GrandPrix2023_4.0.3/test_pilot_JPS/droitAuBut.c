@@ -1075,6 +1075,7 @@ int main()
 			firstNode = path->head->data;
 
 			if ((firstNode->x == secondX && firstNode->y == secondY) || (firstNode->x == thirdX && firstNode->y == thirdY)) {
+				fprintf(stderr, "\nVoiture rencontré !\n");
 				vitesse = 25;
 				occupied = 1;
 				firstNode->x = occupiedX;
