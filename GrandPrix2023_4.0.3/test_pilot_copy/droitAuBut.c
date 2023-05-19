@@ -1164,6 +1164,7 @@ int main()
 		start->y = myY;
 
 		findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, arrayEnd, &end);
+		fprintf(stderr, "    End: (%d,%d)\n", end->x, end->y);
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied, occupiedX,
 					 occupiedY);
