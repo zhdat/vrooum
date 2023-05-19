@@ -999,6 +999,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 
 	PriorityQueue* openSet = pqInit(10);
 	HashSet* closedSet = hsInit();
+	fprintf(stderr, "start : %d %d\n", start->x, start->y);
 
 	start->g_cost = 0;
 	start->h_cost = heuristicCost(start, end);
