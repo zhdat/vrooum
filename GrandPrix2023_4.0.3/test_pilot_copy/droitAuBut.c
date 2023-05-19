@@ -1168,6 +1168,7 @@ int main()
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied, occupiedX,
 					 occupiedY);
+		fprintf(stderr, "    Path: ");
 		reverseList(path);
 		printPath(path);
 
