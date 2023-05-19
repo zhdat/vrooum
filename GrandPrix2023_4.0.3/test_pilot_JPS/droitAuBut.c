@@ -1031,16 +1031,12 @@ int main()
 			/* Trouver les positions de départ et d'arrivée sur la carte */
 			start = createNode(myX, myY, NULL, speedX, speedY, maxGas);
 			arrayEnd = findEndPositions(map, width, height, start);
-			fprintf(stderr, "    Start: (%d, %d)\n", start->x, start->y);
-			fflush(stderr);
 		}
 
 		start->x = myX;
 		start->y = myY;
 
 		findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, arrayEnd, &end);
-		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
-
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied, occupiedX,
 					 occupiedY);
@@ -1049,15 +1045,11 @@ int main()
 			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
 						 occupiedX, occupiedY);
 		}
-		fprintf(stderr, "    Path found: \n");
 		reverseList(path);
-		printPath(path);
 
 		while (path == NULL && i < arrayEnd->size) {
 			vitesse = 25;
-			fprintf(stderr, "    Path not found: \n");
 			end = createNode(arrayEnd->array[i].x, arrayEnd->array[i].y, NULL, speedX, speedY, 0);
-			fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
 						 occupiedX, occupiedY);
 			while (path == NULL && vitesse > 0) {
@@ -1065,9 +1057,7 @@ int main()
 				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
 							 occupiedX, occupiedY);
 			}
-			fprintf(stderr, "    Path found: \n");
 			reverseList(path);
-			printPath(path);
 			i++;
 		}
 
@@ -1095,13 +1085,11 @@ int main()
 								 occupied, occupiedX, occupiedY);
 				}
 				reverseList(path);
-				printPath(path);
 			}
 		}
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map, &boosts);
-		fprintf(stderr, "    Acceleration: (%d, %d)\n", accelerationX, accelerationY);
 
 		/* Gas consumption cannot be accurate here. */
 		gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, map[myY][myX] == '~');
