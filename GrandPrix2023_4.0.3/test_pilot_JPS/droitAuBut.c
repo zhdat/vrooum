@@ -1084,7 +1084,7 @@ int main()
 		}
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
-		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map), boosts;
+		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map, boosts);
 		fprintf(stderr, "    Acceleration: (%d, %d)\n", accelerationX, accelerationY);
 
 		/* Gas consumption cannot be accurate here. */
