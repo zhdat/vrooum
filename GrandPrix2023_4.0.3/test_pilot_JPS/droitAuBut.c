@@ -707,7 +707,8 @@ void findBestEnd(int myX, int myY, int secondX, int secondY, int thirdX, int thi
  * @param speedX
  * @param speedY
  */
-void determineAcceleration(const List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY, char** map, int boosts)
+void determineAcceleration(const List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY, char** map,
+						   int* boosts)
 {
 	int nextX;
 	int nextY;
@@ -757,30 +758,15 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 		}
 	}
 
-	/* if (boosts > 0) {
-		int boostOptions[3] = { -2, 2 };
-		int i;
-		for (i = 0; i < 3; i++) {
-			int boostX = boostOptions[i];
-			int boostY;
-			int j;
-			for (j = 0; j < 3; j++) {
-				boostY = boostOptions[j];
-				if (boosts == 0) {
-					break;
-				}
-				if (boostX != 0 || boostY != 0) {
-					if (*accelerationX + boostX >= -2 && *accelerationX + boostX <= 2 && *accelerationY + boostY >= -2 &&
-						*accelerationY + boostY <= 2 && SpeedNorme(speedX + *accelerationX + boostX, speedY + *accelerationY + boostY) <= 25) {
-						*accelerationX += boostX;
-						*accelerationY += boostY;
-						boosts--;
-						break;
-					}
-				}
+	if (*boosts > 0) {
+		if (*boosts != 0) {
+			if (SpeedNorme(speedX + (*accelerationX * 2), speedY + (*accelerationY * 2)) <= 25) {
+				*accelerationX = *accelerationX * 2;
+				*accelerationY = *accelerationY * 2;
+				*boosts--;
 			}
 		}
-	} */
+	}
 }
 
 /**
@@ -934,9 +920,6 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 						if (newX == start->x && newY == start->y) {
 							continue;
 						}
-						if (isPathClear_Occupied(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0) {
-							continue;
-						}
 					}
 
 					if (isPathClear(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0)
@@ -976,7 +959,7 @@ int main()
 	int height;
 	int gasLevel;
 	int maxGas;
-	int boosts = BOOSTS_AT_START;
+	int* boosts = BOOSTS_AT_START;
 	int round = 0;
 	int accelerationX = 0;
 	int accelerationY = 0;
@@ -1082,7 +1065,7 @@ int main()
 		}
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
-		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map, boosts);
+		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map, &boosts);
 		fprintf(stderr, "    Acceleration: (%d, %d)\n", accelerationX, accelerationY);
 
 		/* Gas consumption cannot be accurate here. */
@@ -1105,6 +1088,8 @@ int main()
 				isPathClear_Occupied(map, width, height, debut, fin, secondX, secondY, thirdX, thirdY)) {
 				vitesse = 25;
 				occupied = 1;
+				start->x = myX + speedX;
+				start->y = myY + speedY;
 				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied);
 				while (path == NULL && vitesse > 0) {
 					vitesse--;
@@ -1112,6 +1097,7 @@ int main()
 						aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied);
 				}
 			}
+			determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map, &boosts);
 		}
 
 		/* Write the acceleration request to the race manager (stdout). */
