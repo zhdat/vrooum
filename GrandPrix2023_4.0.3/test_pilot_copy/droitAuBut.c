@@ -121,12 +121,16 @@ void deleteFromHash(HashTable* ht, char* key)
 	HashNode *temp = list, *prev = NULL;
 	while (temp) {
 		if (strcmp(temp->key, key) == 0) {
-			if (temp == list)
+			if (temp == list) {
 				ht->list[pos] = list->next;
-			else
+			} else {
 				prev->next = temp->next;
-			free(temp->key);
-			free(temp);
+			}
+			char* tempKey = temp->key;
+			HashNode* tempNode = temp;
+			temp = temp->next;
+			free(tempKey);
+			free(tempNode);
 			return;
 		}
 		prev = temp;
