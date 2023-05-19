@@ -213,6 +213,7 @@ Node* pqPop(PriorityQueue* pq)
 		return NULL;
 
 	Node* root = pq->nodes[0];
+	fprintf(stderr, "pqPop: %d:%d\n", root->x, root->y);
 	char* key = nodeHashKey(root);
 	deleteFromHash(pq->hashTable, key);
 	free(key);
