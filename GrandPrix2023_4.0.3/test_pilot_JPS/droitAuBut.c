@@ -1073,6 +1073,7 @@ int main()
 		if (path != NULL) {
 			Node* firstNode;
 			firstNode = path->head->data;
+			fprintf(stderr, " premier node : (%d, %d)", firstNode->x, firstNode->y);
 
 			if ((firstNode->x == secondX && firstNode->y == secondY) || (firstNode->x == thirdX && firstNode->y == thirdY)) {
 				fprintf(stderr, "\nVoiture rencontré !\n");
