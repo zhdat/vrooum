@@ -1013,6 +1013,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 
 	while (!pqIsEmpty(openSet)) {
 		Node* currentNode = pqPop(openSet);
+		fprintf(stderr, "current : %d %d\n", currentNode->x, currentNode->y);
 
 		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
 			List* path;
