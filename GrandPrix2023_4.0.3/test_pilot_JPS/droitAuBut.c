@@ -1070,6 +1070,8 @@ int main()
 			i++;
 		}
 
+		fprintf(stderr, "\n secondX, secondY : (%d, %d)\n", secondX, secondY);
+
 		if (path != NULL) {
 			Node* firstNode;
 			firstNode = path->head->next->data;
