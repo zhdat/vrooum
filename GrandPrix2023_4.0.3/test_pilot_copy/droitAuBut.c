@@ -76,7 +76,6 @@ HashNode* createHashNode(const char* key, int index)
 {
 	HashNode* node = (HashNode*)malloc(sizeof(HashNode));
 	if (!node) {
-		// handle allocation failure
 		return NULL;
 	}
 	node->key = strdup(key); // duplicate key string
