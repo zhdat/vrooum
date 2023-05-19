@@ -134,6 +134,7 @@ void deleteFromHash(HashTable* ht, char* key)
 			temp = tempNextNode;
 			return;
 		}
+		fprintf(stderr, "deleteFromHash %s\n", temp->key);
 		prev = temp;
 		temp = temp->next;
 	}
