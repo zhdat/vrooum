@@ -207,7 +207,8 @@ int nodeEquals(const Node* node1, const Node* node2)
 	if (node1 == NULL || node2 == NULL) {
 		return 0;
 	}
-	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY;
+	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY &&
+		   node1->gas == node2->gas;
 }
 
 /**
