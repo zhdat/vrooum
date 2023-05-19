@@ -119,7 +119,9 @@ void deleteFromHash(HashTable* ht, char* key)
 	int pos = hashCode(ht, key);
 	fprintf(stderr, "pos = %d\n", pos);
 	HashNode* list = ht->list[pos];
+	fprintf(stderr, "list = %p\n", list);
 	HashNode *temp = list, *prev = NULL;
+	fprintf(stderr, "temp = %p\n", temp);
 	while (temp) {
 		if (strcmp(temp->key, key) == 0) {
 			if (temp == list) {
