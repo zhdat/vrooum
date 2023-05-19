@@ -1109,7 +1109,7 @@ int main()
 				while (path == NULL && vitesse > 0) {
 					vitesse--;
 					path =
-						Star(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied);
+						aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied);
 				}
 			}
 		}
