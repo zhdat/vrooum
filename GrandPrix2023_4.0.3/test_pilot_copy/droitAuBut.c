@@ -1019,7 +1019,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 			path = getPath(currentNode);
 			return path;
 		}
-
+		fprintf(stderr, "current : %d %d\n", currentNode->x, currentNode->y);
 		hsInsert(closedSet, currentNode);
 		fprintf(stderr, "current : %d %d\n", currentNode->x, currentNode->y);
 
