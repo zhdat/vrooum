@@ -917,10 +917,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					newPos.y = newY;
 
 					if (occupied == 1) {
-						fprintf(stderr, "\nRentre dans la boucle occupied ! \n");
-						fprintf(stderr, "\nnewX = %d, newY = %d, occupiedX = %d, occupiedY = %d \n", newX, newY, occupiedX, occupiedY);
 						if (newX == occupiedX && newY == occupiedY) {
-							fprintf(stderr, "\nTrouve un noud incompatible \n");
 							continue;
 						}
 					}
@@ -1076,10 +1073,8 @@ int main()
 		if (path != NULL) {
 			Node* firstNode;
 			firstNode = path->head->next->data;
-			fprintf(stderr, " premier node : (%d, %d)", firstNode->x, firstNode->y);
 
 			if ((firstNode->x == secondX && firstNode->y == secondY) || (firstNode->x == thirdX && firstNode->y == thirdY)) {
-				fprintf(stderr, "\nVoiture rencontré !\n");
 				vitesse = 25;
 				occupied = 1;
 				occupiedX = firstNode->x;
