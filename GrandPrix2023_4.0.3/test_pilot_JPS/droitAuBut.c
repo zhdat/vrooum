@@ -41,7 +41,7 @@ int hsContains(const HashSet* hs, const Node* node)
 	HashSetElement* current = hs->buckets[hash];
 
 	while (current != NULL) {
-		if (nodeEquals(current->node, node)) {
+		if (nodeEqualsWithoutSpeed(current->node, node)) {
 			return 1;
 		}
 		current = current->next;
@@ -133,7 +133,7 @@ Node* pqFind(PriorityQueue* pq, const Node* node)
 {
 	PriorityQueueElement* current = pq->head;
 	while (current != NULL) {
-		if (nodeEquals(current->node, node)) {
+		if (nodeEqualsWithoutSpeed(current->node, node)) {
 			return current->node;
 		}
 		current = current->next;
@@ -147,7 +147,7 @@ void pqRemove(PriorityQueue* pq, const Node* node)
 	if (pq->head == NULL) {
 		return;
 	}
-	if (nodeEquals(pq->head->node, node)) {
+	if (nodeEqualsWithoutSpeed(pq->head->node, node)) {
 		PriorityQueueElement* elementToRemove = pq->head;
 		pq->head = pq->head->next;
 		free(elementToRemove);
@@ -155,7 +155,7 @@ void pqRemove(PriorityQueue* pq, const Node* node)
 	}
 	current = pq->head;
 	while (current->next != NULL) {
-		if (nodeEquals(current->next->node, node)) {
+		if (nodeEqualsWithoutSpeed(current->next->node, node)) {
 			PriorityQueueElement* elementToRemove = current->next;
 			current->next = current->next->next;
 			free(elementToRemove);
@@ -207,8 +207,7 @@ int nodeEquals(const Node* node1, const Node* node2)
 	if (node1 == NULL || node2 == NULL) {
 		return 0;
 	}
-	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY &&
-		   node1->gas == node2->gas;
+	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY;
 }
 
 /**
