@@ -476,15 +476,7 @@ void freePath(List* path)
  */
 double heuristicCost(const Node* a, const Node* b)
 {
-	double dx = abs(a->x - b->x);
-	double dy = abs(a->y - b->y);
-	double dMin = fmin(dx, dy);
-	double dMax = fmax(dx, dy);
-	double diagonalCost = sqrt(2);
-	double orthogonalCost = 2;
-
-	double heuristic1 = dMin * diagonalCost + (dMax - dMin) * orthogonalCost;
-	return heuristic1;
+	return sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2));
 }
 
 /**
