@@ -72,6 +72,19 @@ void hsFree(HashSet* hs)
 	free(hs);
 }
 
+HashNode* createHashNode(const char* key, int index)
+{
+	HashNode* node = (HashNode*)malloc(sizeof(HashNode));
+	if (!node) {
+		// handle allocation failure
+		return NULL;
+	}
+	node->key = strdup(key); // duplicate key string
+	node->index = index;
+	node->next = NULL;
+	return node;
+}
+
 HashTable* createHashTable(int capacity)
 {
 	int i;
@@ -98,19 +111,8 @@ int hashCode(HashTable* ht, char* key)
 void insertToHash(HashTable* ht, char* key, int index)
 {
 	int pos = hashCode(ht, key);
-	HashNode* list = ht->list[pos];
-	HashNode* temp = list;
-	while (temp) {
-		if (strcmp(temp->key, key) == 0) {
-			temp->index = index;
-			return;
-		}
-		temp = temp->next;
-	}
-	HashNode* newNode = (HashNode*)malloc(sizeof(HashNode));
-	newNode->key = strdup(key);
-	newNode->index = index;
-	newNode->next = list;
+	HashNode* newNode = createHashNode(key, index);
+	newNode->next = ht->list[pos];
 	ht->list[pos] = newNode;
 }
 
@@ -1012,7 +1014,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 	int newGas;
 	Node* neighbour;
 
-	PriorityQueue* openSet = pqInit(10);
+	PriorityQueue* openSet = pqInit(100);
 	HashSet* closedSet = hsInit();
 	fprintf(stderr, "start : %d %d\n", start->x, start->y);
 
