@@ -133,7 +133,7 @@ Node* pqFind(PriorityQueue* pq, const Node* node)
 {
 	PriorityQueueElement* current = pq->head;
 	while (current != NULL) {
-		if (nodeEqual(current->node, node)) {
+		if (nodeEquals(current->node, node)) {
 			return current->node;
 		}
 		current = current->next;
