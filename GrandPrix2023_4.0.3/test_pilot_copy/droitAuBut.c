@@ -154,7 +154,8 @@ void pqFree(PriorityQueue* pq)
 
 Node* pqFind(PriorityQueue* pq, const Node* node)
 {
-	for (int i = 0; i < pq->size; i++) {
+	int i;
+	for (i = 0; i < pq->size; i++) {
 		if (nodeEquals(pq->nodes[i], node)) {
 			return pq->nodes[i];
 		}
@@ -164,7 +165,8 @@ Node* pqFind(PriorityQueue* pq, const Node* node)
 
 void pqRemove(PriorityQueue* pq, const Node* node)
 {
-	for (int i = 0; i < pq->size; i++) {
+	int i;
+	for (i = 0; i < pq->size; i++) {
 		if (nodeEquals(pq->nodes[i], node)) {
 			swap(&pq->nodes[i], &pq->nodes[pq->size - 1]);
 			pq->size--;
