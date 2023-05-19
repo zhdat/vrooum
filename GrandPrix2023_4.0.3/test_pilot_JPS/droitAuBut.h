@@ -283,6 +283,8 @@ int compareEndPositions(const void* a, const void* b);
  */
 int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end, int secondX, int secondY, int thirdX, int thirdY);
 
+int isPathClear_Occupied(char** map, int width, int height, Pos2Dint start, Pos2Dint end, int secondX, int secondY, int thirdX, int thirdY);
+
 /**
  * @brief Compute the gas consumption of a requested acceleration
  *

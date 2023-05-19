@@ -560,6 +560,36 @@ int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end,
 		if (map[p.y][p.x] == '3') {
 			return 0;
 		}
+	}
+	return 1; /*Path is clear*/
+}
+
+int isPathClear_Occupied(char** map, int width, int height, Pos2Dint start, Pos2Dint end, int secondX, int secondY, int thirdX, int thirdY)
+{
+	InfoLine vline;
+	Pos2Dint p;
+	initLine(start.x, start.y, end.x, end.y, &vline);
+	while (nextPoint(&vline, &p, +1) > 0) {
+		if (p.x == start.x && p.y == start.y) {
+			/* We suppose that the start position is not worth visiting! */
+			continue;
+		}
+		if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height) {
+			/* We suppose that the map is surrounded by walls! */
+			return 0;
+		}
+		if (map[p.y][p.x] == '.') {
+			return 0;
+		}
+		if (map[p.y][p.x] == '1') {
+			return 0;
+		}
+		if (map[p.y][p.x] == '2') {
+			return 0;
+		}
+		if (map[p.y][p.x] == '3') {
+			return 0;
+		}
 		if (p.y == secondY && p.x == secondX) {
 			return 0;
 		}
@@ -677,7 +707,7 @@ void findBestEnd(int myX, int myY, int secondX, int secondY, int thirdX, int thi
  * @param speedX
  * @param speedY
  */
-void determineAcceleration(const List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY, char** map)
+void determineAcceleration(const List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY, char** map, int boosts)
 {
 	int nextX;
 	int nextY;
@@ -724,6 +754,33 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 		if (SpeedNorme(speedX + *accelerationX, speedY + *accelerationY) > 1) {
 			*accelerationX = 0;
 			*accelerationY = 0;
+		}
+	}
+
+	if (boosts > 0) {
+		/* Boosts autorisés : {-2, -1, 0, 1, 2}^2 \ {-1, 0, 1}^2 */
+		int boostOptions[5] = { -2, -1, 1, 2 };
+		int i;
+		for (i = 0; i < 5; i++) {
+			int boostX = boostOptions[i];
+			int boostY;
+			int j;
+			for (j = 0; j < 5; j++) {
+				boostY = boostOptions[j];
+				if (boostX != 0 || boostY != 0) {
+					/* Vérifier si le boost est possible */
+					if (*accelerationX + boostX >= -1 && *accelerationX + boostX <= 1 && *accelerationY + boostY >= -1 &&
+						*accelerationY + boostY <= 1 && SpeedNorme(speedX + *accelerationX + boostX, speedY + *accelerationY + boostY) <= 5) {
+						*accelerationX += boostX;
+						*accelerationY += boostY;
+						boosts--;
+						break;
+					}
+				}
+			}
+			if (boosts == 0) {
+				break;
+			}
 		}
 	}
 }
@@ -879,6 +936,9 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 						if (newX == start->x && newY == start->y) {
 							continue;
 						}
+						if (isPathClear_Occupied(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0) {
+							continue;
+						}
 					}
 
 					if (isPathClear(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0)
@@ -938,6 +998,7 @@ int main()
 	int oldX;
 	int oldY;
 	int occupied;
+	int boosts = 5;
 
 	ArrayEnd* arrayEnd = NULL;
 	Node* start = NULL;
@@ -1024,7 +1085,7 @@ int main()
 		}
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
-		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map);
+		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map), boosts;
 		fprintf(stderr, "    Acceleration: (%d, %d)\n", accelerationX, accelerationY);
 
 		/* Gas consumption cannot be accurate here. */
