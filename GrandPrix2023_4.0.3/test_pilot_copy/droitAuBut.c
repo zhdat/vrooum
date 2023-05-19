@@ -127,6 +127,7 @@ void deleteFromHash(HashTable* ht, char* key)
 	fprintf(stderr, "list is not null\n");
 	fprintf(stderr, "key: %s\n", key);
 	fprintf(stderr, "list->key: %s\n", list->key);
+	fprintf(stderr, "strcmp(list->key, key): %d\n", strcmp(list->key, key));
 
 	HashNode *temp = list, *prev = NULL;
 	while (temp) {
