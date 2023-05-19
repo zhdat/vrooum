@@ -407,7 +407,6 @@ void reverseList(List* list)
 	ListElement* currentElement;
 	ListElement* nextElement;
 	if (list == NULL) {
-		fprintf(stderr, "List is NULL\n");
 		return;
 	}
 	prevElement = NULL;
@@ -415,7 +414,6 @@ void reverseList(List* list)
 	nextElement = NULL;
 
 	if (list == NULL || list->head == NULL) {
-		fprintf(stderr, "List is empty\n");
 		return;
 	}
 
@@ -682,10 +680,6 @@ void findBestEnd(int myX, int myY, int secondX, int secondY, int thirdX, int thi
 	qsort(array->array, array->size, sizeof(EndPosition), compareEndPositions);
 	*end = createNode(array->array[0].x, array->array[0].y, NULL, speedX, speedY, 0);
 
-	for (j = 0; j < array->size; j++) {
-		fprintf(stderr, "endPositions[%d] = (%d, %d, %f)\n", j, array->array[j].x, array->array[j].y, array->array[j].distance);
-	}
-
 	for (i = 0; i < array->size; i++) {
 		int x = array->array[i].x;
 		int y = array->array[i].y;
@@ -714,7 +708,6 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 	int nextY;
 	Node const* first;
 	if (path == NULL || path->head == NULL || path->head->data == NULL) {
-		fprintf(stderr, "Path is NULL\n");
 		*accelerationX = 0;
 		*accelerationY = 0;
 		return;
@@ -761,7 +754,6 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 
 	/* Accélération dans le sable */
 	if (map[myY][myX] == '~') {
-		fprintf(stderr, "\n<In sand\n");
 		if (SpeedNorme(speedX + *accelerationX, speedY + *accelerationY) > 1) {
 			*accelerationX = 0;
 			*accelerationY = 0;
