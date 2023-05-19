@@ -590,6 +590,9 @@ int isPathClear_Occupied(char** map, int width, int height, Pos2Dint start, Pos2
 		if (map[p.y][p.x] == '3') {
 			return 0;
 		}
+		fprintf(stderr, "p.x = %d, p.y = %d\n", p.x, p.y);
+		fprintf(stderr, "secondX = %d, secondY = %d\n", secondX, secondY);
+		fprintf(stderr, "thirdX = %d, thirdY = %d\n", thirdX, thirdY);
 		if (p.y == secondY && p.x == secondX) {
 			return 0;
 		}
