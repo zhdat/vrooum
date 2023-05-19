@@ -74,17 +74,17 @@ void hsFree(HashSet* hs)
 
 HashTable* createHashTable(int capacity)
 {
+	int i;
 	HashTable* hashTable = (HashTable*)malloc(sizeof(HashTable));
 	hashTable->capacity = capacity;
 	hashTable->list = (HashNode**)malloc(sizeof(HashNode*) * capacity);
-	for (int i = 0; i < capacity; i++)
+	for (i = 0; i < capacity; i++)
 		hashTable->list[i] = NULL;
 	return hashTable;
 }
 
 int hashCode(HashTable* ht, char* key)
 {
-	// fonction de hachage simple
 	unsigned long int hashval = 0;
 	int i = 0;
 	while (hashval < ULONG_MAX && i < strlen(key)) {
@@ -267,13 +267,14 @@ int pqIsEmpty(const PriorityQueue* pq)
 
 void pqFree(PriorityQueue* pq)
 {
+	int i;
 	if (pq) {
 		if (pq->nodes) {
 			free(pq->nodes);
 		}
 
 		if (pq->hashTable) {
-			for (int i = 0; i < pq->hashTable->capacity; i++) {
+			for (i = 0; i < pq->hashTable->capacity; i++) {
 				HashNode* node = pq->hashTable->list[i];
 				while (node != NULL) {
 					HashNode* temp = node;
