@@ -817,7 +817,7 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 	Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 	factor = 1;
 	if (map[newY][newX] == '~') {
-		factor += 4;
+		factor += 6;
 	}
 	if (SpeedNorme(newSpeedX, newSpeedY) < 25) {
 		factor += 2;
