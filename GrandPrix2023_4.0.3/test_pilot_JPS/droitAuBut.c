@@ -920,7 +920,8 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					newPos.y = newY;
 
 					if (occupied == 1) {
-						if ((newX == secondX && newY == secondY) || (newX == thirdX && newY == thirdY)) {
+						if ((newX == secondX && newY == secondY) || (newX == thirdX && newY == thirdY) ||
+							isPathClear_Occupied(map, width, height, currentPos, newPos, secondX, secondY, thirdX, thirdY) == 0) {
 							continue;
 						}
 					}
