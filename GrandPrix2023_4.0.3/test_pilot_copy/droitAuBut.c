@@ -116,6 +116,7 @@ void insertToHash(HashTable* ht, char* key, int index)
 
 void deleteFromHash(HashTable* ht, char* key)
 {
+	fprintf(stderr, "key: %s\n", key);
 	int pos = hashCode(ht, key);
 	HashNode* list = ht->list[pos];
 
