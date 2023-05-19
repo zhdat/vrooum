@@ -1074,9 +1074,16 @@ int main()
 
 		if (path != NULL) {
 			Node* firstNode;
+			Pos2Dint firstNodePos;
+			Pos2Dint startNodePos;
 			firstNode = path->head->next->data;
+			firstNodePos.x = firstNode->x;
+			firstNodePos.y = firstNode->y;
+			startNodePos.x = start->x;
+			startNodePos.y = start->y;
 
-			if ((firstNode->x == secondX && firstNode->y == secondY) || (firstNode->x == thirdX && firstNode->y == thirdY)) {
+			if ((firstNode->x == secondX && firstNode->y == secondY) || (firstNode->x == thirdX && firstNode->y == thirdY) ||
+				isPathClear_Occupied(map, width, height, startNodePos, firstNodePos, secondX, secondY, thirdX, thirdY)) {
 				vitesse = 25;
 				occupied = 1;
 				occupiedX = firstNode->x;
