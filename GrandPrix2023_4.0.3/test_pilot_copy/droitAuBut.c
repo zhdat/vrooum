@@ -117,11 +117,8 @@ void insertToHash(HashTable* ht, char* key, int index)
 void deleteFromHash(HashTable* ht, char* key)
 {
 	int pos = hashCode(ht, key);
-	fprintf(stderr, "pos = %d\n", pos);
 	HashNode* list = ht->list[pos];
-	fprintf(stderr, "list = %p\n", list);
 	HashNode *temp = list, *prev = NULL;
-	fprintf(stderr, "temp = %p\n", temp);
 	while (temp) {
 		if (strcmp(temp->key, key) == 0) {
 			if (temp == list) {
@@ -130,10 +127,10 @@ void deleteFromHash(HashTable* ht, char* key)
 				prev->next = temp->next;
 			}
 			char* tempKey = temp->key;
-			HashNode* tempNode = temp;
-			temp = temp->next;
+			HashNode* tempNextNode = temp->next;
 			free(tempKey);
-			free(tempNode);
+			free(temp);
+			temp = tempNextNode;
 			return;
 		}
 		prev = temp;
