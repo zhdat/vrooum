@@ -78,7 +78,7 @@ HashNode* createHashNode(const char* key, int index)
 	if (!node) {
 		return NULL;
 	}
-	node->key = strdup(key); // duplicate key string
+	node->key = strdup(key);
 	node->index = index;
 	node->next = NULL;
 	return node;
