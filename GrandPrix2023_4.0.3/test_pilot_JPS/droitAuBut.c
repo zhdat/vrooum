@@ -757,8 +757,8 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 		}
 	}
 
-	if (boosts > 0) {
-		/* Boosts autorisés : {-2, -1, 0, 1, 2}^2 \ {-1, 0, 1}^2 */
+	/*if (boosts > 0) {
+		 Boosts autorisés : {-2, -1, 0, 1, 2}^2 \ {-1, 0, 1}^2
 		int boostOptions[5] = { -2, -1, 1, 2 };
 		int i;
 		for (i = 0; i < 5; i++) {
@@ -768,7 +768,7 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 			for (j = 0; j < 5; j++) {
 				boostY = boostOptions[j];
 				if (boostX != 0 || boostY != 0) {
-					/* Vérifier si le boost est possible */
+					Vérifier si le boost est possible
 					if (*accelerationX + boostX >= -1 && *accelerationX + boostX <= 1 && *accelerationY + boostY >= -1 &&
 						*accelerationY + boostY <= 1 && SpeedNorme(speedX + *accelerationX + boostX, speedY + *accelerationY + boostY) <= 5) {
 						*accelerationX += boostX;
@@ -782,7 +782,7 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 				break;
 			}
 		}
-	}
+	}*/
 }
 
 /**
