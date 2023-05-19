@@ -750,7 +750,7 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 	}
 
 	/* Accélération dans le sable */
-	/* if (map[myY][myX] == '~') {
+	if (map[myY][myX] == '~') {
 		fprintf(stderr, "\n<In sand\n");
 		if (SpeedNorme(speedX + *accelerationX, speedY + *accelerationY) > 1) {
 			*accelerationX = 0;
@@ -766,7 +766,7 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 				*boosts--;
 			}
 		}
-	} */
+	}
 }
 
 /**
@@ -1073,13 +1073,13 @@ int main()
 		speedX += accelerationX;
 		speedY += accelerationY;
 
-		if (path != NULL) {
+		/* if (path != NULL) {
 			Node* firstNode;
 			Pos2Dint debut;
 			Pos2Dint fin;
 
-			debut.x = start->x;
-			debut.y = start->y;
+			debut.x = start->x + speedX;
+			debut.y = start->y + speedY;
 			fin.x = end->x;
 			fin.y = end->y;
 			firstNode = path->head->data;
@@ -1098,7 +1098,7 @@ int main()
 				}
 			}
 			determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map, &boosts);
-		}
+		} */
 
 		/* Write the acceleration request to the race manager (stdout). */
 		sprintf(action, "%d %d", accelerationX, accelerationY);
