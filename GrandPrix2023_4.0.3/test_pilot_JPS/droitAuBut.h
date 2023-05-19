@@ -361,6 +361,6 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
  * @return List* le chemin le plus court
  */
 List* aStar(Node* start, const Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int gasLevel,
-			int currentSpeedX, int currentSpeedY, int speedMax, int maxGas, int occupied);
+			int currentSpeedX, int currentSpeedY, int speedMax, int maxGas, int occupied, int occupiedX, int occupiedY);
 
 #endif /* DROITAUBUT_H */

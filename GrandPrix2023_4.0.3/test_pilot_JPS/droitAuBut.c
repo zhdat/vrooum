@@ -749,22 +749,22 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 		*accelerationY = -1;
 	}
 
-	/* Accélération dans le sable */
-	if (map[myY][myX] == '~') {
-		fprintf(stderr, "\n<In sand\n");
-		if (SpeedNorme(speedX + *accelerationX, speedY + *accelerationY) > 1) {
-			*accelerationX = 0;
-			*accelerationY = 0;
-		}
-	}
-
-	if (*boosts > 0) {
+	/* if (*boosts > 0) {
 		if (*boosts != 0) {
 			if (SpeedNorme(speedX + (*accelerationX * 2), speedY + (*accelerationY * 2)) <= 25) {
 				*accelerationX = *accelerationX * 2;
 				*accelerationY = *accelerationY * 2;
 				*boosts--;
 			}
+		}
+	} */
+
+	/* Accélération dans le sable */
+	if (map[myY][myX] == '~') {
+		fprintf(stderr, "\n<In sand\n");
+		if (SpeedNorme(speedX + *accelerationX, speedY + *accelerationY) > 1) {
+			*accelerationX = 0;
+			*accelerationY = 0;
 		}
 	}
 }
@@ -859,7 +859,7 @@ List* getPath(Node* currentNode)
  * @return List* le chemin le plus court
  */
 List* aStar(Node* start, const Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int gasLevel,
-			int currentSpeedX, int currentSpeedY, int speedMax, int maxGas, int occupied)
+			int currentSpeedX, int currentSpeedY, int speedMax, int maxGas, int occupied, int occupiedX, int occupiedY)
 {
 	int accX;
 	int accY;
@@ -917,7 +917,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					newPos.y = newY;
 
 					if (occupied == 1) {
-						if (newX == start->x && newY == start->y) {
+						if (newX == occupiedX && newY == occupiedY) {
 							continue;
 						}
 					}
@@ -979,6 +979,8 @@ int main()
 	int oldX;
 	int oldY;
 	int occupied;
+	int occupiedX = 0;
+	int occupiedY = 0;
 
 	ArrayEnd* arrayEnd = NULL;
 	Node* start = NULL;
@@ -1039,10 +1041,12 @@ int main()
 		fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
 
 		/* Executer l'algorithme A* pour trouver le chemin */
-		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied);
+		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied, occupiedX,
+					 occupiedY);
 		while (path == NULL && vitesse > 0) {
 			vitesse--;
-			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied);
+			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
+						 occupiedX, occupiedY);
 		}
 		fprintf(stderr, "    Path found: \n");
 		reverseList(path);
@@ -1053,15 +1057,36 @@ int main()
 			fprintf(stderr, "    Path not found: \n");
 			end = createNode(arrayEnd->array[i].x, arrayEnd->array[i].y, NULL, speedX, speedY, 0);
 			fprintf(stderr, "    End: (%d, %d)\n", end->x, end->y);
-			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied);
+			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
+						 occupiedX, occupiedY);
 			while (path == NULL && vitesse > 0) {
 				vitesse--;
-				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied);
+				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
+							 occupiedX, occupiedY);
 			}
 			fprintf(stderr, "    Path found: \n");
 			reverseList(path);
 			printPath(path);
 			i++;
+		}
+
+		if (path != NULL) {
+			Node* firstNode;
+			firstNode = path->head->data;
+
+			if ((firstNode->x == secondX && firstNode->y == secondY) || (firstNode->x == thirdX && firstNode->y == thirdY)) {
+				vitesse = 25;
+				occupied = 1;
+				firstNode->x = occupiedX;
+				firstNode->y = occupiedY;
+				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
+							 occupiedX, occupiedY);
+				while (path == NULL && vitesse > 0) {
+					vitesse--;
+					path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas,
+								 occupied, occupiedX, occupiedY);
+				}
+			}
 		}
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
@@ -1072,33 +1097,6 @@ int main()
 		gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, map[myY][myX] == '~');
 		speedX += accelerationX;
 		speedY += accelerationY;
-
-		/* if (path != NULL) {
-			Node* firstNode;
-			Pos2Dint debut;
-			Pos2Dint fin;
-
-			debut.x = start->x + speedX;
-			debut.y = start->y + speedY;
-			fin.x = end->x;
-			fin.y = end->y;
-			firstNode = path->head->data;
-
-			if (((myX + speedX == firstNode->x) && (myY + speedY == firstNode->y)) ||
-				isPathClear_Occupied(map, width, height, debut, fin, secondX, secondY, thirdX, thirdY)) {
-				vitesse = 25;
-				occupied = 1;
-				start->x = myX + speedX;
-				start->y = myY + speedY;
-				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied);
-				while (path == NULL && vitesse > 0) {
-					vitesse--;
-					path =
-						aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied);
-				}
-			}
-			determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map, &boosts);
-		} */
 
 		/* Write the acceleration request to the race manager (stdout). */
 		sprintf(action, "%d %d", accelerationX, accelerationY);
