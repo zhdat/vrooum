@@ -1090,6 +1090,7 @@ int main()
 				}
 			}
 		}
+		reverseList(path);
 		printPath(path);
 
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
