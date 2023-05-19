@@ -1086,7 +1086,7 @@ int main()
 			startNodePos.y = start->y;
 
 			if ((firstNode->x == secondX && firstNode->y == secondY) || (firstNode->x == thirdX && firstNode->y == thirdY) ||
-				isPathClear_Occupied(map, width, height, startNodePos, firstNodePos, secondX, secondY, thirdX, thirdY)) {
+				isPathClear_Occupied(map, width, height, startNodePos, firstNodePos, secondX, secondY, thirdX, thirdY) == 0) {
 				vitesse = 25;
 				occupied = 1;
 				occupiedX = firstNode->x;
