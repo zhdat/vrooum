@@ -757,20 +757,21 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 		}
 	}
 
-	/*if (boosts > 0) {
-		 Boosts autorisés : {-2, -1, 0, 1, 2}^2 \ {-1, 0, 1}^2
-		int boostOptions[5] = { -2, -1, 1, 2 };
+	if (boosts > 0) {
+		int boostOptions[3] = { -2, 2 };
 		int i;
-		for (i = 0; i < 5; i++) {
+		for (i = 0; i < 3; i++) {
 			int boostX = boostOptions[i];
 			int boostY;
 			int j;
-			for (j = 0; j < 5; j++) {
+			for (j = 0; j < 3; j++) {
 				boostY = boostOptions[j];
+				if (boosts == 0) {
+					break;
+				}
 				if (boostX != 0 || boostY != 0) {
-					Vérifier si le boost est possible
-					if (*accelerationX + boostX >= -1 && *accelerationX + boostX <= 1 && *accelerationY + boostY >= -1 &&
-						*accelerationY + boostY <= 1 && SpeedNorme(speedX + *accelerationX + boostX, speedY + *accelerationY + boostY) <= 5) {
+					if (*accelerationX + boostX >= -2 && *accelerationX + boostX <= 2 && *accelerationY + boostY >= -2 &&
+						*accelerationY + boostY <= 2 && SpeedNorme(speedX + *accelerationX + boostX, speedY + *accelerationY + boostY) <= 25) {
 						*accelerationX += boostX;
 						*accelerationY += boostY;
 						boosts--;
@@ -778,11 +779,8 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 					}
 				}
 			}
-			if (boosts == 0) {
-				break;
-			}
 		}
-	}*/
+	}
 }
 
 /**
@@ -1092,14 +1090,27 @@ int main()
 		speedX += accelerationX;
 		speedY += accelerationY;
 
-		if (isPositionOccupied(myX + speedX, myY + speedY, secondX, secondY, thirdX, thirdY)) {
-			occupied = 1;
-			start->x = myX + speedX;
-			start->y = myY + speedY;
-			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied);
-			while (path == NULL && vitesse > 0) {
-				vitesse--;
+		if (path != NULL) {
+			Node* firstNode;
+			Pos2Dint debut;
+			Pos2Dint fin;
+
+			debut.x = start->x;
+			debut.y = start->y;
+			fin.x = end->x;
+			fin.y = end->y;
+			firstNode = path->head->data;
+
+			if (((myX + speedX == firstNode->x) && (myY + speedY == firstNode->y)) ||
+				isPathClear_Occupied(map, width, height, debut, fin, secondX, secondY, thirdX, thirdY)) {
+				vitesse = 25;
+				occupied = 1;
 				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied);
+				while (path == NULL && vitesse > 0) {
+					vitesse--;
+					path =
+						Star(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied);
+				}
 			}
 		}
 
