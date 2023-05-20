@@ -803,9 +803,9 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 	if (map[newY][newX] == '~') {
 		factor += 4;
 	}
-	if (SpeedNorme(newSpeedX, newSpeedY) < 25) {
+	/* if (SpeedNorme(newSpeedX, newSpeedY) < 25) {
 		factor += 2;
-	}
+	} */
 	neighbour->g_cost =
 		currentNode->g_cost + factor * sqrt((currentNode->x - newX) * (currentNode->x - newX) + (currentNode->y - newY) * (currentNode->y - newY));
 
