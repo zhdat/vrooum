@@ -152,7 +152,8 @@ void pqFree(PriorityQueue* pq)
 
 Node* pqFind(PriorityQueue* pq, const Node* node)
 {
-    for (int i = 0; i < pq->count; i++) {
+	int i;
+    for (i = 0; i < pq->count; i++) {
         if (nodeEqualsWithoutSpeed(pq->heapArray[i], node)) {
             return pq->heapArray[i];
         }
@@ -162,7 +163,8 @@ Node* pqFind(PriorityQueue* pq, const Node* node)
 
 void pqRemove(PriorityQueue* pq, const Node* node)
 {
-    for (int i = 0; i < pq->count; i++) {
+	int i;
+    for (i = 0; i < pq->count; i++) {
         if (nodeEqualsWithoutSpeed(pq->heapArray[i], node)) {
             pq->heapArray[i] = pq->heapArray[pq->count - 1];
             pq->count--;
