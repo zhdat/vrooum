@@ -11,9 +11,6 @@
 
 /* TESTS */
 
-static const size_t HS_SIZE = sizeof(HashSet);
-static const size_t HSE_SIZE = sizeof(HashSetElement);
-
 static unsigned int hashFunction(Node const* node)
 {
 	return (node->x * 31 + node->y) % HASH_SET_SIZE;
@@ -21,18 +18,18 @@ static unsigned int hashFunction(Node const* node)
 
 HashSet* hsInit()
 {
-	HashSet* hs = (HashSet*)calloc(1, HS_SIZE);
+	int i;
+	HashSet* hs = (HashSet*)malloc(sizeof(HashSet));
+	for (i = 0; i < HASH_SET_SIZE; i++) {
+		hs->buckets[i] = NULL;
+	}
 	return hs;
 }
 
 void hsInsert(HashSet* hs, Node* node)
 {
-	if (hsContains(hs, node)) {
-		return;
-	}
-
 	unsigned int hash = hashFunction(node);
-	HashSetElement* newElement = (HashSetElement*)malloc(HSE_SIZE);
+	HashSetElement* newElement = (HashSetElement*)malloc(sizeof(HashSetElement));
 	newElement->node = node;
 	newElement->next = hs->buckets[hash];
 	hs->buckets[hash] = newElement;
@@ -44,7 +41,7 @@ int hsContains(const HashSet* hs, const Node* node)
 	HashSetElement* current = hs->buckets[hash];
 
 	while (current != NULL) {
-		if (nodeEquals(current->node, node)) {
+		if (nodeEqualsWithoutSpeed(current->node, node)) {
 			return 1;
 		}
 		current = current->next;
@@ -136,7 +133,7 @@ Node* pqFind(PriorityQueue* pq, const Node* node)
 {
 	PriorityQueueElement* current = pq->head;
 	while (current != NULL) {
-		if (nodeEquals(current->node, node)) {
+		if (nodeEqualsWithoutSpeed(current->node, node)) {
 			return current->node;
 		}
 		current = current->next;
@@ -150,7 +147,7 @@ void pqRemove(PriorityQueue* pq, const Node* node)
 	if (pq->head == NULL) {
 		return;
 	}
-	if (nodeEquals(pq->head->node, node)) {
+	if (nodeEqualsWithoutSpeed(pq->head->node, node)) {
 		PriorityQueueElement* elementToRemove = pq->head;
 		pq->head = pq->head->next;
 		free(elementToRemove);
@@ -158,7 +155,7 @@ void pqRemove(PriorityQueue* pq, const Node* node)
 	}
 	current = pq->head;
 	while (current->next != NULL) {
-		if (nodeEquals(current->next->node, node)) {
+		if (nodeEqualsWithoutSpeed(current->next->node, node)) {
 			PriorityQueueElement* elementToRemove = current->next;
 			current->next = current->next->next;
 			free(elementToRemove);
@@ -210,8 +207,7 @@ int nodeEquals(const Node* node1, const Node* node2)
 	if (node1 == NULL || node2 == NULL) {
 		return 0;
 	}
-	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY &&
-		   node1->gas == node2->gas;
+	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY;
 }
 
 /**
@@ -479,7 +475,15 @@ void freePath(List* path)
  */
 double heuristicCost(const Node* a, const Node* b)
 {
-	return sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2));
+	double dx = abs(a->x - b->x);
+	double dy = abs(a->y - b->y);
+	double dMin = fmin(dx, dy);
+	double dMax = fmax(dx, dy);
+	double diagonalCost = sqrt(2);
+	double orthogonalCost = 2;
+
+	double heuristic1 = dMin * diagonalCost + (dMax - dMin) * orthogonalCost;
+	return heuristic1;
 }
 
 /**
@@ -788,6 +792,14 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 		return 0;
 	}
 
+	/* if (newX == secondX && newY == secondY) {
+		return 0;
+	}
+
+	if (newX == thirdX && newY == thirdY) {
+		return 0;
+	} */
+
 	return 1; /* continue with current iteration */
 }
 
@@ -914,7 +926,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 
 					if (!hsContains(closedSet, neighbour)) {
 						Node const* existingNodeInOpenSet = pqFind(openSet, neighbour);
-						if (existingNodeInOpenSet == NULL || neighbour->f_cost < existingNodeInOpenSet->f_cost) {
+						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
 							if (existingNodeInOpenSet != NULL) {
 								pqRemove(openSet, existingNodeInOpenSet);
 							}
@@ -1020,8 +1032,26 @@ int main()
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied, occupiedX,
 					 occupiedY);
+		while (path == NULL && vitesse > 0) {
+			vitesse--;
+			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
+						 occupiedX, occupiedY);
+		}
 		reverseList(path);
-		printPath(path);
+
+		while (path == NULL && i < arrayEnd->size) {
+			vitesse = 25;
+			end = createNode(arrayEnd->array[i].x, arrayEnd->array[i].y, NULL, speedX, speedY, 0);
+			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
+						 occupiedX, occupiedY);
+			while (path == NULL && vitesse > 0) {
+				vitesse--;
+				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
+							 occupiedX, occupiedY);
+			}
+			reverseList(path);
+			i++;
+		}
 
 		if (path != NULL) {
 			Node* firstNode;
@@ -1041,8 +1071,12 @@ int main()
 				occupiedY = firstNode->y;
 				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
 							 occupiedX, occupiedY);
+				while (path == NULL && vitesse > 0) {
+					vitesse--;
+					path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas,
+								 occupied, occupiedX, occupiedY);
+				}
 				reverseList(path);
-				printPath(path);
 			}
 		}
 
