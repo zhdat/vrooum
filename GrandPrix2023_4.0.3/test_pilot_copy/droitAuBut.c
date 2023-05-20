@@ -41,7 +41,7 @@ int hsContains(const HashSet* hs, const Node* node)
 	HashSetElement* current = hs->buckets[hash];
 
 	while (current != NULL) {
-		if (nodeEquals(current->node, node)) {
+		if (nodeEqualsWithoutSpeed(current->node, node)) {
 			return 1;
 		}
 		current = current->next;
@@ -68,101 +68,186 @@ void hsFree(HashSet* hs)
 	free(hs);
 }
 
-PriorityQueue* pqInit()
+PriorityQueue* pqInit(int initialCapacity)
 {
-	PriorityQueue* pq = (PriorityQueue*)malloc(sizeof(PriorityQueue));
-	pq->head = NULL;
-	return pq;
+    PriorityQueue* pq = (PriorityQueue*)malloc(sizeof(PriorityQueue));
+    pq->heapArray = (Node**)malloc(sizeof(Node*) * initialCapacity);
+    pq->count = 0;
+    pq->capacity = initialCapacity;
+    return pq;
 }
 
 void pqPush(PriorityQueue* pq, Node* node)
 {
-	PriorityQueueElement* current;
-	PriorityQueueElement* newElement = (PriorityQueueElement*)malloc(sizeof(PriorityQueueElement));
-	newElement->node = node;
-	newElement->next = NULL;
+    if (pq->count == pq->capacity) {
+        pq->capacity *= 2;
+        pq->heapArray = (Node**)realloc(pq->heapArray, sizeof(Node*) * pq->capacity);
+    }
 
-	if (pq->head == NULL || pq->head->node->f_cost > node->f_cost) {
-		newElement->next = pq->head;
-		pq->head = newElement;
-		return;
-	}
+    pq->heapArray[pq->count] = node;
 
-	current = pq->head;
-	while (current->next != NULL && current->next->node->f_cost < node->f_cost) {
-		current = current->next;
-	}
-	newElement->next = current->next;
-	current->next = newElement;
+    int childIndex = pq->count;
+    int parentIndex = (childIndex - 1) / 2;
+    while (childIndex > 0 && pq->heapArray[parentIndex]->f_cost > pq->heapArray[childIndex]->f_cost) {
+        Node* temp = pq->heapArray[childIndex];
+        pq->heapArray[childIndex] = pq->heapArray[parentIndex];
+        pq->heapArray[parentIndex] = temp;
+
+        childIndex = parentIndex;
+        parentIndex = (childIndex - 1) / 2;
+    }
+
+    pq->count++;
 }
 
 Node* pqPop(PriorityQueue* pq)
 {
-	PriorityQueueElement* elementToRemove;
-	Node* node;
-	if (pq->head == NULL) {
-		return NULL;
-	}
-	elementToRemove = pq->head;
-	node = elementToRemove->node;
-	pq->head = elementToRemove->next;
-	free(elementToRemove);
-	return node;
+    if (pq->count == 0) {
+        return NULL;
+    }
+
+    Node* toReturn = pq->heapArray[0];
+
+    pq->heapArray[0] = pq->heapArray[pq->count - 1];
+    pq->count--;
+
+    int parentIndex = 0;
+    while (1) {
+        int leftChildIndex = parentIndex * 2 + 1;
+        int rightChildIndex = parentIndex * 2 + 2;
+
+        int smallestChildIndex = parentIndex;
+        if (leftChildIndex < pq->count && pq->heapArray[leftChildIndex]->f_cost < pq->heapArray[smallestChildIndex]->f_cost) {
+            smallestChildIndex = leftChildIndex;
+        }
+        if (rightChildIndex < pq->count && pq->heapArray[rightChildIndex]->f_cost < pq->heapArray[smallestChildIndex]->f_cost) {
+            smallestChildIndex = rightChildIndex;
+        }
+
+        if (smallestChildIndex != parentIndex) {
+            Node* temp = pq->heapArray[parentIndex];
+            pq->heapArray[parentIndex] = pq->heapArray[smallestChildIndex];
+            pq->heapArray[smallestChildIndex] = temp;
+
+            parentIndex = smallestChildIndex;
+        } else {
+            break;
+        }
+    }
+
+    return toReturn;
 }
 
 int pqIsEmpty(const PriorityQueue* pq)
 {
-	return pq->head == NULL;
+    return pq->count == 0;
 }
 
 void pqFree(PriorityQueue* pq)
 {
-	PriorityQueueElement* current = pq->head;
-	PriorityQueueElement* next;
-
-	while (current != NULL) {
-		next = current->next;
-		free(current);
-		current = next;
-	}
-
-	free(pq);
+    free(pq->heapArray);
+    free(pq);
 }
+
 
 Node* pqFind(PriorityQueue* pq, const Node* node)
 {
-	PriorityQueueElement* current = pq->head;
-	while (current != NULL) {
-		if (nodeEquals(current->node, node)) {
-			return current->node;
-		}
-		current = current->next;
-	}
-	return NULL;
+    for (int i = 0; i < pq->count; i++) {
+        if (nodeEqualsWithoutSpeed(pq->heapArray[i], node)) {
+            return pq->heapArray[i];
+        }
+    }
+    return NULL;
 }
 
 void pqRemove(PriorityQueue* pq, const Node* node)
 {
-	PriorityQueueElement* current;
-	if (pq->head == NULL) {
-		return;
-	}
-	if (nodeEquals(pq->head->node, node)) {
-		PriorityQueueElement* elementToRemove = pq->head;
-		pq->head = pq->head->next;
-		free(elementToRemove);
-		return;
-	}
-	current = pq->head;
-	while (current->next != NULL) {
-		if (nodeEquals(current->next->node, node)) {
-			PriorityQueueElement* elementToRemove = current->next;
-			current->next = current->next->next;
-			free(elementToRemove);
-			return;
-		}
-		current = current->next;
-	}
+    for (int i = 0; i < pq->count; i++) {
+        if (nodeEqualsWithoutSpeed(pq->heapArray[i], node)) {
+            pq->heapArray[i] = pq->heapArray[pq->count - 1];
+            pq->count--;
+
+            int parentIndex = i;
+            while (1) {
+                int leftChildIndex = parentIndex * 2 + 1;
+                int rightChildIndex = parentIndex * 2 + 2;
+
+                int smallestChildIndex = parentIndex;
+                if (leftChildIndex < pq->count && pq->heapArray[leftChildIndex]->f_cost < pq->heapArray[smallestChildIndex]->f_cost) {
+                    smallestChildIndex = leftChildIndex;
+                }
+                if (rightChildIndex < pq->count && pq->heapArray[rightChildIndex]->f_cost < pq->heapArray[smallestChildIndex]->f_cost) {
+                    smallestChildIndex = rightChildIndex;
+                }
+
+                if (smallestChildIndex != parentIndex) {
+                    Node* temp = pq->heapArray[parentIndex];
+                    pq->heapArray[parentIndex] = pq->heapArray[smallestChildIndex];
+                    pq->heapArray[smallestChildIndex] = temp;
+
+                    parentIndex = smallestChildIndex;
+                } else {
+                    break;
+                }
+            }
+            return;
+        }
+    }
+}
+
+HashSet* hashSetInit(int initialCapacity)
+{
+    HashSet* set = (HashSet*)malloc(sizeof(HashSet));
+    set->buckets = (Node**)calloc(initialCapacity, sizeof(Node*));
+    set->capacity = initialCapacity;
+    set->count = 0;
+    return set;
+}
+
+
+void hashSetAdd(HashSet* set, Node* node)
+{
+    int index = hashFunction(node) % set->capacity;
+    while (set->buckets[index] != NULL) {
+        if (nodeEqualsWithoutSpeed(set->buckets[index], node)) {
+            return;
+        }
+        index = (index + 1) % set->capacity;
+    }
+    set->buckets[index] = node;
+    set->count++;
+}
+
+
+void hashSetRemove(HashSet* set, Node* node)
+{
+    int index = hashFunction(node) % set->capacity;
+    while (set->buckets[index] != NULL) {
+        if (nodeEqualsWithoutSpeed(set->buckets[index], node)) {
+            set->buckets[index] = NULL;
+            set->count--;
+            return;
+        }
+        index = (index + 1) % set->capacity;
+    }
+}
+
+Node* hashSetFind(HashSet* set, Node* node)
+{
+    int index = hashFunction(node) % set->capacity;
+    while (set->buckets[index] != NULL) {
+        if (nodeEqualsWithoutSpeed(set->buckets[index], node)) {
+            return set->buckets[index];
+        }
+        index = (index + 1) % set->capacity;
+    }
+    return NULL;
+}
+
+void hashSetFree(HashSet* set)
+{
+    free(set->buckets);
+    free(set);
 }
 
 /* ------------------------------------------------------------------------------------------------------------------ */
@@ -207,7 +292,7 @@ int nodeEquals(const Node* node1, const Node* node2)
 	if (node1 == NULL || node2 == NULL) {
 		return 0;
 	}
-	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY && node1->gas == node2->gas;
+	return node1->x == node2->x && node1->y == node2->y && node1->speedX == node2->speedX && node1->speedY == node2->speedY;
 }
 
 /**
@@ -246,34 +331,6 @@ int nodeInList(const Node* node, List* list)
 }
 
 /**
- * @brief Vérifie si un noeud est dans une liste et retourne l'élément de la liste
- *
- * @param node
- * @param list
- * @param elementInList
- * @return Node* le noeud si il est dans la liste, NULL sinon
- */
-Node* findNodeInList(const Node* node, List* list, ListElement** elementInList)
-{
-	ListElement* currentElement = list->head;
-
-	while (currentElement != NULL) {
-		Node* currentNode = (Node*)currentElement->data;
-
-		if (nodeEqualsWithoutSpeed(currentNode, node)) {
-			if (elementInList != NULL) {
-				*elementInList = currentElement;
-			}
-			return currentNode;
-		}
-
-		currentElement = currentElement->next;
-	}
-
-	return NULL;
-}
-
-/**
  * @brief Ajoute un noeud dans une liste
  *
  * @param node
@@ -294,44 +351,6 @@ void addNodeToList(Node* node, List* list)
 		}
 		current->next = newElement;
 	}
-}
-
-/**
- * @brief Supprime un noeud d'une liste
- *
- * @param list
- * @return Node* le noeud supprimé
- */
-Node* removeNodeWithLowestFCost(List* list)
-{
-	Node* result;
-	ListElement* current = list->head;
-	ListElement* previous = NULL;
-	ListElement* lowest = current;
-	ListElement* previousLowest = NULL;
-
-	double lowestCost = ((Node*)current->data)->f_cost;
-
-	while (current != NULL) {
-		Node const* currentNode = (Node*)current->data;
-		if (currentNode->f_cost < lowestCost) {
-			lowestCost = currentNode->f_cost;
-			lowest = current;
-			previousLowest = previous;
-		}
-		previous = current;
-		current = current->next;
-	}
-
-	if (previousLowest == NULL) {
-		list->head = lowest->next;
-	} else {
-		previousLowest->next = lowest->next;
-	}
-
-	result = (Node*)lowest->data;
-	free(lowest);
-	return result;
 }
 
 /**
@@ -360,17 +379,6 @@ List* initList()
 	List* newList = (List*)malloc(sizeof(List));
 	newList->head = NULL;
 	return newList;
-}
-
-/**
- * @brief Vériie si une liste est vide
- *
- * @param list
- * @return int 1 si la liste est vide, 0 sinon
- */
-int isListEmpty(const List* list)
-{
-	return list->head == NULL;
 }
 
 /**
@@ -425,20 +433,6 @@ void reverseList(List* list)
 	}
 
 	list->head = prevElement;
-}
-
-void removeElementFromList(List* list, ListElement* element)
-{
-	if (element == list->head) {
-		list->head = element->next;
-	} else {
-		ListElement* previous = list->head;
-		while (previous->next != element) {
-			previous = previous->next;
-		}
-		previous->next = element->next;
-	}
-	free(element);
 }
 
 /**
@@ -792,6 +786,14 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 		return 0;
 	}
 
+	/* if (newX == secondX && newY == secondY) {
+		return 0;
+	}
+
+	if (newX == thirdX && newY == thirdY) {
+		return 0;
+	} */
+
 	return 1; /* continue with current iteration */
 }
 
@@ -854,7 +856,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 	int newGas;
 	Node* neighbour;
 
-	PriorityQueue* openSet = pqInit();
+	PriorityQueue* openSet = pqInit(10);
 	HashSet* closedSet = hsInit();
 
 	start->g_cost = 0;
@@ -880,8 +882,8 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
-				newSpeedX = currentNode->speedX + accX + currentSpeedX;
-				newSpeedY = currentNode->speedY + accY + currentSpeedY;
+				newSpeedX = currentNode->speedX + accX;
+				newSpeedY = currentNode->speedY + accY;
 
 				if ((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY) <= speedMax) {
 					newX = currentNode->x + newSpeedX;
@@ -1030,8 +1032,6 @@ int main()
 						 occupiedX, occupiedY);
 		}
 		reverseList(path);
-		printPath(path);
-		fprintf(stderr, "    vitesse = %d\n", vitesse);
 
 		while (path == NULL && i < arrayEnd->size) {
 			vitesse = 25;
@@ -1044,7 +1044,6 @@ int main()
 							 occupiedX, occupiedY);
 			}
 			reverseList(path);
-			printPath(path);
 			i++;
 		}
 
@@ -1072,11 +1071,9 @@ int main()
 								 occupied, occupiedX, occupiedY);
 				}
 				reverseList(path);
-				printPath(path);
 			}
 		}
 
-		fprintf(stderr, " vitesse %d\n", vitesse);
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map, &boosts);
 

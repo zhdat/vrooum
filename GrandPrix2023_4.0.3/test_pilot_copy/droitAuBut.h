@@ -50,18 +50,17 @@ typedef struct HashSetElement {
 	struct HashSetElement* next;
 } HashSetElement;
 
-typedef struct HashSet {
-	HashSetElement* buckets[HASH_SET_SIZE];
-} HashSet;
-
-typedef struct PriorityQueueElement {
-	Node* node;
-	struct PriorityQueueElement* next;
-} PriorityQueueElement;
-
 typedef struct PriorityQueue {
-	PriorityQueueElement* head;
+    Node** heapArray;
+    int count;
+    int capacity;
 } PriorityQueue;
+
+typedef struct HashSet {
+    Node** buckets;
+    int capacity;
+    int count;
+} HashSet;
 
 /**
  * @brief Structure représentant une position finale
@@ -133,15 +132,6 @@ Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas);
  * @return int 1 si les noeuds sont égaux, 0 sinon
  */
 int nodeEquals(const Node* node1, const Node* node2);
-
-/**
- * @brief Vérifie l'égalité entre deux noeuds sans la vitesse
- *
- * @param node1
- * @param node2
- * @return int 1 si les noeuds sont égaux, 0 sinon
- */
-int nodeEqualsWithoutSpeed(const Node* node1, const Node* node2);
 
 /**
  * @brief Vérifie l'égalité entre deux noeuds sans la vitesse
