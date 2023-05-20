@@ -904,6 +904,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 						continue;
 					}
 					
+					fprintf(stderr, "  BoostRemaining : %d", currentNode->boostRemaining);
 					neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 					neighbour->boostRemaining = currentNode->boostRemaining - ((accX == 2) ? 1 : 0) - ((accY == 2) ? 1 : 0);
 
