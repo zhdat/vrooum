@@ -872,7 +872,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 		for (accX = -acc_boost; accX <= acc_boost; accX++) {
 			for (accY = -acc_boost; accY <= acc_boost; accY++) {
 				if (abs(acc_boost)>1){
-					if (newSpeedX < currentNode->speedX || newSpeedY < currentSpeedY){
+					if (newSpeedX < currentNode->speedX && newSpeedY < currentSpeedY){
 						continue;
 					}
 				}
