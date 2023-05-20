@@ -935,8 +935,8 @@ int main()
 	int thirdY;
 	int i;
 	int vitesse = 25;
-	int oldX;
-	int oldY;
+	int oldX = 0;
+	int oldY = 0;
 	int occupied;
 
 	ArrayEnd* arrayEnd = NULL;
@@ -944,6 +944,7 @@ int main()
 	Node* end = NULL;
 	List* path = NULL;
 	occupied = 0;
+	boosts = boosts;
 
 	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
 	sscanf(line_buffer, "%d %d %d", &width, &height, &gasLevel);
