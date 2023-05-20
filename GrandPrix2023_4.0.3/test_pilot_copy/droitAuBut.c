@@ -880,8 +880,8 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
 			for (accY = -1; accY <= 1; accY++) {
-				newSpeedX = currentNode->speedX + accX;
-				newSpeedY = currentNode->speedY + accY;
+				newSpeedX = currentNode->speedX + accX + currentSpeedX;
+				newSpeedY = currentNode->speedY + accY + currentSpeedY;
 
 				if ((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY) <= speedMax) {
 					newX = currentNode->x + newSpeedX;
