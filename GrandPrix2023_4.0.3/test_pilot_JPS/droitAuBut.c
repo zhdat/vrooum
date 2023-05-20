@@ -1071,7 +1071,6 @@ int main()
 		if (accelerationX > 1 || accelerationY > 1){
 			boosts --;
 		}
-		fprintf(stderr, )
 
 		/* Gas consumption cannot be accurate here. */
 		gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, map[myY][myX] == '~');
