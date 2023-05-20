@@ -935,7 +935,7 @@ int main()
 	int height;
 	int gasLevel;
 	int maxGas;
-	int boosts = BOOSTS_AT_START;
+	int boosts;
 	int round = 0;
 	int accelerationX = 0;
 	int accelerationY = 0;
@@ -964,7 +964,7 @@ int main()
 	List* path = NULL;
 	occupied = 0;
 
-	boosts = boosts;							/* Prevent warning "unused variable" */
+	/* boosts = boosts;							/* Prevent warning "unused variable" */
 	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
 	sscanf(line_buffer, "%d %d %d", &width, &height, &gasLevel);
 	maxGas = gasLevel;
@@ -1006,6 +1006,7 @@ int main()
 			/* Trouver les positions de départ et d'arrivée sur la carte */
 			start = createNode(myX, myY, NULL, speedX, speedY, maxGas);
 			arrayEnd = findEndPositions(map, width, height, start);
+			boosts = BOOSTS_AT_START;
 		}
 
 		start->x = myX;
@@ -1070,6 +1071,7 @@ int main()
 		if (accelerationX > 1 || accelerationY > 1){
 			boosts --;
 		}
+		fprintf(stderr, )
 
 		/* Gas consumption cannot be accurate here. */
 		gasLevel += gasConsumption(accelerationX, accelerationY, speedX, speedY, map[myY][myX] == '~');
