@@ -874,7 +874,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 				newSpeedX = currentNode->speedX + accX;
 				newSpeedY = currentNode->speedY + accY;
 
-				if ((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY) <= speedMax || ((abs(acc_boost)>1) && (SpeedNorme(newSpeedX, newSpeedY)) < SpeedNorme(currentSpeedX, currentSpeedY))) {
+				if ((abs(acc_boost) <= 1 && (newSpeedX * newSpeedX) + (newSpeedY * newSpeedY) <= speedMax) || (((abs(acc_boost)>1) && (SpeedNorme(newSpeedX, newSpeedY)) < SpeedNorme(currentSpeedX, currentSpeedY)) && SpeedNorme(newSpeedX, newSpeedY) < speedMax)) {
 					newX = currentNode->x + newSpeedX;
 					newY = currentNode->y + newSpeedY;
 
