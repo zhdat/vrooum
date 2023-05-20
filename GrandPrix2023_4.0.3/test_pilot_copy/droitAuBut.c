@@ -260,7 +260,7 @@ Node* findNodeInList(const Node* node, List* list, ListElement** elementInList)
 	while (currentElement != NULL) {
 		Node* currentNode = (Node*)currentElement->data;
 
-		if (nodeEquals(currentNode, node)) {
+		if (nodeEqualsWithoutSpeed(currentNode, node)) {
 			if (elementInList != NULL) {
 				*elementInList = currentElement;
 			}
