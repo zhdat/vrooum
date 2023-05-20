@@ -142,7 +142,7 @@ HashTable* htInit()
 {
 	int i;
 	HashTable* table = (HashTable*)malloc(sizeof(HashTable));
-	table->size = 100; // initial size
+	table->size = 100;
 	table->data = (HashEntry**)malloc(table->size * sizeof(HashEntry*));
 	for (i = 0; i < table->size; i++)
 		table->data[i] = NULL;
