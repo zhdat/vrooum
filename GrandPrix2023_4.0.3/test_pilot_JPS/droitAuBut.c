@@ -9,6 +9,8 @@
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
 
+int acc_boost = 2;
+
 /* TESTS */
 
 static unsigned int hashFunction(Node const* node)
@@ -849,6 +851,10 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 	start->speedX = currentSpeedX;
 	start->speedY = currentSpeedY;
 
+	if (start->boostRemaining <= 0){
+		acc_boost = 1;
+	}
+
 	pqPush(openSet, start);
 
 	while (!pqIsEmpty(openSet)) {
@@ -863,8 +869,8 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 		hsInsert(closedSet, currentNode);
 
 		/* Générer les voisins */
-		for (accX = -2; accX <= 2; accX++) {
-			for (accY = -2; accY <= 2; accY++) {
+		for (accX = -acc_boost; accX <= acc_boost; accX++) {
+			for (accY = -acc_boost; accY <= acc_boost; accY++) {
 				newSpeedX = currentNode->speedX + accX;
 				newSpeedY = currentNode->speedY + accY;
 
@@ -898,10 +904,6 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
 					if (newGas < 0)
 						continue;
-
-					if (currentNode->boostRemaining < 0){
-						continue;
-					}
 					
 					neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
 					neighbour->boostRemaining = currentNode->boostRemaining - ((accX == 2) ? 1 : 0) - ((accY == 2) ? 1 : 0);
