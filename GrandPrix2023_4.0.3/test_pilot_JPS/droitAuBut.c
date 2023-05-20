@@ -1069,6 +1069,7 @@ int main()
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map, &boosts);
 		if (accelerationX > 1 || accelerationY > 1){
+			fprintf(stderr, "\nBoost utilisé !\n");
 			boosts --;
 		}
 
