@@ -740,16 +740,16 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 	}
 
 	/* Boosts */
-	if (accelerationX > 1 && abs(speedX) > abs(accelerationX + speedX)){
+	if (accelerationX > 1 && SpeedNorme(speedX + accelerationX, speedY + accelerationY) < SpeedNorme(speedX, speedY)){
 		*accelerationX -= 1;
 	}
-	if (accelerationX < -1 && abs(speedX) > abs(accelerationX + speedX)){
+	if (accelerationX < -1 && SpeedNorme(speedX + accelerationX, speedY + accelerationY) < SpeedNorme(speedX, speedY)){
 		*accelerationX += 1;
 	}
-	if (accelerationY > 1 && abs(speedY) > abs(accelerationY + speedY)){
+	if (accelerationY > 1 && SpeedNorme(speedX + accelerationX, speedY + accelerationY) < SpeedNorme(speedX, speedY)){
 		*accelerationY -= 1;
 	}
-	if (accelerationY < -1 && abs(speedY) > abs(accelerationY + speedY)){
+	if (accelerationY < -1 && SpeedNorme(speedX + accelerationX, speedY + accelerationY) < SpeedNorme(speedX, speedY)){
 		*accelerationX += 1;
 	}
 }
