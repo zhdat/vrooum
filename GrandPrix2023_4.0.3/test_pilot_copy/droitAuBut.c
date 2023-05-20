@@ -11,6 +11,9 @@
 
 /* TESTS */
 
+static const size_t HS_SIZE = sizeof(HashSet);
+static const size_t HSE_SIZE = sizeof(HashSetElement);
+
 static unsigned int hashFunction(Node const* node)
 {
 	return (node->x * 31 + node->y) % HASH_SET_SIZE;
@@ -18,18 +21,18 @@ static unsigned int hashFunction(Node const* node)
 
 HashSet* hsInit()
 {
-	int i;
-	HashSet* hs = (HashSet*)malloc(sizeof(HashSet));
-	for (i = 0; i < HASH_SET_SIZE; i++) {
-		hs->buckets[i] = NULL;
-	}
+	HashSet* hs = (HashSet*)calloc(1, HS_SIZE);
 	return hs;
 }
 
 void hsInsert(HashSet* hs, Node* node)
 {
+	if (hsContains(hs, node)) {
+		return;
+	}
+
 	unsigned int hash = hashFunction(node);
-	HashSetElement* newElement = (HashSetElement*)malloc(sizeof(HashSetElement));
+	HashSetElement* newElement = (HashSetElement*)malloc(HSE_SIZE);
 	newElement->node = node;
 	newElement->next = hs->buckets[hash];
 	hs->buckets[hash] = newElement;
@@ -68,200 +71,101 @@ void hsFree(HashSet* hs)
 	free(hs);
 }
 
-BinaryHeap* bhInit()
-{
-	BinaryHeap* heap = (BinaryHeap*)malloc(sizeof(BinaryHeap));
-	heap->size = 0;
-	heap->capacity = 10;
-	heap->data = (Node**)malloc(heap->capacity * sizeof(Node*));
-	return heap;
-}
-
-void swap(Node** a, Node** b)
-{
-	Node* temp = *a;
-	*a = *b;
-	*b = temp;
-}
-
-void bubbleUp(BinaryHeap* heap, int idx)
-{
-	while (idx != 0 && heap->data[(idx - 1) / 2]->f_cost > heap->data[idx]->f_cost) {
-		swap(&heap->data[idx], &heap->data[(idx - 1) / 2]);
-		idx = (idx - 1) / 2;
-	}
-}
-
-void bubbleDown(BinaryHeap* heap, int idx)
-{
-	int smallest = idx;
-	int left = 2 * idx + 1;
-	int right = 2 * idx + 2;
-	if (left < heap->size && heap->data[left]->f_cost < heap->data[smallest]->f_cost)
-		smallest = left;
-	if (right < heap->size && heap->data[right]->f_cost < heap->data[smallest]->f_cost)
-		smallest = right;
-	if (smallest != idx) {
-		swap(&heap->data[idx], &heap->data[smallest]);
-		bubbleDown(heap, smallest);
-	}
-}
-
-void bhPush(BinaryHeap* heap, Node* node)
-{
-	if (heap->size == heap->capacity) {
-		heap->capacity *= 2;
-		heap->data = (Node**)realloc(heap->data, heap->capacity * sizeof(Node*));
-	}
-	heap->data[heap->size++] = node;
-	bubbleUp(heap, heap->size - 1);
-}
-
-Node* bhPop(BinaryHeap* heap)
-{
-	if (heap->size == 0)
-		return NULL;
-	Node* root = heap->data[0];
-	heap->data[0] = heap->data[--heap->size];
-	bubbleDown(heap, 0);
-	return root;
-}
-
-int bhIsEmpty(BinaryHeap* heap)
-{
-	return heap->size == 0;
-}
-
-void bhFree(BinaryHeap* heap)
-{
-	free(heap->data);
-	free(heap);
-}
-
-HashTable* htInit()
-{
-	int i;
-	HashTable* table = (HashTable*)malloc(sizeof(HashTable));
-	table->size = 100;
-	table->data = (HashEntry**)malloc(table->size * sizeof(HashEntry*));
-	for (i = 0; i < table->size; i++)
-		table->data[i] = NULL;
-	return table;
-}
-
-int hash(const Node* node)
-{
-	int prime1 = 31;
-	int prime2 = 37;
-	int prime3 = 41;
-	int prime4 = 43;
-	int prime5 = 47;
-
-	int result = prime1 * node->x + prime2 * node->y + prime3 * node->speedX + prime4 * node->speedY + prime5 * node->gas;
-
-	if (result < 0) {
-		result = -result;
-	}
-
-	return result;
-}
-
-void htInsert(HashTable* table, Node* node)
-{
-	int index = hash(node) % table->size;
-	HashEntry* entry = (HashEntry*)malloc(sizeof(HashEntry));
-	entry->node = node;
-	entry->next = table->data[index];
-	table->data[index] = entry;
-}
-
-Node* htFind(HashTable* table, const Node* node)
-{
-	int index = hash(node) % table->size;
-	HashEntry* entry = table->data[index];
-	while (entry) {
-		if (nodeEquals(entry->node, node))
-			return entry->node;
-		entry = entry->next;
-	}
-	return NULL;
-}
-
-void htRemove(HashTable* table, const Node* node)
-{
-	int index = hash(node) % table->size;
-	HashEntry* entry = table->data[index];
-	HashEntry* prev = NULL;
-	while (entry) {
-		if (nodeEquals(entry->node, node)) {
-			if (prev)
-				prev->next = entry->next;
-			else
-				table->data[index] = entry->next;
-			free(entry);
-			return;
-		}
-		prev = entry;
-		entry = entry->next;
-	}
-}
-
-void htFree(HashTable* table)
-{
-	int i;
-	for (i = 0; i < table->size; i++) {
-		HashEntry* entry = table->data[i];
-		while (entry) {
-			HashEntry* next = entry->next;
-			free(entry);
-			entry = next;
-		}
-	}
-	free(table->data);
-	free(table);
-}
-
 PriorityQueue* pqInit()
 {
 	PriorityQueue* pq = (PriorityQueue*)malloc(sizeof(PriorityQueue));
-	pq->heap = bhInit();
-	pq->hashTable = htInit();
+	pq->head = NULL;
 	return pq;
 }
 
 void pqPush(PriorityQueue* pq, Node* node)
 {
-	bhPush(pq->heap, node);
-	htInsert(pq->hashTable, node);
+	PriorityQueueElement* current;
+	PriorityQueueElement* newElement = (PriorityQueueElement*)malloc(sizeof(PriorityQueueElement));
+	newElement->node = node;
+	newElement->next = NULL;
+
+	if (pq->head == NULL || pq->head->node->f_cost > node->f_cost) {
+		newElement->next = pq->head;
+		pq->head = newElement;
+		return;
+	}
+
+	current = pq->head;
+	while (current->next != NULL && current->next->node->f_cost < node->f_cost) {
+		current = current->next;
+	}
+	newElement->next = current->next;
+	current->next = newElement;
 }
 
 Node* pqPop(PriorityQueue* pq)
 {
-	Node* node = bhPop(pq->heap);
-	htRemove(pq->hashTable, node);
+	PriorityQueueElement* elementToRemove;
+	Node* node;
+	if (pq->head == NULL) {
+		return NULL;
+	}
+	elementToRemove = pq->head;
+	node = elementToRemove->node;
+	pq->head = elementToRemove->next;
+	free(elementToRemove);
 	return node;
 }
 
 int pqIsEmpty(const PriorityQueue* pq)
 {
-	return bhIsEmpty(pq->heap);
+	return pq->head == NULL;
 }
 
 void pqFree(PriorityQueue* pq)
 {
-	bhFree(pq->heap);
-	htFree(pq->hashTable);
+	PriorityQueueElement* current = pq->head;
+	PriorityQueueElement* next;
+
+	while (current != NULL) {
+		next = current->next;
+		free(current);
+		current = next;
+	}
+
 	free(pq);
 }
 
 Node* pqFind(PriorityQueue* pq, const Node* node)
 {
-	return htFind(pq->hashTable, node);
+	PriorityQueueElement* current = pq->head;
+	while (current != NULL) {
+		if (nodeEquals(current->node, node)) {
+			return current->node;
+		}
+		current = current->next;
+	}
+	return NULL;
 }
 
 void pqRemove(PriorityQueue* pq, const Node* node)
 {
-	htRemove(pq->hashTable, node);
+	PriorityQueueElement* current;
+	if (pq->head == NULL) {
+		return;
+	}
+	if (nodeEquals(pq->head->node, node)) {
+		PriorityQueueElement* elementToRemove = pq->head;
+		pq->head = pq->head->next;
+		free(elementToRemove);
+		return;
+	}
+	current = pq->head;
+	while (current->next != NULL) {
+		if (nodeEquals(current->next->node, node)) {
+			PriorityQueueElement* elementToRemove = current->next;
+			current->next = current->next->next;
+			free(elementToRemove);
+			return;
+		}
+		current = current->next;
+	}
 }
 
 /* ------------------------------------------------------------------------------------------------------------------ */
