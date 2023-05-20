@@ -738,6 +738,20 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 			*accelerationY = 0;
 		}
 	}
+
+	/* Boosts */
+	if (accelerationX > 1 && abs(speedX) > abs(accelerationX + speedX)){
+		*accelerationX -= 1;
+	}
+	if (accelerationX < -1 && abs(speedX) > abs(accelerationX + speedX)){
+		*accelerationX += 1;
+	}
+	if (accelerationY > 1 && abs(speedY) > abs(accelerationY + speedY)){
+		*accelerationY -= 1;
+	}
+	if (accelerationY < -1 && abs(speedY) > abs(accelerationY + speedY)){
+		*accelerationX += 1;
+	}
 }
 
 /**
@@ -880,10 +894,6 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 				if ((newSpeedX * newSpeedX) + (newSpeedY * newSpeedY) <= speedMax) {
 					newX = currentNode->x + newSpeedX;
 					newY = currentNode->y + newSpeedY;
-
-					if (acc_boost == 2 && SpeedNorme(newSpeedX, newSpeedY) < SpeedNorme(currentNode->speedX, currentNode->speedY)){
-						continue;
-					}
 
 					if (shouldContinue(newX, newY, width, height, map, currentNode->x, currentNode->y, accX, accY, secondX, secondY, thirdX, thirdY,
 									   0, 0) == 0) {
