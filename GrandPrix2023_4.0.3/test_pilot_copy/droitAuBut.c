@@ -72,7 +72,7 @@ BinaryHeap* bhInit()
 {
 	BinaryHeap* heap = (BinaryHeap*)malloc(sizeof(BinaryHeap));
 	heap->size = 0;
-	heap->capacity = 10; // initial capacity
+	heap->capacity = 10;
 	heap->data = (Node**)malloc(heap->capacity * sizeof(Node*));
 	return heap;
 }
