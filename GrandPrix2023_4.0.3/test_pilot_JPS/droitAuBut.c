@@ -854,11 +854,11 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 	if (start->boostRemaining <= 0 || map[start->y][start->x] == '~'){
 		acc_boost = 1;
 	}
-	if (start->boostRemaining > 0 || map[start->y][start->x] != '~'){
+	if (start->boostRemaining > 0 && map[start->y][start->x] != '~'){
 		acc_boost = 2;
 	}
 
-	fprintf(stderr, "acc_boost : %d", acc_boost);
+	fprintf(stderr, "\nacc_boost : %d\n", acc_boost);
 	pqPush(openSet, start);
 
 	while (!pqIsEmpty(openSet)) {
