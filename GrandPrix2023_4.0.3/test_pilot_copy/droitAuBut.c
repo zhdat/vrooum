@@ -261,7 +261,6 @@ Node* pqFind(PriorityQueue* pq, const Node* node)
 
 void pqRemove(PriorityQueue* pq, const Node* node)
 {
-	bhRemove(pq->heap, node);
 	htRemove(pq->hashTable, node);
 }
 
