@@ -1038,6 +1038,7 @@ int main()
 						 occupiedX, occupiedY);
 		}
 		reverseList(path);
+		printPath(path);
 
 		while (path == NULL && i < arrayEnd->size) {
 			vitesse = 25;
@@ -1050,6 +1051,7 @@ int main()
 							 occupiedX, occupiedY);
 			}
 			reverseList(path);
+			printPath(path);
 			i++;
 		}
 
@@ -1077,6 +1079,7 @@ int main()
 								 occupied, occupiedX, occupiedY);
 				}
 				reverseList(path);
+				printPath(path);
 			}
 		}
 
