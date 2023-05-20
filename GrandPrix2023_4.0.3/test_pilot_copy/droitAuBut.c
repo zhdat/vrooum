@@ -1032,28 +1032,8 @@ int main()
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied, occupiedX,
 					 occupiedY);
-		while (path == NULL && vitesse > 0) {
-			vitesse--;
-			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
-						 occupiedX, occupiedY);
-		}
 		reverseList(path);
 		printPath(path);
-
-		while (path == NULL && i < arrayEnd->size) {
-			vitesse = 25;
-			end = createNode(arrayEnd->array[i].x, arrayEnd->array[i].y, NULL, speedX, speedY, 0);
-			path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
-						 occupiedX, occupiedY);
-			while (path == NULL && vitesse > 0) {
-				vitesse--;
-				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
-							 occupiedX, occupiedY);
-			}
-			reverseList(path);
-			printPath(path);
-			i++;
-		}
 
 		if (path != NULL) {
 			Node* firstNode;
@@ -1073,11 +1053,6 @@ int main()
 				occupiedY = firstNode->y;
 				path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied,
 							 occupiedX, occupiedY);
-				while (path == NULL && vitesse > 0) {
-					vitesse--;
-					path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas,
-								 occupied, occupiedX, occupiedY);
-				}
 				reverseList(path);
 				printPath(path);
 			}
