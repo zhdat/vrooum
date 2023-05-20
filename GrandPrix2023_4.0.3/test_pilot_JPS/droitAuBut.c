@@ -944,7 +944,10 @@ int main()
 	Node* end = NULL;
 	List* path = NULL;
 	occupied = 0;
-	boosts = boosts;
+
+	if (round == 0) {
+		boosts = BOOSTS_AT_START;
+	}
 
 	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
 	sscanf(line_buffer, "%d %d %d", &width, &height, &gasLevel);
