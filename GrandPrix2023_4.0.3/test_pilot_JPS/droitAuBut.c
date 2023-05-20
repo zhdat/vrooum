@@ -729,7 +729,7 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 	}
 
 	/* Vérifier si l'accélération est trop grande */
-	if (*accelerationX > 1) {
+	/* if (*accelerationX > 1) {
 		*accelerationX = 1;
 	}
 	if (*accelerationX < -1) {
@@ -740,7 +740,7 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 	}
 	if (*accelerationY < -1) {
 		*accelerationY = -1;
-	}
+	} */
 
 	/* if (*boosts > 0) {
 		if (*boosts != 0) {
