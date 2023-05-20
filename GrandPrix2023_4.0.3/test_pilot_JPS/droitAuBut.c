@@ -931,7 +931,7 @@ int main()
 	int height;
 	int gasLevel;
 	int maxGas;
-	int* boosts = BOOSTS_AT_START;
+	int boosts = BOOSTS_AT_START;
 	int round = 0;
 	int accelerationX = 0;
 	int accelerationY = 0;
@@ -960,7 +960,7 @@ int main()
 	List* path = NULL;
 	occupied = 0;
 
-	*boosts = *boosts;							/* Prevent warning "unused variable" */
+	boosts = boosts;							/* Prevent warning "unused variable" */
 	fgets(line_buffer, MAX_LINE_LENGTH, stdin); /* Read gas level at Start */
 	sscanf(line_buffer, "%d %d %d", &width, &height, &gasLevel);
 	maxGas = gasLevel;
@@ -1006,7 +1006,7 @@ int main()
 
 		start->x = myX;
 		start->y = myY;
-		start->boostRemaining = *boosts;
+		start->boostRemaining = boosts;
 
 		findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, arrayEnd, &end);
 		/* Executer l'algorithme A* pour trouver le chemin */
@@ -1063,7 +1063,7 @@ int main()
 		/* Utiliser le chemin trouvé par A* pour déterminer l'accélération */
 		determineAcceleration(path, myX, myY, &accelerationX, &accelerationY, speedX, speedY, map, &boosts);
 		if (accelerationX > 1 || accelerationY > 1){
-			*boosts --;
+			boosts --;
 		}
 
 		/* Gas consumption cannot be accurate here. */
