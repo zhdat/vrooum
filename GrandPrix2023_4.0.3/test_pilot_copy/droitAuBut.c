@@ -792,14 +792,6 @@ int shouldContinue(int newX, int newY, int width, int height, char** map, int cu
 		return 0;
 	}
 
-	/* if (newX == secondX && newY == secondY) {
-		return 0;
-	}
-
-	if (newX == thirdX && newY == thirdY) {
-		return 0;
-	} */
-
 	return 1; /* continue with current iteration */
 }
 
@@ -926,7 +918,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 
 					if (!hsContains(closedSet, neighbour)) {
 						Node const* existingNodeInOpenSet = pqFind(openSet, neighbour);
-						if (existingNodeInOpenSet == NULL || neighbour->g_cost < existingNodeInOpenSet->g_cost) {
+						if (existingNodeInOpenSet == NULL || neighbour->f_cost < existingNodeInOpenSet->f_cost) {
 							if (existingNodeInOpenSet != NULL) {
 								pqRemove(openSet, existingNodeInOpenSet);
 							}
