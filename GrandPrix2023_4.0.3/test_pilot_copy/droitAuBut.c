@@ -1031,6 +1031,7 @@ int main()
 		}
 		reverseList(path);
 		printPath(path);
+		fprintf(stderr, "    vitesse = %d\n", vitesse);
 
 		while (path == NULL && i < arrayEnd->size) {
 			vitesse = 25;
