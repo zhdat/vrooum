@@ -282,7 +282,7 @@ int compareEndPositions(const void* a, const void* b);
  * @param end
  * @return int 1 si le chemin est libre, 0 sinon
  */
-int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end, int secondX, int secondY, int thirdX, int thirdY);
+int isPathClear(char** map, int width, int height, Pos2Dint start, Pos2Dint end);
 
 int isPathClear_Occupied(char** map, int width, int height, Pos2Dint start, Pos2Dint end, int secondX, int secondY, int thirdX, int thirdY);
 
@@ -329,8 +329,7 @@ ArrayEnd* findEndPositions(char** map, int width, int height, const Node* start)
  * @param speedX
  * @param speedY
  */
-void determineAcceleration(const List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY, char** map,
-						   int* boosts);
+void determineAcceleration(const List* path, int myX, int myY, int* accelerationX, int* accelerationY, int speedX, int speedY, char** map);
 
 /**
  * @brief Calcule la norme de la vitesse
@@ -362,6 +361,6 @@ int shouldExploreNeighbor(Node* currentNode, char** map, int width, int height, 
  * @return List* le chemin le plus court
  */
 List* aStar(Node* start, const Node* end, char** map, int width, int height, int secondX, int secondY, int thirdX, int thirdY, int gasLevel,
-			int currentSpeedX, int currentSpeedY, int speedMax, int maxGas, int occupied, int occupiedX, int occupiedY);
+			int currentSpeedX, int currentSpeedY, int speedMax, int occupied);
 
 #endif /* DROITAUBUT_H */

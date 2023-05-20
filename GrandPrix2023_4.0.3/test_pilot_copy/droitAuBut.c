@@ -70,186 +70,183 @@ void hsFree(HashSet* hs)
 
 PriorityQueue* pqInit(int initialCapacity)
 {
-    PriorityQueue* pq = (PriorityQueue*)malloc(sizeof(PriorityQueue));
-    pq->heapArray = (Node**)malloc(sizeof(Node*) * initialCapacity);
-    pq->count = 0;
-    pq->capacity = initialCapacity;
-    return pq;
+	PriorityQueue* pq = (PriorityQueue*)malloc(sizeof(PriorityQueue));
+	pq->heapArray = (Node**)malloc(sizeof(Node*) * initialCapacity);
+	pq->count = 0;
+	pq->capacity = initialCapacity;
+	return pq;
 }
 
 void pqPush(PriorityQueue* pq, Node* node)
 {
-    if (pq->count == pq->capacity) {
-        pq->capacity *= 2;
-        pq->heapArray = (Node**)realloc(pq->heapArray, sizeof(Node*) * pq->capacity);
-    }
+	if (pq->count == pq->capacity) {
+		pq->capacity *= 2;
+		pq->heapArray = (Node**)realloc(pq->heapArray, sizeof(Node*) * pq->capacity);
+	}
 
-    pq->heapArray[pq->count] = node;
+	pq->heapArray[pq->count] = node;
 
-    int childIndex = pq->count;
-    int parentIndex = (childIndex - 1) / 2;
-    while (childIndex > 0 && pq->heapArray[parentIndex]->f_cost > pq->heapArray[childIndex]->f_cost) {
-        Node* temp = pq->heapArray[childIndex];
-        pq->heapArray[childIndex] = pq->heapArray[parentIndex];
-        pq->heapArray[parentIndex] = temp;
+	int childIndex = pq->count;
+	int parentIndex = (childIndex - 1) / 2;
+	while (childIndex > 0 && pq->heapArray[parentIndex]->f_cost > pq->heapArray[childIndex]->f_cost) {
+		Node* temp = pq->heapArray[childIndex];
+		pq->heapArray[childIndex] = pq->heapArray[parentIndex];
+		pq->heapArray[parentIndex] = temp;
 
-        childIndex = parentIndex;
-        parentIndex = (childIndex - 1) / 2;
-    }
+		childIndex = parentIndex;
+		parentIndex = (childIndex - 1) / 2;
+	}
 
-    pq->count++;
+	pq->count++;
 }
 
 Node* pqPop(PriorityQueue* pq)
 {
-    if (pq->count == 0) {
-        return NULL;
-    }
+	if (pq->count == 0) {
+		return NULL;
+	}
 
-    Node* toReturn = pq->heapArray[0];
+	Node* toReturn = pq->heapArray[0];
 
-    pq->heapArray[0] = pq->heapArray[pq->count - 1];
-    pq->count--;
+	pq->heapArray[0] = pq->heapArray[pq->count - 1];
+	pq->count--;
 
-    int parentIndex = 0;
-    while (1) {
-        int leftChildIndex = parentIndex * 2 + 1;
-        int rightChildIndex = parentIndex * 2 + 2;
+	int parentIndex = 0;
+	while (1) {
+		int leftChildIndex = parentIndex * 2 + 1;
+		int rightChildIndex = parentIndex * 2 + 2;
 
-        int smallestChildIndex = parentIndex;
-        if (leftChildIndex < pq->count && pq->heapArray[leftChildIndex]->f_cost < pq->heapArray[smallestChildIndex]->f_cost) {
-            smallestChildIndex = leftChildIndex;
-        }
-        if (rightChildIndex < pq->count && pq->heapArray[rightChildIndex]->f_cost < pq->heapArray[smallestChildIndex]->f_cost) {
-            smallestChildIndex = rightChildIndex;
-        }
+		int smallestChildIndex = parentIndex;
+		if (leftChildIndex < pq->count && pq->heapArray[leftChildIndex]->f_cost < pq->heapArray[smallestChildIndex]->f_cost) {
+			smallestChildIndex = leftChildIndex;
+		}
+		if (rightChildIndex < pq->count && pq->heapArray[rightChildIndex]->f_cost < pq->heapArray[smallestChildIndex]->f_cost) {
+			smallestChildIndex = rightChildIndex;
+		}
 
-        if (smallestChildIndex != parentIndex) {
-            Node* temp = pq->heapArray[parentIndex];
-            pq->heapArray[parentIndex] = pq->heapArray[smallestChildIndex];
-            pq->heapArray[smallestChildIndex] = temp;
+		if (smallestChildIndex != parentIndex) {
+			Node* temp = pq->heapArray[parentIndex];
+			pq->heapArray[parentIndex] = pq->heapArray[smallestChildIndex];
+			pq->heapArray[smallestChildIndex] = temp;
 
-            parentIndex = smallestChildIndex;
-        } else {
-            break;
-        }
-    }
+			parentIndex = smallestChildIndex;
+		} else {
+			break;
+		}
+	}
 
-    return toReturn;
+	return toReturn;
 }
 
 int pqIsEmpty(const PriorityQueue* pq)
 {
-    return pq->count == 0;
+	return pq->count == 0;
 }
 
 void pqFree(PriorityQueue* pq)
 {
-    free(pq->heapArray);
-    free(pq);
+	free(pq->heapArray);
+	free(pq);
 }
-
 
 Node* pqFind(PriorityQueue* pq, const Node* node)
 {
 	int i;
-    for (i = 0; i < pq->count; i++) {
-        if (nodeEqualsWithoutSpeed(pq->heapArray[i], node)) {
-            return pq->heapArray[i];
-        }
-    }
-    return NULL;
+	for (i = 0; i < pq->count; i++) {
+		if (nodeEqualsWithoutSpeed(pq->heapArray[i], node)) {
+			return pq->heapArray[i];
+		}
+	}
+	return NULL;
 }
 
 void pqRemove(PriorityQueue* pq, const Node* node)
 {
 	int i;
-    for (i = 0; i < pq->count; i++) {
-        if (nodeEqualsWithoutSpeed(pq->heapArray[i], node)) {
-            pq->heapArray[i] = pq->heapArray[pq->count - 1];
-            pq->count--;
+	for (i = 0; i < pq->count; i++) {
+		if (nodeEqualsWithoutSpeed(pq->heapArray[i], node)) {
+			pq->heapArray[i] = pq->heapArray[pq->count - 1];
+			pq->count--;
 
-            int parentIndex = i;
-            while (1) {
-                int leftChildIndex = parentIndex * 2 + 1;
-                int rightChildIndex = parentIndex * 2 + 2;
+			int parentIndex = i;
+			while (1) {
+				int leftChildIndex = parentIndex * 2 + 1;
+				int rightChildIndex = parentIndex * 2 + 2;
 
-                int smallestChildIndex = parentIndex;
-                if (leftChildIndex < pq->count && pq->heapArray[leftChildIndex]->f_cost < pq->heapArray[smallestChildIndex]->f_cost) {
-                    smallestChildIndex = leftChildIndex;
-                }
-                if (rightChildIndex < pq->count && pq->heapArray[rightChildIndex]->f_cost < pq->heapArray[smallestChildIndex]->f_cost) {
-                    smallestChildIndex = rightChildIndex;
-                }
+				int smallestChildIndex = parentIndex;
+				if (leftChildIndex < pq->count && pq->heapArray[leftChildIndex]->f_cost < pq->heapArray[smallestChildIndex]->f_cost) {
+					smallestChildIndex = leftChildIndex;
+				}
+				if (rightChildIndex < pq->count && pq->heapArray[rightChildIndex]->f_cost < pq->heapArray[smallestChildIndex]->f_cost) {
+					smallestChildIndex = rightChildIndex;
+				}
 
-                if (smallestChildIndex != parentIndex) {
-                    Node* temp = pq->heapArray[parentIndex];
-                    pq->heapArray[parentIndex] = pq->heapArray[smallestChildIndex];
-                    pq->heapArray[smallestChildIndex] = temp;
+				if (smallestChildIndex != parentIndex) {
+					Node* temp = pq->heapArray[parentIndex];
+					pq->heapArray[parentIndex] = pq->heapArray[smallestChildIndex];
+					pq->heapArray[smallestChildIndex] = temp;
 
-                    parentIndex = smallestChildIndex;
-                } else {
-                    break;
-                }
-            }
-            return;
-        }
-    }
+					parentIndex = smallestChildIndex;
+				} else {
+					break;
+				}
+			}
+			return;
+		}
+	}
 }
 
 HashSet* hashSetInit(int initialCapacity)
 {
-    HashSet* set = (HashSet*)malloc(sizeof(HashSet));
-    set->buckets = (Node**)calloc(initialCapacity, sizeof(Node*));
-    set->capacity = initialCapacity;
-    set->count = 0;
-    return set;
+	HashSet* set = (HashSet*)malloc(sizeof(HashSet));
+	set->buckets = (Node**)calloc(initialCapacity, sizeof(Node*));
+	set->capacity = initialCapacity;
+	set->count = 0;
+	return set;
 }
-
 
 void hashSetAdd(HashSet* set, Node* node)
 {
-    int index = hashFunction(node) % set->capacity;
-    while (set->buckets[index] != NULL) {
-        if (nodeEqualsWithoutSpeed(set->buckets[index], node)) {
-            return;
-        }
-        index = (index + 1) % set->capacity;
-    }
-    set->buckets[index] = node;
-    set->count++;
+	int index = hashFunction(node) % set->capacity;
+	while (set->buckets[index] != NULL) {
+		if (nodeEqualsWithoutSpeed(set->buckets[index], node)) {
+			return;
+		}
+		index = (index + 1) % set->capacity;
+	}
+	set->buckets[index] = node;
+	set->count++;
 }
-
 
 void hashSetRemove(HashSet* set, Node* node)
 {
-    int index = hashFunction(node) % set->capacity;
-    while (set->buckets[index] != NULL) {
-        if (nodeEqualsWithoutSpeed(set->buckets[index], node)) {
-            set->buckets[index] = NULL;
-            set->count--;
-            return;
-        }
-        index = (index + 1) % set->capacity;
-    }
+	int index = hashFunction(node) % set->capacity;
+	while (set->buckets[index] != NULL) {
+		if (nodeEqualsWithoutSpeed(set->buckets[index], node)) {
+			set->buckets[index] = NULL;
+			set->count--;
+			return;
+		}
+		index = (index + 1) % set->capacity;
+	}
 }
 
 Node* hashSetFind(HashSet* set, Node* node)
 {
-    int index = hashFunction(node) % set->capacity;
-    while (set->buckets[index] != NULL) {
-        if (nodeEqualsWithoutSpeed(set->buckets[index], node)) {
-            return set->buckets[index];
-        }
-        index = (index + 1) % set->capacity;
-    }
-    return NULL;
+	int index = hashFunction(node) % set->capacity;
+	while (set->buckets[index] != NULL) {
+		if (nodeEqualsWithoutSpeed(set->buckets[index], node)) {
+			return set->buckets[index];
+		}
+		index = (index + 1) % set->capacity;
+	}
+	return NULL;
 }
 
 void hashSetFree(HashSet* set)
 {
-    free(set->buckets);
-    free(set);
+	free(set->buckets);
+	free(set);
 }
 
 /* ------------------------------------------------------------------------------------------------------------------ */
