@@ -188,6 +188,7 @@ Node* createNode(int x, int y, Node* parent, int speedX, int speedY, int gas)
 	newNode->parent = parent;
 	newNode->speedX = speedX;
 	newNode->speedY = speedY;
+	newNode->boostRemaining = BOOSTS_AT_START;
 	newNode->gas = gas;
 	newNode->g_cost = 0;
 	newNode->h_cost = 0;
@@ -728,30 +729,6 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 		*accelerationY = desiredSpeedY - speedY;
 	}
 
-	/* Vérifier si l'accélération est trop grande */
-	/* if (*accelerationX > 1) {
-		*accelerationX = 1;
-	}
-	if (*accelerationX < -1) {
-		*accelerationX = -1;
-	}
-	if (*accelerationY > 1) {
-		*accelerationY = 1;
-	}
-	if (*accelerationY < -1) {
-		*accelerationY = -1;
-	} */
-
-	/* if (*boosts > 0) {
-		if (*boosts != 0) {
-			if (SpeedNorme(speedX + (*accelerationX * 2), speedY + (*accelerationY * 2)) <= 25) {
-				*accelerationX = *accelerationX * 2;
-				*accelerationY = *accelerationY * 2;
-				*boosts--;
-			}
-		}
-	} */
-
 	/* Accélération dans le sable */
 	if (map[myY][myX] == '~') {
 		if (SpeedNorme(speedX + *accelerationX, speedY + *accelerationY) > 1) {
@@ -869,6 +846,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 	start->gas = gasLevel;
+	start->boostRemaining = 5;
 	start->speedX = currentSpeedX;
 	start->speedY = currentSpeedY;
 
@@ -886,8 +864,8 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 		hsInsert(closedSet, currentNode);
 
 		/* Générer les voisins */
-		for (accX = -1; accX <= 1; accX++) {
-			for (accY = -1; accY <= 1; accY++) {
+		for (accX = -2; accX <= 2; accX++) {
+			for (accY = -2; accY <= 2; accY++) {
 				newSpeedX = currentNode->speedX + accX;
 				newSpeedY = currentNode->speedY + accY;
 
@@ -921,8 +899,9 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
 					if (newGas < 0)
 						continue;
-
+					
 					neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
+					neighbour->boostRemaining = currentNode->boostRemaining - ((accX == 2) ? 1 : 0) - ((accY == 2) ? 1 : 0);
 
 					if (!hsContains(closedSet, neighbour)) {
 						Node const* existingNodeInOpenSet = pqFind(openSet, neighbour);

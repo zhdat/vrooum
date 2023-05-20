@@ -22,6 +22,7 @@ typedef struct Node {
 	int speedX;
 	int speedY;
 	int gas;
+	int boostRemaining;
 	double g_cost;
 	double h_cost;
 	double f_cost;
