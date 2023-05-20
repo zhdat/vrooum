@@ -738,20 +738,6 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 			*accelerationY = 0;
 		}
 	}
-
-	/* Boosts */
-	if (accelerationX > 1 && SpeedNorme(speedX + accelerationX, speedY + accelerationY) < SpeedNorme(speedX, speedY)){
-		*accelerationX -= 1;
-	}
-	if (accelerationX < -1 && SpeedNorme(speedX + accelerationX, speedY + accelerationY) < SpeedNorme(speedX, speedY)){
-		*accelerationX += 1;
-	}
-	if (accelerationY > 1 && SpeedNorme(speedX + accelerationX, speedY + accelerationY) < SpeedNorme(speedX, speedY)){
-		*accelerationY -= 1;
-	}
-	if (accelerationY < -1 && SpeedNorme(speedX + accelerationX, speedY + accelerationY) < SpeedNorme(speedX, speedY)){
-		*accelerationY += 1;
-	}
 }
 
 /**
@@ -872,6 +858,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 		acc_boost = 2;
 	}
 
+	fprintf(stderr, "acc_boost : %d", acc_boost);
 	pqPush(openSet, start);
 
 	while (!pqIsEmpty(openSet)) {
