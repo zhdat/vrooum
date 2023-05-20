@@ -750,7 +750,7 @@ void determineAcceleration(const List* path, int myX, int myY, int* acceleration
 		*accelerationY -= 1;
 	}
 	if (accelerationY < -1 && SpeedNorme(speedX + accelerationX, speedY + accelerationY) < SpeedNorme(speedX, speedY)){
-		*accelerationX += 1;
+		*accelerationY += 1;
 	}
 }
 
