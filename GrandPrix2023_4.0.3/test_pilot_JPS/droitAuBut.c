@@ -899,7 +899,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 					if (newGas < 0)
 						continue;
 
-					if (currentNode->boostRemaining <= 0){
+					if (currentNode->boostRemaining < 0){
 						continue;
 					}
 					
