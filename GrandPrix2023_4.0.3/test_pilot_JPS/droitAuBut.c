@@ -846,7 +846,6 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 	start->h_cost = heuristicCost(start, end);
 	start->f_cost = start->g_cost + start->h_cost;
 	start->gas = gasLevel;
-	start->boostRemaining = 5;
 	start->speedX = currentSpeedX;
 	start->speedY = currentSpeedY;
 
