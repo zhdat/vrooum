@@ -54,22 +54,25 @@ typedef struct HashSet {
 	HashSetElement* buckets[HASH_SET_SIZE];
 } HashSet;
 
-typedef struct HashNode {
-	char* key;
-	int index;
-	struct HashNode* next;
-} HashNode;
+typedef struct BinaryHeap {
+	int size;
+	int capacity;
+	Node** data;
+} BinaryHeap;
+
+typedef struct HashEntry {
+	Node* node;
+	struct HashEntry* next;
+} HashEntry;
 
 typedef struct HashTable {
-	HashNode** list;
-	int capacity;
+	int size;
+	HashEntry** data;
 } HashTable;
 
 typedef struct PriorityQueue {
-	Node** nodes;
+	BinaryHeap* heap;
 	HashTable* hashTable;
-	int size;
-	int capacity;
 } PriorityQueue;
 
 /**

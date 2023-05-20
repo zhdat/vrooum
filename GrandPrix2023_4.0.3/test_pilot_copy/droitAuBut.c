@@ -8,10 +8,6 @@
 
 #define MAX_LINE_LENGTH 1024
 #define BOOSTS_AT_START 5
-#define PARENT(i) ((i - 1) / 2)
-#define LEFT(i) (2 * i + 1)
-#define RIGHT(i) (2 * i + 2)
-#define ULONG_MAX 4294967295
 
 /* TESTS */
 
@@ -72,264 +68,201 @@ void hsFree(HashSet* hs)
 	free(hs);
 }
 
-HashNode* createHashNode(const char* key, int index)
+BinaryHeap* bhInit()
 {
-	HashNode* node = (HashNode*)malloc(sizeof(HashNode));
-	if (!node) {
-		return NULL;
-	}
-	node->key = strdup(key);
-	node->index = index;
-	node->next = NULL;
-	return node;
-}
-
-HashTable* createHashTable(int capacity)
-{
-	int i;
-	HashTable* hashTable = (HashTable*)malloc(sizeof(HashTable));
-	hashTable->capacity = capacity;
-	hashTable->list = (HashNode**)malloc(sizeof(HashNode*) * capacity);
-	for (i = 0; i < capacity; i++)
-		hashTable->list[i] = NULL;
-	return hashTable;
-}
-
-int hashCode(HashTable* ht, char* key)
-{
-	unsigned long int hashval = 0;
-	int i = 0;
-	while (hashval < ULONG_MAX && i < strlen(key)) {
-		hashval = hashval << 8;
-		hashval += key[i];
-		i++;
-	}
-	return hashval % ht->capacity;
-}
-
-void insertToHash(HashTable* ht, char* key, int index)
-{
-	int pos = hashCode(ht, key);
-	HashNode* newNode = createHashNode(key, index);
-	newNode->next = ht->list[pos];
-	ht->list[pos] = newNode;
-}
-
-void deleteFromHash(HashTable* ht, char* key)
-{
-	fprintf(stderr, "key: %s\n", key);
-	int pos = hashCode(ht, key);
-	HashNode* list = ht->list[pos];
-
-	if (!list) {
-		return;
-	}
-	fprintf(stderr, "list is not null\n");
-	fprintf(stderr, "key: %s\n", key);
-	fprintf(stderr, "list->key: %s\n", list->key);
-	fprintf(stderr, "strcmp(list->key, key): %d\n", strcmp(list->key, key));
-
-	HashNode *temp = list, *prev = NULL;
-	while (temp) {
-		if (strcmp(temp->key, key) == 0) {
-			if (temp == list) {
-				ht->list[pos] = list->next;
-			} else {
-				prev->next = temp->next;
-			}
-			char* tempKey = temp->key;
-			HashNode* tempNextNode = temp->next;
-			free(tempKey);
-			free(temp);
-			temp = tempNextNode;
-			return;
-		}
-		prev = temp;
-		temp = temp->next;
-	}
-}
-
-int getFromHash(HashTable* ht, char* key)
-{
-	int pos = hashCode(ht, key);
-	HashNode* list = ht->list[pos];
-	HashNode* temp = list;
-	while (temp) {
-		if (strcmp(temp->key, key) == 0)
-			return temp->index;
-		temp = temp->next;
-	}
-	return -1;
-}
-
-char* nodeHashKey(const Node* node)
-{
-	char* key = (char*)malloc(128 * sizeof(char));
-	sprintf(key, "%d:%d", node->x, node->y);
-	return key;
-}
-
-PriorityQueue* pqInit(int capacity)
-{
-	PriorityQueue* pq = (PriorityQueue*)malloc(sizeof(PriorityQueue));
-	if (!pq)
-		return NULL;
-	pq->nodes = (Node**)malloc(sizeof(Node*) * capacity);
-	if (!pq->nodes) {
-		free(pq);
-		return NULL;
-	}
-	pq->hashTable = createHashTable(capacity);
-	pq->size = 0;
-	pq->capacity = capacity;
-	return pq;
+	BinaryHeap* heap = (BinaryHeap*)malloc(sizeof(BinaryHeap));
+	heap->size = 0;
+	heap->capacity = 10; // initial capacity
+	heap->data = (Node**)malloc(heap->capacity * sizeof(Node*));
+	return heap;
 }
 
 void swap(Node** a, Node** b)
 {
-	Node* t = *a;
+	Node* temp = *a;
 	*a = *b;
-	*b = t;
+	*b = temp;
+}
+
+void bubbleUp(BinaryHeap* heap, int idx)
+{
+	while (idx != 0 && heap->data[(idx - 1) / 2]->f_cost > heap->data[idx]->f_cost) {
+		swap(&heap->data[idx], &heap->data[(idx - 1) / 2]);
+		idx = (idx - 1) / 2;
+	}
+}
+
+void bubbleDown(BinaryHeap* heap, int idx)
+{
+	int smallest = idx;
+	int left = 2 * idx + 1;
+	int right = 2 * idx + 2;
+	if (left < heap->size && heap->data[left]->f_cost < heap->data[smallest]->f_cost)
+		smallest = left;
+	if (right < heap->size && heap->data[right]->f_cost < heap->data[smallest]->f_cost)
+		smallest = right;
+	if (smallest != idx) {
+		swap(&heap->data[idx], &heap->data[smallest]);
+		bubbleDown(heap, smallest);
+	}
+}
+
+void bhPush(BinaryHeap* heap, Node* node)
+{
+	if (heap->size == heap->capacity) {
+		heap->capacity *= 2;
+		heap->data = (Node**)realloc(heap->data, heap->capacity * sizeof(Node*));
+	}
+	heap->data[heap->size++] = node;
+	bubbleUp(heap, heap->size - 1);
+}
+
+Node* bhPop(BinaryHeap* heap)
+{
+	if (heap->size == 0)
+		return NULL;
+	Node* root = heap->data[0];
+	heap->data[0] = heap->data[--heap->size];
+	bubbleDown(heap, 0);
+	return root;
+}
+
+int bhIsEmpty(BinaryHeap* heap)
+{
+	return heap->size == 0;
+}
+
+void bhFree(BinaryHeap* heap)
+{
+	free(heap->data);
+	free(heap);
+}
+
+HashTable* htInit()
+{
+	int i;
+	HashTable* table = (HashTable*)malloc(sizeof(HashTable));
+	table->size = 100; // initial size
+	table->data = (HashEntry**)malloc(table->size * sizeof(HashEntry*));
+	for (i = 0; i < table->size; i++)
+		table->data[i] = NULL;
+	return table;
+}
+
+int hash(const Node* node)
+{
+	int prime1 = 31;
+	int prime2 = 37;
+	int prime3 = 41;
+	int prime4 = 43;
+	int prime5 = 47;
+
+	int result = prime1 * node->x + prime2 * node->y + prime3 * node->speedX + prime4 * node->speedY + prime5 * node->gas;
+
+	if (result < 0) {
+		result = -result;
+	}
+
+	return result;
+}
+
+void htInsert(HashTable* table, Node* node)
+{
+	int index = hash(node) % table->size;
+	HashEntry* entry = (HashEntry*)malloc(sizeof(HashEntry));
+	entry->node = node;
+	entry->next = table->data[index];
+	table->data[index] = entry;
+}
+
+Node* htFind(HashTable* table, const Node* node)
+{
+	int index = hash(node) % table->size;
+	HashEntry* entry = table->data[index];
+	while (entry) {
+		if (nodeEquals(entry->node, node))
+			return entry->node;
+		entry = entry->next;
+	}
+	return NULL;
+}
+
+void htRemove(HashTable* table, const Node* node)
+{
+	int index = hash(node) % table->size;
+	HashEntry* entry = table->data[index];
+	HashEntry* prev = NULL;
+	while (entry) {
+		if (nodeEquals(entry->node, node)) {
+			if (prev)
+				prev->next = entry->next;
+			else
+				table->data[index] = entry->next;
+			free(entry);
+			return;
+		}
+		prev = entry;
+		entry = entry->next;
+	}
+}
+
+void htFree(HashTable* table)
+{
+	int i;
+	for (i = 0; i < table->size; i++) {
+		HashEntry* entry = table->data[i];
+		while (entry) {
+			HashEntry* next = entry->next;
+			free(entry);
+			entry = next;
+		}
+	}
+	free(table->data);
+	free(table);
+}
+
+PriorityQueue* pqInit()
+{
+	PriorityQueue* pq = (PriorityQueue*)malloc(sizeof(PriorityQueue));
+	pq->heap = bhInit();
+	pq->hashTable = htInit();
+	return pq;
 }
 
 void pqPush(PriorityQueue* pq, Node* node)
 {
-	if (pq->size == pq->capacity) {
-		pq->capacity *= 2;
-		Node** newNodes = (Node**)realloc(pq->nodes, sizeof(Node*) * pq->capacity);
-		if (!newNodes) {
-			return;
-		}
-		pq->nodes = newNodes;
-	}
-
-	int i = pq->size;
-	pq->nodes[i] = node;
-	char* key = nodeHashKey(node);
-	insertToHash(pq->hashTable, key, i);
-	free(key);
-	pq->size++;
-
-	while (i != 0 && pq->nodes[PARENT(i)]->f_cost > pq->nodes[i]->f_cost) {
-		char* key1 = nodeHashKey(pq->nodes[i]);
-		char* key2 = nodeHashKey(pq->nodes[PARENT(i)]);
-		swap(&pq->nodes[i], &pq->nodes[PARENT(i)]);
-		insertToHash(pq->hashTable, key1, PARENT(i));
-		insertToHash(pq->hashTable, key2, i);
-		free(key1);
-		free(key2);
-		i = PARENT(i);
-	}
+	bhPush(pq->heap, node);
+	htInsert(pq->hashTable, node);
 }
 
 Node* pqPop(PriorityQueue* pq)
 {
-	if (pq->size == 0)
-		return NULL;
-
-	Node* root = pq->nodes[0];
-	fprintf(stderr, "pqPop: %d:%d\n", root->x, root->y);
-	char* key = nodeHashKey(root);
-	fprintf(stderr, "pqPop: %s\n", key);
-	deleteFromHash(pq->hashTable, key);
-	fprintf(stderr, "pqPop: %s\n", key);
-	free(key);
-
-	pq->size--;
-
-	if (pq->size > 0) {
-		pq->nodes[0] = pq->nodes[pq->size];
-		key = nodeHashKey(pq->nodes[0]);
-		insertToHash(pq->hashTable, key, 0);
-		free(key);
-
-		MinHeapify(pq, 0);
-	}
-
-	return root;
-}
-
-void MinHeapify(PriorityQueue* pq, int i)
-{
-	int left = LEFT(i);
-	int right = RIGHT(i);
-	int smallest = i;
-
-	if (left < pq->size && pq->nodes[left]->f_cost < pq->nodes[i]->f_cost)
-		smallest = left;
-
-	if (right < pq->size && pq->nodes[right]->f_cost < pq->nodes[smallest]->f_cost)
-		smallest = right;
-
-	if (smallest != i) {
-		char* key1 = nodeHashKey(pq->nodes[i]);
-		char* key2 = nodeHashKey(pq->nodes[smallest]);
-
-		swap(&pq->nodes[i], &pq->nodes[smallest]);
-
-		insertToHash(pq->hashTable, key1, smallest);
-		insertToHash(pq->hashTable, key2, i);
-
-		free(key1);
-		free(key2);
-
-		MinHeapify(pq, smallest);
-	}
+	Node* node = bhPop(pq->heap);
+	htRemove(pq->hashTable, node);
+	return node;
 }
 
 int pqIsEmpty(const PriorityQueue* pq)
 {
-	return pq->size == 0;
+	return bhIsEmpty(pq->heap);
 }
 
 void pqFree(PriorityQueue* pq)
 {
-	int i;
-	if (pq) {
-		if (pq->nodes) {
-			free(pq->nodes);
-		}
-
-		if (pq->hashTable) {
-			for (i = 0; i < pq->hashTable->capacity; i++) {
-				HashNode* node = pq->hashTable->list[i];
-				while (node != NULL) {
-					HashNode* temp = node;
-					node = node->next;
-					free(temp->key);
-					free(temp);
-				}
-			}
-			free(pq->hashTable->list);
-			free(pq->hashTable);
-		}
-
-		free(pq);
-	}
+	bhFree(pq->heap);
+	htFree(pq->hashTable);
+	free(pq);
 }
 
 Node* pqFind(PriorityQueue* pq, const Node* node)
 {
-	char* key = nodeHashKey(node);
-	int index = getFromHash(pq->hashTable, key);
-	free(key);
-	if (index != -1)
-		return pq->nodes[index];
-	else
-		return NULL;
+	return htFind(pq->hashTable, node);
 }
 
 void pqRemove(PriorityQueue* pq, const Node* node)
 {
-	char* key = nodeHashKey(node);
-	int index = getFromHash(pq->hashTable, key);
-	if (index != -1) {
-		deleteFromHash(pq->hashTable, key);
-		swap(&pq->nodes[index], &pq->nodes[pq->size - 1]);
-		pq->size--;
-		MinHeapify(pq, index);
-	}
-	free(key);
+	bhRemove(pq->heap, node);
+	htRemove(pq->hashTable, node);
 }
 
 /* ------------------------------------------------------------------------------------------------------------------ */
@@ -1014,9 +947,8 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 	int newGas;
 	Node* neighbour;
 
-	PriorityQueue* openSet = pqInit(100);
+	PriorityQueue* openSet = pqInit();
 	HashSet* closedSet = hsInit();
-	fprintf(stderr, "start : %d %d\n", start->x, start->y);
 
 	start->g_cost = 0;
 	start->h_cost = heuristicCost(start, end);
@@ -1026,21 +958,17 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 	start->speedY = currentSpeedY;
 
 	pqPush(openSet, start);
-	fprintf(stderr, "end : %d %d\n", end->x, end->y);
 
 	while (!pqIsEmpty(openSet)) {
-		fprintf(stderr, "openSet : %d\n", openSet->size);
 		Node* currentNode = pqPop(openSet);
-		fprintf(stderr, "current : %d %d\n", currentNode->x, currentNode->y);
 
 		if (nodeEqualsWithoutSpeed(currentNode, end) == 1) {
 			List* path;
 			path = getPath(currentNode);
 			return path;
 		}
-		fprintf(stderr, "current : %d %d\n", currentNode->x, currentNode->y);
+
 		hsInsert(closedSet, currentNode);
-		fprintf(stderr, "current : %d %d\n", currentNode->x, currentNode->y);
 
 		/* Générer les voisins */
 		for (accX = -1; accX <= 1; accX++) {
@@ -1186,11 +1114,9 @@ int main()
 		start->y = myY;
 
 		findBestEnd(myX, myY, secondX, secondY, thirdX, thirdY, speedX, speedY, arrayEnd, &end);
-		fprintf(stderr, "    End: (%d,%d)\n", end->x, end->y);
 		/* Executer l'algorithme A* pour trouver le chemin */
 		path = aStar(start, end, map, width, height, secondX, secondY, thirdX, thirdY, gasLevel, speedX, speedY, vitesse, maxGas, occupied, occupiedX,
 					 occupiedY);
-		fprintf(stderr, "    Path: ");
 		reverseList(path);
 		printPath(path);
 
