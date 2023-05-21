@@ -1,4 +1,3 @@
 How to install this program
  
-bla bla bla
-bli bli bli
+make all
