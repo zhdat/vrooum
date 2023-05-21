@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 PROJECT_PATH=""
 AUTHOR1="Ravix Calliste"
@@ -171,8 +171,8 @@ function create_project() {
       create_AUTHORS
       create_main
       create_Makefile
-	  create_Doxyfile
-	  copy_minunit
+	   create_Doxyfile
+	   copy_minunit
       echo "Projet `basename $PROJECT_PATH` créé."
    fi
 }
@@ -194,8 +194,8 @@ function open_project() {
          create_AUTHORS
          create_main
          create_Makefile
-   	     create_Doxyfile
-   	     copy_minunit
+   	   create_Doxyfile
+   	   copy_minunit
       fi
       echo "Projet `basename $PROJECT_PATH` créé."
       return 0

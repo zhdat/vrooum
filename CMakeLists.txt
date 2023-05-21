@@ -30,4 +30,4 @@ add_executable(vrooum
         GrandPrix2023_4.0.3/test_pilot_JPS/droitAuBut.h
         GrandPrix2023_4.0.3/test_pilot_JPS/follow_line.c
         GrandPrix2023_4.0.3/test_pilot_JPS/follow_line.h
-        GrandPrix2023_4.0.3/test_pilot_JPS/test_pilot.c)
+        GrandPrix2023_4.0.3/test_pilot_JPS/test_pilot.c PicoleNationale_RavixJantet/src/aStar.c)

@@ -1,0 +1,14 @@
+{
+  "files.associations": {
+    "hashset.h": "c",
+    "priorityqueue.h": "c",
+    "stdlib.h": "c",
+    "math.h": "c",
+    "follow_line.h": "c",
+    "stdio.h": "c",
+    "end.h": "c",
+    "list.h": "c",
+    "node.h": "c",
+    "astar.h": "c"
+  }
+}
