@@ -1,0 +1,6 @@
+PROJECT_NAME = "PicoleNationale_RavixJantet"
+OUTPUT_DIRECTORY = doc
+FILE_PATTERNS = include/*.h src/*.c
+GENERATE_HTML = YES
+GENERATE_LATEX = NO
+GENERATE_RTF = NO
