@@ -6,6 +6,7 @@
 #include <math.h>
 
 #include "structures.h"
+
 /**
  * @brief The function to calculate the hash of a node
  *

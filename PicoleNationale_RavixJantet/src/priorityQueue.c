@@ -8,6 +8,11 @@
 #include "../include/list.h"
 #include "../include/aStar.h"
 
+/**
+ * @brief The function to create a new priority queue
+ *
+ * @return PriorityQueue* The new priority queue
+ */
 PriorityQueue* pqInit(void)
 {
 	PriorityQueue* pq = (PriorityQueue*)malloc(sizeof(PriorityQueue));
@@ -15,6 +20,12 @@ PriorityQueue* pqInit(void)
 	return pq;
 }
 
+/**
+ * @brief The function to push a node in the priority queue
+ *
+ * @param pq
+ * @param node
+ */
 void pqPush(PriorityQueue* pq, Node* node)
 {
 	PriorityQueueElement* current;
@@ -36,6 +47,12 @@ void pqPush(PriorityQueue* pq, Node* node)
 	current->next = newElement;
 }
 
+/**
+ * @brief The function to pop the first node of the priority queue
+ *
+ * @param pq
+ * @return Node* The node popped
+ */
 Node* pqPop(PriorityQueue* pq)
 {
 	PriorityQueueElement* elementToRemove;
@@ -50,11 +67,22 @@ Node* pqPop(PriorityQueue* pq)
 	return node;
 }
 
+/**
+ * @brief The function to check if the priority queue is empty
+ *
+ * @param pq
+ * @return int 1 if the priority queue is empty, 0 otherwise
+ */
 int pqIsEmpty(const PriorityQueue* pq)
 {
 	return pq->head == NULL;
 }
 
+/**
+ * @brief The function to free the priority queue
+ *
+ * @param pq
+ */
 void pqFree(PriorityQueue* pq)
 {
 	PriorityQueueElement* current = pq->head;
@@ -69,6 +97,13 @@ void pqFree(PriorityQueue* pq)
 	free(pq);
 }
 
+/**
+ * @brief The function to find a node in the priority queue
+ *
+ * @param pq
+ * @param node
+ * @return Node*
+ */
 Node* pqFind(PriorityQueue* pq, const Node* node)
 {
 	PriorityQueueElement* current = pq->head;
@@ -81,6 +116,12 @@ Node* pqFind(PriorityQueue* pq, const Node* node)
 	return NULL;
 }
 
+/**
+ * @brief The function to remove a node from the priority queue
+ *
+ * @param pq
+ * @param node
+ */
 void pqRemove(PriorityQueue* pq, const Node* node)
 {
 	PriorityQueueElement* current;

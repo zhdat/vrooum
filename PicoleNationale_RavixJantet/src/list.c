@@ -8,6 +8,11 @@
 #include "../include/priorityQueue.h"
 #include "../include/aStar.h"
 
+/**
+ * @brief The function to create a new list
+ *
+ * @return List* The new list
+ */
 List* initList(void)
 {
 	List* newList = (List*)malloc(sizeof(List));
@@ -15,11 +20,22 @@ List* initList(void)
 	return newList;
 }
 
+/**
+ * @brief The function to verify if a list is empty
+ *
+ * @param list
+ * @return int 1 if the list is empty, 0 otherwise
+ */
 int isListEmpty(const List* list)
 {
 	return list->head == NULL;
 }
 
+/**
+ * @brief The function to print a list
+ *
+ * @param path
+ */
 void printPath(List* path)
 {
 	ListElement* currentElement;
@@ -38,6 +54,11 @@ void printPath(List* path)
 	}
 }
 
+/**
+ * @brief The function to reverse a list
+ *
+ * @param list
+ */
 void reverseList(List* list)
 {
 	ListElement* prevElement;
@@ -64,6 +85,11 @@ void reverseList(List* list)
 	list->head = prevElement;
 }
 
+/**
+ * @brief The function to free a list
+ *
+ * @param path
+ */
 void freePath(List* path)
 {
 	ListElement* current;
