@@ -37,4 +37,4 @@ clean:
 	-@$(RM) ./src/*.o
 
 distclean: clean
-	-@$(RM) ./bin/PicoleNational
+	-@$(RM) ./bin/PicoleNationale
