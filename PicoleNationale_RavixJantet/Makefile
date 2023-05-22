@@ -3,13 +3,13 @@ RM       = rm
 DOC      = doxygen
 CPPFLAGS = -I./include
 CFLAGS   = -Wall -Wextra -ansi -pedantic -Wpedantic -g
-LDFLAGS  = -lm -L ./lib # Add the libraries you will use, e.g. -lm
+LDFLAGS  = -L ./lib -lm# Add the libraries you will use, e.g. -lm
 
 .PHONY: all doc clean distclean
 
-all: ./bin/PicoleNational
+all: ./bin/PicoleNationale
 
-./bin/PicoleNational: ./src/main.o ./src/aStar.o ./src/follow_line.o ./src/hashSet.o ./src/list.o ./src/node.o ./src/priorityQueue.o# And others .o
+./bin/PicoleNationale: ./src/main.o ./src/aStar.o ./src/follow_line.o ./src/hashSet.o ./src/list.o ./src/node.o ./src/priorityQueue.o# And others .o
 	$(CC) $^ -o $@ $(LDFLAGS)
 
 ./src/aStar.o: ./src/aStar.c
