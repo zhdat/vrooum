@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#define _GNU_SOURCE
 #include <math.h>
 
 #include "../include/aStar.h"
@@ -8,6 +7,8 @@
 #include "../include/list.h"
 #include "../include/hashSet.h"
 #include "../include/follow_line.h"
+
+#define fmin(x, y)
 
 /**
  * @brief Get the Path from the end node to the start node
