@@ -13,7 +13,7 @@ all: ./bin/PicoleNationale
 	$(CC) $^ -o $@ $(LDFLAGS)
 
 ./src/aStar.o: ./src/aStar.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) $< -o $@ -c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $< -o $@ -c -lm
 
 ./src/hashSet.o: ./src/hashSet.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) $< -o $@ -c
