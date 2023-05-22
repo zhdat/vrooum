@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#define _GNU_SOURCE
 #include <math.h>
 
 #include "../include/aStar.h"
