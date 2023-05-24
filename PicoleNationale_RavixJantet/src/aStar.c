@@ -8,7 +8,8 @@
 #include "../include/hashSet.h"
 #include "../include/follow_line.h"
 
-#define fmin(x, y)
+#define fmin(x, y) ((x) < (y) ? (x) : (y))
+#define fmax(x, y) ((x) > (y) ? (x) : (y))
 
 /**
  * @brief Get the Path from the end node to the start node
@@ -82,8 +83,13 @@ double heuristicCost(const Node* a, const Node* b)
 {
 	double dx = abs(a->x - b->x);
 	double dy = abs(a->y - b->y);
-	double F = sqrt(2) - 1;
-	return F * fmin(dx, dy) + fabs(dx - dy);
+	double dMin = fmin(dx, dy);
+	double dMax = fmax(dx, dy);
+	double diagonalCost = sqrt(2);
+	double orthogonalCost = 2;
+
+	double heuristic1 = dMin * diagonalCost + (dMax - dMin) * orthogonalCost;
+	return heuristic1;
 }
 
 /**
