@@ -47,7 +47,7 @@ Node* createNeighbourNode(int newX, int newY, Node* currentNode, int newSpeedX, 
 	Node* neighbour = createNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas);
 	factor = 1;
 	if (map[newY][newX] == '~') {
-		factor += 2;
+		factor += 4;
 	}
 	if (SpeedNorme(newSpeedX, newSpeedY) < 25) {
 		factor += 1;
@@ -86,7 +86,7 @@ double heuristicCost(const Node* a, const Node* b)
 	double dMin = fmin(dx, dy);
 	double dMax = fmax(dx, dy);
 	double diagonalCost = sqrt(2);
-	double orthogonalCost = 2;
+	double orthogonalCost = 1;
 
 	double heuristic1 = dMin * diagonalCost + (dMax - dMin) * orthogonalCost;
 	return heuristic1;
@@ -487,7 +487,7 @@ List* aStar(Node* start, const Node* end, char** map, int width, int height, int
 						continue;
 
 					newGas = currentNode->gas + gasConsumption(accX, accY, newSpeedX, newSpeedY, map[newY][newX] == '~');
-					if (newGas < 1)
+					if (newGas < 0)
 						continue;
 
 					neighbour = createNeighbourNode(newX, newY, currentNode, newSpeedX, newSpeedY, newGas, map, end);
