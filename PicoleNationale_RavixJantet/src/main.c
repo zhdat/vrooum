@@ -105,6 +105,9 @@ int main(void)
 
 		start->x = myX;
 		start->y = myY;
+		if (round != 1){
+			start->gas = gasLevel;
+		}
 		start->boostRemaining = boosts;
 		fprintf(stderr, "Boost Remaining : %d", start->boostRemaining);
 
