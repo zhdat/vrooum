@@ -1,3 +1,5 @@
 How to install this program
  
 make all
+cp bin/PicoleNationale ../GrandPrix2023_4.0.3/drivers/
+
