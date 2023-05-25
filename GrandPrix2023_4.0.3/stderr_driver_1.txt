@@ -1,36 +1,4139 @@
 === >Map< ===
-Size 7 x 4
-Gas at start 8 
+Size 75 x 74
+Gas at start 410 
 
-.......
-.####=.
-.##.#=.
-.......
+................#######################....................................
+...............#########################...................................
+..............##########################...................................
+.............###########################...................................
+............############################...................................
+...........#######..................####...................................
+..........#######...................####...................................
+.........#######....................####...................................
+........#######.....................####...................................
+.......#######.....................#####...................................
+......#######......................#####...................................
+.....#######.......................###~~...................................
+....#######........................###~~...................................
+....######.........................#####...................................
+....#####..........................#~~##...................................
+....#####..........................#~~##...................................
+....#####..........................#####...................................
+....#####..........................###~~...................................
+....#####..........................###~~...#########.......................
+....#####..........................#~~##..###~~####~#......................
+....#####..........................#~~##..###~~####~~......................
+....#####..........................#####..###########......................
+....#####..........................~~###..#####~#~~##......................
+....#####..........................~~###..#####.#~~##......................
+....#####..........................###~~..#####.######.....................
+....#####..........................###~~..#####.###~~##....................
+....#####..........................#~~##..~~###.###~~#~~############.......
+....#####..........................#~~##..~~###.######~~#######~~####......
+....#####..........................###~~..#####.~~#######~~#~~#~~####......
+....#####..........................###~~..#####.~~#######~~#~~########.....
+....#####..........................#~~##..#####..################~~###.....
+....#####..........................#~~##..#####..................~~#~~#....
+....#####..........................#####..###~~..................###~~#....
+....#####..........................###~~..###~~...................#####....
+....#####..........................###~~#~~####...................####~~...
+....#####..........................#~~###~~####...................####~~...
+....#####..........................#~~#########....................#~~###..
+....#####..........................###~~###~~##....................#~~###..
+....#####...........................##~~###~~#......................###~~..
+....#####...........................................................###~~#.
+....#####...........................................................######.
+....#####............................................................#####.
+....#####............................................................#~~###
+....#####............................................................#~~###
+....#####.............................................................#####
+......................................................................#####
+.......................................................................####
+.......................................................................##~~
+.......................................................................##~~
+.......................................................................####
+........................................................#####~~#########~~#
+.......................................................######~~####~~###~~#
+.....====..............................................###~~#######~~######
+.....####..............................................###~~####~~####~~#~~
+.....####..............................................~~#######~~####~~#~~
+.....####..............................................~~####~~##..........
+.....####..............................................####~~~~~...........
+.....####..............................................~~##~~##............
+.....####..............................................~~###~~.............
+.....####..............................................#####~..............
+.....####..............................................#####...............
+.....####.............................................######...............
+.....#####...........................................~~#####...............
+.....######.........................................#~~#####...............
+......######.......................................~~#~~####...............
+.......######.....................................~~~~~~####...............
+........##################~~#####~~###########~~####~~####~~...............
+.........###########~~####~~#####~~#####~~####~~##########~~...............
+..........##########~~##############~~##~~########~~########...............
+.....................##~~####~~#####~~#####~~#####~~##~~####...............
+......................#~~####~~############~~#########~~###................
+...........................................................................
+...........................................................................
+...........................................................................
 
 === Race start ===
 === ROUND 1
-    Positions: Me(1,1)  A(1,2), B(2,2)
-    Start: (1, 1)
-endPositions[0] = (5, 1, 2.828427)
-endPositions[1] = (5, 2, 2.828427)
-    End: (5, 1)
-    Path found: 
-Path: (1, 1) (2, 1) (3, 1) (5, 1)     Acceleration: (1, 0)
-    Action: 1 0   Gas remaining: 7
+    Positions: Me(4,44)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 -1   Gas remaining: 409
 === ROUND 2
-    Positions: Me(2,1)  A(1,2), B(2,2)
-endPositions[0] = (5, 1, 2.828427)
-endPositions[1] = (5, 2, 2.828427)
-    End: (5, 1)
-    Path found: 
-Path: (2, 1) (3, 1) (5, 1)     Acceleration: (0, 0)
-    Action: 0 0   Gas remaining: 6
+    Positions: Me(4,43)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 408
 === ROUND 3
-    Positions: Me(3,1)  A(1,2), B(2,2)
-endPositions[0] = (5, 1, 2.828427)
-endPositions[1] = (5, 2, 2.828427)
-    End: (5, 1)
-    Path found: 
-Path: (3, 1) (5, 1)     Acceleration: (1, 0)
-    Action: 1 0   Gas remaining: 4
+    Positions: Me(4,42)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 407
 === ROUND 4
+    Positions: Me(4,41)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 406
+=== ROUND 5
+    Positions: Me(4,40)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 405
+=== ROUND 6
+    Positions: Me(4,39)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 404
+=== ROUND 7
+    Positions: Me(4,38)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 403
+=== ROUND 8
+    Positions: Me(4,37)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 402
+=== ROUND 9
+    Positions: Me(4,36)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 401
+=== ROUND 10
+    Positions: Me(4,35)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 400
+=== ROUND 11
+    Positions: Me(4,34)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 399
+=== ROUND 12
+    Positions: Me(4,33)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 398
+=== ROUND 13
+    Positions: Me(4,32)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 397
+=== ROUND 14
+    Positions: Me(4,31)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 396
+=== ROUND 15
+    Positions: Me(4,30)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 395
+=== ROUND 16
+    Positions: Me(4,29)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 394
+=== ROUND 17
+    Positions: Me(4,28)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 393
+=== ROUND 18
+    Positions: Me(4,27)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 392
+=== ROUND 19
+    Positions: Me(4,26)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 391
+=== ROUND 20
+    Positions: Me(4,25)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 390
+=== ROUND 21
+    Positions: Me(4,24)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 389
+=== ROUND 22
+    Positions: Me(4,23)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 388
+=== ROUND 23
+    Positions: Me(4,22)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 387
+=== ROUND 24
+    Positions: Me(4,21)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 386
+=== ROUND 25
+    Positions: Me(4,20)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 385
+=== ROUND 26
+    Positions: Me(4,19)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 384
+=== ROUND 27
+    Positions: Me(4,18)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 1 0   Gas remaining: 382
+=== ROUND 28
+    Positions: Me(5,17)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 380
+=== ROUND 29
+    Positions: Me(6,16)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 378
+=== ROUND 30
+    Positions: Me(7,15)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 376
+=== ROUND 31
+    Positions: Me(8,14)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 374
+=== ROUND 32
+    Positions: Me(9,13)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 372
+=== ROUND 33
+    Positions: Me(10,12)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 370
+=== ROUND 34
+    Positions: Me(11,11)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 368
+=== ROUND 35
+    Positions: Me(12,10)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 366
+=== ROUND 36
+    Positions: Me(13,9)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 364
+=== ROUND 37
+    Positions: Me(14,8)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 362
+=== ROUND 38
+    Positions: Me(15,7)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 360
+=== ROUND 39
+    Positions: Me(16,6)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 358
+=== ROUND 40
+    Positions: Me(17,5)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 356
+=== ROUND 41
+    Positions: Me(18,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 1   Gas remaining: 353
+=== ROUND 42
+    Positions: Me(19,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 352
+=== ROUND 43
+    Positions: Me(20,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 351
+=== ROUND 44
+    Positions: Me(21,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 350
+=== ROUND 45
+    Positions: Me(22,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 349
+=== ROUND 46
+    Positions: Me(23,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 348
+=== ROUND 47
+    Positions: Me(24,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 347
+=== ROUND 48
+    Positions: Me(25,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 346
+=== ROUND 49
+    Positions: Me(26,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 345
+=== ROUND 50
+    Positions: Me(27,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 344
+=== ROUND 51
+    Positions: Me(28,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 343
+=== ROUND 52
+    Positions: Me(29,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 342
+=== ROUND 53
+    Positions: Me(30,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 341
+=== ROUND 54
+    Positions: Me(31,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 340
+=== ROUND 55
+    Positions: Me(32,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 339
+=== ROUND 56
+    Positions: Me(33,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 338
+=== ROUND 57
+    Positions: Me(34,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 337
+=== ROUND 58
+    Positions: Me(35,4)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 1   Gas remaining: 335
+=== ROUND 59
+    Positions: Me(36,5)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: -1 1   Gas remaining: 331
+=== ROUND 60
+    Positions: Me(36,7)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 1   Gas remaining: 327
+=== ROUND 61
+    Positions: Me(36,10)  A(6,44), B(8,44)
+Boost Remaining : 5
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+Boost utilisé !
+    Action: 0 -2   Gas remaining: 319
+=== ROUND 62
+    Positions: Me(36,11)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 318
+=== ROUND 63
+    Positions: Me(36,12)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 317
+=== ROUND 64
+    Positions: Me(36,13)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: -1 0   Gas remaining: 315
+=== ROUND 65
+    Positions: Me(35,14)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 1 0   Gas remaining: 312
+=== ROUND 66
+    Positions: Me(35,15)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 311
+=== ROUND 67
+    Positions: Me(35,16)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 310
+=== ROUND 68
+    Positions: Me(35,17)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 309
+=== ROUND 69
+    Positions: Me(35,18)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 308
+=== ROUND 70
+    Positions: Me(35,19)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 307
+=== ROUND 71
+    Positions: Me(35,20)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 1 0   Gas remaining: 305
+=== ROUND 72
+    Positions: Me(36,21)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 303
+=== ROUND 73
+    Positions: Me(37,22)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: -1 0   Gas remaining: 300
+=== ROUND 74
+    Positions: Me(37,23)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 299
+=== ROUND 75
+    Positions: Me(37,24)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 298
+=== ROUND 76
+    Positions: Me(37,25)  A(6,44), B(8,44)
+Boost Remaining : 4
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+Boost utilisé !
+    Action: 0 2   Gas remaining: 293
+=== ROUND 77
+    Positions: Me(37,28)  A(6,44), B(8,44)
+Boost Remaining : 3
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 1 0   Gas remaining: 288
+=== ROUND 78
+    Positions: Me(38,31)  A(6,44), B(8,44)
+Boost Remaining : 3
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 1 0   Gas remaining: 283
+=== ROUND 79
+    Positions: Me(40,34)  A(6,44), B(8,44)
+Boost Remaining : 3
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+Boost utilisé !
+    Action: 1 -2   Gas remaining: 273
+=== ROUND 80
+    Positions: Me(43,35)  A(6,44), B(8,44)
+Boost Remaining : 2
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+Boost utilisé !
+    Action: -2 -2   Gas remaining: 261
+=== ROUND 81
+    Positions: Me(44,34)  A(6,44), B(8,44)
+Boost Remaining : 1
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: -1 -1   Gas remaining: 257
+=== ROUND 82
+    Positions: Me(44,32)  A(6,44), B(8,44)
+Boost Remaining : 1
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 -1   Gas remaining: 253
+=== ROUND 83
+    Positions: Me(44,29)  A(6,44), B(8,44)
+Boost Remaining : 1
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 1 0   Gas remaining: 248
+=== ROUND 84
+    Positions: Me(45,26)  A(6,44), B(8,44)
+Boost Remaining : 1
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+    Action: 0 0   Gas remaining: 244
+=== ROUND 85
+    Positions: Me(46,23)  A(6,44), B(8,44)
+Boost Remaining : 1
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+acc_boost : 2
+
+Boost utilisé !
+    Action: -1 2   Gas remaining: 235
+=== ROUND 86
+    Positions: Me(46,22)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 1 0   Gas remaining: 233
+=== ROUND 87
+    Positions: Me(47,21)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 1 1   Gas remaining: 229
+=== ROUND 88
+    Positions: Me(49,21)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 0 1   Gas remaining: 225
+=== ROUND 89
+    Positions: Me(51,22)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: -1 0   Gas remaining: 221
+=== ROUND 90
+    Positions: Me(52,23)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 1 1   Gas remaining: 217
+=== ROUND 91
+    Positions: Me(54,25)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 0 -1   Gas remaining: 212
+=== ROUND 92
+    Positions: Me(56,26)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 1 0   Gas remaining: 208
+=== ROUND 93
+    Positions: Me(59,27)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 0 1   Gas remaining: 203
+=== ROUND 94
+    Positions: Me(62,29)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: -1 -1   Gas remaining: 196
+=== ROUND 95
+    Positions: Me(64,30)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: -1 1   Gas remaining: 191
+=== ROUND 96
+    Positions: Me(65,32)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 0 0   Gas remaining: 188
+=== ROUND 97
+    Positions: Me(66,34)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 0 1   Gas remaining: 184
+=== ROUND 98
+    Positions: Me(67,37)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 1 1   Gas remaining: 178
+=== ROUND 99
+    Positions: Me(69,41)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: -1 -1   Gas remaining: 170
+=== ROUND 100
+    Positions: Me(70,44)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 0 0   Gas remaining: 166
+=== ROUND 101
+    Positions: Me(71,47)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: -1 -1   Gas remaining: 160
+=== ROUND 102
+    Positions: Me(71,49)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: -1 -1   Gas remaining: 155
+=== ROUND 103
+    Positions: Me(70,50)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 0 0   Gas remaining: 153
+=== ROUND 104
+    Positions: Me(69,51)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: -1 1   Gas remaining: 149
+=== ROUND 105
+    Positions: Me(67,53)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: -1 0   Gas remaining: 144
+=== ROUND 106
+    Positions: Me(64,55)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 0 0   Gas remaining: 139
+=== ROUND 107
+    Positions: Me(61,57)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 1 -1   Gas remaining: 132
+=== ROUND 108
+    Positions: Me(59,58)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: -1 1   Gas remaining: 127
+=== ROUND 109
+    Positions: Me(56,60)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: -1 1   Gas remaining: 120
+=== ROUND 110
+    Positions: Me(52,63)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 1 0   Gas remaining: 112
+=== ROUND 111
+    Positions: Me(49,66)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: -1 -1   Gas remaining: 104
+=== ROUND 112
+    Positions: Me(45,68)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 0 -1   Gas remaining: 97
+=== ROUND 113
+    Positions: Me(41,69)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 1 -1   Gas remaining: 89
+=== ROUND 114
+    Positions: Me(38,69)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: -1 -1   Gas remaining: 83
+=== ROUND 115
+    Positions: Me(34,68)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: -1 1   Gas remaining: 75
+=== ROUND 116
+    Positions: Me(29,68)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 0 0   Gas remaining: 68
+=== ROUND 117
+    Positions: Me(24,68)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 0 0   Gas remaining: 61
+=== ROUND 118
+    Positions: Me(19,68)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 1 -1   Gas remaining: 52
+=== ROUND 119
+    Positions: Me(15,67)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 1 -1   Gas remaining: 44
+=== ROUND 120
+    Positions: Me(12,65)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 1 0   Gas remaining: 38
+=== ROUND 121
+    Positions: Me(10,63)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 0 0   Gas remaining: 34
+=== ROUND 122
+    Positions: Me(8,61)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 1 -1   Gas remaining: 28
+=== ROUND 123
+    Positions: Me(7,58)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 1 0   Gas remaining: 23
+=== ROUND 124
+    Positions: Me(7,55)  A(6,44), B(8,44)
+Boost Remaining : 0
+acc_boost : 1
+    Action: 0 0   Gas remaining: 19
+=== ROUND 125
